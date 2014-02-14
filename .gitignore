@@ -1,0 +1,15 @@
+*.un~
+Session.vim
+tags
+*.swp
+*.a
+*.so
+*.o
+*.pyc
+*.mexa64
+
+
+build/
+extern/
+doc/html/
+doc/latex/
