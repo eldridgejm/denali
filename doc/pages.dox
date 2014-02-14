@@ -1,0 +1,194 @@
+
+/*!
+    \page concepts_page Concepts
+    \brief A description of the use of concepts.
+
+    denali thoroughly uses template functions and classes. In order to 
+    more rigorously define the requirements on the parameters of these generic
+    structures, [concepts](http://www.boost.org/doc/libs/1_55_0/libs/concept_check/concept_check.htm)
+    are used. This document describes the conventions adopted by denali 
+    pertaining to the use of concepts.
+
+    \tableofcontents
+
+    \section concept_classes Concept Classes
+    
+    A *concept* consists of a set of constraints that an implementor of the
+    concept must follow: in some ways, it is like an abstract interface.  An
+    *archetype* of a concept is a concrete class that implements the interface,
+    but none of the functionality. In denali, *concepts* and *archetypes* are
+    contained together in *concept classes*.
+
+    As an example, consider the function below which counts the nodes of a graph:
+
+    ~~~
+    template <typename Graph>
+    int countNodes(const Graph& graph)
+    {
+        Graph::Node node = graph.getFirstNode();
+        int count = 0;
+
+        while (graph.isValid(node)) {
+            node = graph.getNextNode(node);
+            ++count;
+        }
+
+        return count;
+    }
+    ~~~
+
+    Here, `Graph` is a parameterized type. The following constraints are implicit:
+
+    - `Graph` must define a `Node` type.
+    - `Graph` must have the methods:
+        - `bool isValid(Node)`
+        - `Node getFirstNode()`
+        - `Node getNextNode(Node)`
+
+    All of this functionality is required to do a specific task: iterate over the 
+    nodes of the graph. We might then say that `Graph` should conform to a
+    "NodeIterable" concept.
+
+    To make this rigorous, we define a `NodeIterableConcept` concept class:
+
+    ~~~
+    template <typename BaseConcept>
+    class NodeIterableConcept : public BaseConcept
+    {
+    public:
+
+        // the archetype:
+
+        typedef concepts::Node Node;
+
+        bool isValid(Node) { return true; }
+        Node getFirstNode() { return Node(); }
+        Node getNextNode(Node node) { return Node(); }
+
+        // the constraints:
+
+        template <typename _NodeIterableConcept>
+        struct Constraints
+        {
+            void constraints()
+            {
+                _Node node = _node_iterable.getFirstNode();
+                _Node next = _node_iterable.getNextNode(node);
+                bool valid = _node_iterable.isValid(node);
+            }
+
+            _NodeIterableConcept& _node_iterable;
+            typedef typename _NodeIterableConcept::Node _Node;
+        }
+
+    };
+    ~~~
+
+    The constraints are defined (according to convention) in a `Constraints`
+    template struct with a `void constraints()` member. The `constraints()`
+    member method exercises the functionality of the concept. The
+    `_NodeIterableConcept` template parameter represents a class that is being checked
+    against the concept. If the class does not meet the concept, the type checker
+    should find an error in the body of `constraints()`. `constraints()`, however,
+    is never executed, so we do not need to worry about making the code
+    here operational.
+
+    The archetype of the concept is defined in the concept class as well.
+    It should be designed to meet the constraints, and nothing more.
+    The idea is that a concept class should be self-consistent: when
+    concept checking is done, a concept class should satisfy its own constraints.
+
+
+    \section concept_checking Concept Checking
+
+    denali defines several functions for checking classes against concepts. The most 
+    general is `denali::concepts::checkConcept<A,B>()`. This function takes the concept
+    `A` and checks that the class `B` conforms to the constraints imposed by `A`.
+    For example, to check that our `NodeIterableConcept` concept class is self-consistent,
+    we would type
+
+    ~~~
+    checkConcept<NodeIterableConcept<NullConcept>, NodeIterableConcept<NullConcept> >();
+    ~~~
+
+    where `NullConcept` is a base concept class that has no constraints and
+    models no functionality, defined in denali::concepts.
+
+
+    \section implementation Implementation
+
+    The implementation of concept checking in denali is closely related to
+    the concept check in LEMON's [concept_check.h](http://lemon.cs.elte.hu/trac/lemon/browser/lemon/lemon/concept_check.h),
+    which itself is inspired by the [Boost Concept Check library](http://www.boost.org/doc/libs/1_55_0/libs/concept_check/concept_check.htm).
+
+    In short, we want the `constraints()` method to be instantiated, but never run. 
+    That way, static type checking is performed, but we don't have to write 
+    functioning archetype code. The trick is to declared a function pointer
+    to the `constraints()` method. The compiler instantiates the method
+    and performs type-checking, but it is never run.
+
+    The following code will handle the vast majority of cases. The
+    `ignore_unused_variable_warning` function is used to prevent the compiler
+    from complaining that our function pointer was never used.
+
+    ~~~
+    template <class T> inline void ignore_unused_variable_warning(const T&) {}
+
+    template <typename Concept, typename Type>
+    void checkConcept()
+    {
+        typedef typename Concept::template Constraints<Type> ConceptCheck;
+        void (ConceptCheck::*x)() = &ConceptCheck::constraints;
+        ignore_unused_variable_warning(x);
+    }
+    ~~~
+
+    \section concept_conventions Conventions
+
+    The following conventions should be used when writing and employing concepts:
+
+
+    \subsection placement Placement of concept definitions
+    All concept classes should be in the `concepts` namespace. Furthemore, the definitions
+    of the concepts will be in header files in the `concepts` subdirectory.
+
+
+    \subsection concept_names Concept classes should be suffixed with `Concept`.
+
+    `NodeIterableConcept` is the concept class describing the "NodeIterable" concept.
+    While this may seem redundant, especially as `NodeIterableConcept` is in the
+    `denali::concepts` namespace, it helps distinguish template parameters intended
+    to conform to a concept from general template parameters.
+
+
+    \subsection as_params Concepts as template parameters
+
+    When a generic function or class's template parameter is intended to conform
+    to some single concept, it should name that concept. For example:
+
+    ~~~
+    template <typename NodeIterableConcept>
+    countNodes(const NodeIterableConcept& graph)
+    {
+        // ...
+    }
+    ~~~
+
+    Sometimes, however, no single concept will apply. Suppose that we also want
+    our graph to conform to `EdgeIterableConcept`. We dont have (or need) a
+    `NodeIterableAndEdgeIterableConcept` concept class, so we don't reflect
+    this in the template parameter. In such cases, we choose a short, descriptive name
+    for the parameter that *does not* end in `Concept`, and clearly note the constraints
+    upon the parameter in the documentation:
+
+    ~~~
+    // GraphType must conform to `NodeIterableConcept` and `EdgeIterableConcept`.
+    template <typename GraphType>
+    countNodes(const GraphType& graph)
+    {
+        // ...
+    }
+    ~~~
+
+
+*/

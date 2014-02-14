@@ -1,1 +1,1 @@
-set wildignore+=*/build/*,*/extern/*,*/doc/*
+set wildignore+=*/build/*,*/extern/*,*/doc/latex/*,*/doc/html/*

@@ -18,7 +18,9 @@
 
 /// \defgroup contour_tree Contour Tree
 
-
+/*!
+ *  Concepts
+ */
 /// \defgroup concepts Concepts
 
     /// \defgroup concepts_graph Graph Concepts
