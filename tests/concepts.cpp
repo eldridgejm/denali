@@ -68,15 +68,18 @@ TEST(GraphAttributes)
 
     denali::concepts::checkSelfConsistent <
             denali::concepts::NodeObservable <
-            denali::concepts::BaseDirectedGraph> > ();
+            denali::concepts::BaseObservable <
+            denali::concepts::BaseDirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
             denali::concepts::ArcObservable <
-            denali::concepts::BaseDirectedGraph> > ();
+            denali::concepts::BaseObservable <
+            denali::concepts::BaseDirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
             denali::concepts::EdgeObservable <
-            denali::concepts::BaseUndirectedGraph> > ();
+            denali::concepts::BaseObservable <
+            denali::concepts::BaseUndirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
             denali::concepts::ReadableDirectedGraph> ();
@@ -143,9 +146,11 @@ TEST(GraphMaps)
     denali::concepts::checkSelfConsistent <
             denali::concepts::ObservingNodeMap<
                 denali::concepts::NodeObservable<
-                    denali::concepts::NodeMappable<
-                        denali::concepts::BaseDirectedGraph
-                    > 
+                    denali::concepts::BaseObservable<
+                        denali::concepts::NodeMappable<
+                            denali::concepts::BaseDirectedGraph
+                        > 
+                    >
                 >,
                 int> 
             > ();
@@ -153,9 +158,11 @@ TEST(GraphMaps)
     denali::concepts::checkSelfConsistent <
             denali::concepts::ObservingArcMap<
                 denali::concepts::ArcObservable<
-                    denali::concepts::ArcMappable<
-                        denali::concepts::BaseDirectedGraph
-                    > 
+                    denali::concepts::BaseObservable<
+                        denali::concepts::ArcMappable<
+                            denali::concepts::BaseDirectedGraph
+                        > 
+                    >
                 >,
                 int> 
             > ();
@@ -163,9 +170,11 @@ TEST(GraphMaps)
     denali::concepts::checkSelfConsistent <
             denali::concepts::ObservingEdgeMap<
                 denali::concepts::EdgeObservable<
-                    denali::concepts::EdgeMappable<
-                        denali::concepts::BaseUndirectedGraph
-                    > 
+                    denali::concepts::BaseObservable<
+                        denali::concepts::EdgeMappable<
+                            denali::concepts::BaseUndirectedGraph
+                        > 
+                    >
                 >,
                 int> 
             > ();

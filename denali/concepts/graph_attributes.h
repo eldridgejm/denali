@@ -410,24 +410,31 @@ namespace denali {
         };
 
 
-        /// \brief A type that can notifier observers on a change in the node set.
-        /// \ingroup concepts_graph_attributes
+        /// \brief A base class providing an Observer object.
         template <typename BaseConcept>
-        class NodeObservable : public BaseConcept
+        class BaseObservable : public BaseConcept
         {
         public:
-
-            /// \brief The observer interface.
-            /*!
-             *  The NodeObservable class should provide an Observer
-             *  interface with a `notify` method for clients to 
-             *  override. 
-             */
             class Observer 
             {
                 public:
                 virtual void notify() = 0;
             };
+
+        };
+
+
+        /// \brief A type that can notifier observers on a change in the node set.
+        /// \ingroup concepts_graph_attributes
+        /*!
+         *  BaseConcept must derive from BaseObservable
+         */
+        template <typename BaseConcept>
+        class NodeObservable : public BaseConcept
+        {
+        public:
+
+            typedef typename BaseConcept::Observer Observer; 
 
             /// \brief Attach an Observer to the object.
             /*!
@@ -467,22 +474,15 @@ namespace denali {
 
         /// \brief A type that can notifier observers on a change in the arc set.
         /// \ingroup concepts_graph_attributes
+        /*!
+         *  BaseConcept must derive from BaseObservable
+         */
         template <typename BaseConcept>
         class ArcObservable : public BaseConcept
         {
         public:
 
-            /// \brief The observer interface.
-            /*!
-             *  The ArcObservable class should provide an Observer
-             *  interface with a `notify` method for clients to 
-             *  override. 
-             */
-            class Observer 
-            {
-                public:
-                virtual void notify() = 0;
-            };
+            typedef typename BaseConcept::Observer Observer; 
 
             /// \brief Attach an Observer to the object.
             /*!
@@ -522,22 +522,15 @@ namespace denali {
 
         /// \brief A type that can notifier observers on a change in the edge set.
         /// \ingroup concepts_graph_attributes
+        /*!
+         *  BaseConcept must derive from BaseObservable
+         */
         template <typename BaseConcept>
         class EdgeObservable : public BaseConcept
         {
         public:
 
-            /// \brief The observer interface.
-            /*!
-             *  The EdgeObservable class should provide an Observer
-             *  interface with a `notify` method for clients to 
-             *  override. 
-             */
-            class Observer 
-            {
-                public:
-                virtual void notify() = 0;
-            };
+            typedef typename BaseConcept::Observer Observer; 
 
             /// \brief Attach an Observer to the object.
             /*!

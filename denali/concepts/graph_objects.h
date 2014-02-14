@@ -1,6 +1,8 @@
 #ifndef DENALI_GRAPH_OBJECTS_H
 #define DENALI_GRAPH_OBJECTS_H
 
+#include <denali/concepts/check.h>
+
 namespace denali {
     namespace concepts {
 
