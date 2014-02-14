@@ -23,6 +23,10 @@
  */
 /// \defgroup concepts Concepts
 
+    /// \brief Concepts common to many others.
+    /// \defgroup concepts_common Common Concepts
+    /// \ingroup concepts
+
     /// \defgroup concepts_graph Graph Concepts
     /// \ingroup concepts
 

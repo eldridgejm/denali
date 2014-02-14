@@ -49,11 +49,11 @@
     nodes of the graph. We might then say that `Graph` should conform to a
     "NodeIterable" concept.
 
-    To make this rigorous, we define a `NodeIterableConcept` concept class:
+    To make this rigorous, we define a `NodeIterable` concept class:
 
     ~~~
-    template <typename BaseConcept>
-    class NodeIterableConcept : public BaseConcept
+    template <typename Base>
+    class NodeIterable : public Base
     {
     public:
 
@@ -67,7 +67,7 @@
 
         // the constraints:
 
-        template <typename _NodeIterableConcept>
+        template <typename _NodeIterable>
         struct Constraints
         {
             void constraints()
@@ -77,8 +77,8 @@
                 bool valid = _node_iterable.isValid(node);
             }
 
-            _NodeIterableConcept& _node_iterable;
-            typedef typename _NodeIterableConcept::Node _Node;
+            _NodeIterable& _node_iterable;
+            typedef typename _NodeIterable::Node _Node;
         }
 
     };
@@ -87,7 +87,7 @@
     The constraints are defined (according to convention) in a `Constraints`
     template struct with a `void constraints()` member. The `constraints()`
     member method exercises the functionality of the concept. The
-    `_NodeIterableConcept` template parameter represents a class that is being checked
+    `_NodeIterable` template parameter represents a class that is being checked
     against the concept. If the class does not meet the concept, the type checker
     should find an error in the body of `constraints()`. `constraints()`, however,
     is never executed, so we do not need to worry about making the code
@@ -104,14 +104,14 @@
     denali defines several functions for checking classes against concepts. The most 
     general is `denali::concepts::checkConcept<A,B>()`. This function takes the concept
     `A` and checks that the class `B` conforms to the constraints imposed by `A`.
-    For example, to check that our `NodeIterableConcept` concept class is self-consistent,
+    For example, to check that our `NodeIterable` concept class is self-consistent,
     we would type
 
     ~~~
-    checkConcept<NodeIterableConcept<NullConcept>, NodeIterableConcept<NullConcept> >();
+    checkConcept<NodeIterable<Null>, NodeIterable<Null> >();
     ~~~
 
-    where `NullConcept` is a base concept class that has no constraints and
+    where `Null` is a base concept class that has no constraints and
     models no functionality, defined in denali::concepts.
 
 
@@ -153,12 +153,29 @@
     of the concepts will be in header files in the `concepts` subdirectory.
 
 
-    \subsection concept_names Concept classes should be suffixed with `Concept`.
+    \subsection mixins Concept classes intended to be mixed should be stackable
 
-    `NodeIterableConcept` is the concept class describing the "NodeIterable" concept.
-    While this may seem redundant, especially as `NodeIterableConcept` is in the
-    `denali::concepts` namespace, it helps distinguish template parameters intended
-    to conform to a concept from general template parameters.
+    Some concept classes are obviously designed to be "mixed", such as the `NodeIterable`
+    concept class. Such concept classes should be "stackable": they can be layered upon one another 
+    to produce a new concept class. This is accomplished through the use of 
+    mixins:
+
+    ~~~
+    template <typename Base>
+    class New : public Base
+    {
+        // ...
+    }
+    ~~~
+
+    Of course, `Base` may have some requirements on it as well. These requirements
+    should be informally listed in the documentation of the concept class.
+
+
+    \subsection concept_names Concept classes should not be suffixed with `Concept`.
+
+    `NodeIterable` is the concept class describing the "NodeIterable" concept.
+    Since it is in the `denali::concepts` namespace, it is clear that it is a concept.
 
 
     \subsection as_params Concepts as template parameters
@@ -167,28 +184,31 @@
     to some single concept, it should name that concept. For example:
 
     ~~~
-    template <typename NodeIterableConcept>
-    countNodes(const NodeIterableConcept& graph)
+    template <typename NodeIterable>
+    countNodes(const NodeIterable& graph)
     {
         // ...
     }
     ~~~
-
-    Sometimes, however, no single concept will apply. Suppose that we also want
-    our graph to conform to `EdgeIterableConcept`. We dont have (or need) a
-    `NodeIterableAndEdgeIterableConcept` concept class, so we don't reflect
-    this in the template parameter. In such cases, we choose a short, descriptive name
-    for the parameter that *does not* end in `Concept`, and clearly note the constraints
-    upon the parameter in the documentation:
+    
+    It should also be marked in the documentation for the function that
+    `NodeIterable` refers to `concepts::NodeIterable`. If the union of
+    concepts applies, name the template parameter succinctly and document
+    the requirements on it elsewhere:
 
     ~~~
-    // GraphType must conform to `NodeIterableConcept` and `EdgeIterableConcept`.
+    // GraphType must conform to `NodeIterable` and `EdgeIterable`.
     template <typename GraphType>
     countNodes(const GraphType& graph)
     {
         // ...
     }
     ~~~
+
+
+    \subsection Checking concepts
+    
+    Concepts should be checked for self-consistency in `/tests/concepts.cpp`.
 
 
 */
