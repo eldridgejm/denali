@@ -5,6 +5,7 @@
 #include <denali/concepts/common.h>
 #include <denali/concepts/graph_attributes.h>
 #include <denali/concepts/graph_iterators.h>
+#include <denali/concepts/graph_maps.h>
 
 
 TEST(GraphObjects)
@@ -134,6 +135,41 @@ TEST(GraphIterators)
             denali::concepts::UndirectedNeighborIterable<
             denali::concepts::BaseUndirectedGraph
             > > > ();
+}
+
+
+TEST(GraphMaps)
+{
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ObservingNodeMap<
+                denali::concepts::NodeObservable<
+                    denali::concepts::NodeMappable<
+                        denali::concepts::BaseDirectedGraph
+                    > 
+                >,
+                int> 
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ObservingArcMap<
+                denali::concepts::ArcObservable<
+                    denali::concepts::ArcMappable<
+                        denali::concepts::BaseDirectedGraph
+                    > 
+                >,
+                int> 
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ObservingEdgeMap<
+                denali::concepts::EdgeObservable<
+                    denali::concepts::EdgeMappable<
+                        denali::concepts::BaseUndirectedGraph
+                    > 
+                >,
+                int> 
+            > ();
+
 }
 
 
