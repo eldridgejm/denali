@@ -47,3 +47,7 @@
     /// \defgroup concepts_contour_tree Contour Tree Concepts
     /// \ingroup concepts
 
+    /// \brief Landscape concepts
+    /// \defgroup concepts_landscape Landscape Concepts
+    /// \ingroup concepts
+

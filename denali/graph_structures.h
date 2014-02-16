@@ -100,6 +100,7 @@ namespace denali {
         {
             public:
             virtual void notify() = 0;
+            virtual ~Observer() {}
         };
 
 
@@ -442,7 +443,7 @@ namespace denali {
             if (arcs[arc.index].next_out != -1) {
                 return Arc(arcs[arc.index].next_out);
             } else {
-                Node node = source(arc);
+                Node node = nodes[source(arc).index].next;
                 while (nodes[node.index].first_out == -1 && isNodeValid(node)) {
                     node = getNextNode(node);
                 }
@@ -477,7 +478,12 @@ namespace denali {
 
         Arc getFirstNeighborArc(const Node node) const
         {
-            return getFirstOutArc(node);
+            Arc arc = getFirstOutArc(node);
+            if (isArcValid(arc)) {
+                return arc;
+            } else {
+                return getFirstInArc(node);
+            }
         }
 
         Arc getNextNeighborArc(const Node node, const Arc arc) const
@@ -487,6 +493,7 @@ namespace denali {
                 if (!isArcValid(next_arc)) {
                     return getFirstInArc(node);
                 }
+                return next_arc;
             } else {
                 return getNextInArc(arc);
             }

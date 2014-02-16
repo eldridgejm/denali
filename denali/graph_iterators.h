@@ -16,7 +16,7 @@ namespace denali {
     class NodeIterator
     {
         typedef typename GraphType::Node Node;
-        GraphType& _graph;
+        const GraphType& _graph;
         Node _node;
 
         public:
@@ -24,7 +24,7 @@ namespace denali {
         /*!
          *  The graph must conform to concepts::NodeIterable.
          */
-        NodeIterator(GraphType& graph) 
+        NodeIterator(const GraphType& graph) 
             : _graph(graph), _node(_graph.getFirstNode()) {}
 
         /// Returns true if the iterator is finished iterating.
@@ -48,16 +48,16 @@ namespace denali {
     class ArcIterator
     {
         typedef typename GraphType::Arc Arc;
-        GraphType& _graph;
-        Arc _arc;
+        const GraphType& _graph;
 
         public:
+        Arc _arc;
         /// Constructs an iterator to read arcs from the graph.
-        ArcIterator(GraphType& graph) 
-            : _graph(graph), _arc(graph.getFirstArc()) {}
+        ArcIterator(const GraphType& graph) 
+            : _graph(graph), _arc(_graph.getFirstArc()) {}
 
         /// Returns true if the iterator is finished iterating.
-        bool done() const { !_graph.isArcValid(_arc); }
+        bool done() const { return !_graph.isArcValid(_arc); }
 
         /// Advances the iterator.
         void operator++() { _arc = _graph.getNextArc(_arc); }
@@ -77,16 +77,16 @@ namespace denali {
     class EdgeIterator
     {
         typedef typename GraphType::Edge Edge;
-        GraphType& _graph;
+        const GraphType& _graph;
         Edge _edge;
 
         public:
         /// Constructs an iterator to read edges from the graph.
-        EdgeIterator(GraphType& graph) 
+        EdgeIterator(const GraphType& graph) 
             : _graph(graph), _edge(graph.getFirstEdge()) {}
 
         /// Returns true if the iterator is finished iterating.
-        bool done() const { !_graph.isEdgeValid(_edge); }
+        bool done() const { return !_graph.isEdgeValid(_edge); }
 
         /// Advances the iterator.
         void operator++() { _edge = _graph.getNextEdge(_edge); }
@@ -107,14 +107,14 @@ namespace denali {
     {
         typedef typename GraphType::Node Node;
         typedef typename GraphType::Arc Arc;
-        GraphType& _graph;
+        const GraphType& _graph;
         Arc _arc;
 
         public:
         /// \brief
         /// Constructs an iterator to read the parents of the node from the
         /// graph.
-        ParentIterator(GraphType& graph, Node node)
+        ParentIterator(const GraphType& graph, Node node)
             : _graph(graph), _arc(graph.getFirstInArc(node)) {}
 
         /// Returns true if the iterator is finished iterating.
@@ -142,18 +142,18 @@ namespace denali {
     {
         typedef typename GraphType::Node Node;
         typedef typename GraphType::Arc Arc;
-        GraphType& _graph;
+        const GraphType& _graph;
         Arc _arc;
 
         public:
         /// \brief
         /// Constructs an iterator to read the children of the node from
         /// the graph.
-        ChildIterator(GraphType& graph, Node node)
+        ChildIterator(const GraphType& graph, Node node)
             : _graph(graph), _arc(graph.getFirstOutArc(node)) {}
 
         /// Returns true if the iterator is finished iterating.
-        bool done() const { !_graph.isArcValid(_arc); }
+        bool done() const { return !_graph.isArcValid(_arc); }
 
         /// Advances the iterator.
         void operator++() { _arc = _graph.getNextOutArc(_arc); }
@@ -177,7 +177,7 @@ namespace denali {
     {
         typedef typename GraphType::Node Node;
         typedef typename GraphType::Arc Arc;
-        GraphType& _graph;
+        const GraphType& _graph;
         Arc _arc;
         Node _node;
 
@@ -185,7 +185,7 @@ namespace denali {
         /// \brief
         /// Constructs an iterator to read the neighboring nodes from the
         /// directed graph.
-        DirectedNeighborIterator(GraphType& graph, Node node)
+        DirectedNeighborIterator(const GraphType& graph, Node node)
             : _graph(graph), _node(node), _arc(graph.getFirstNeighborArc(node)) {}
 
         /// Returns true if the iterator is finished iterating.
@@ -213,7 +213,7 @@ namespace denali {
     {
         typedef typename GraphType::Node Node;
         typedef typename GraphType::Edge Edge;
-        GraphType& _graph;
+        const GraphType& _graph;
         Edge _edge;
         Node _node;
 
@@ -221,7 +221,7 @@ namespace denali {
         /// \brief
         /// Constructs an iterator to read the neighboring nodes from the
         /// directed graph.
-        UndirectedNeighborIterator(GraphType& graph, Node node)
+        UndirectedNeighborIterator(const GraphType& graph, Node node)
             : _graph(graph), _node(node), _edge(graph.getFirstNeighborEdge(node)) {}
 
         /// Returns true if the iterator is finished iterating.

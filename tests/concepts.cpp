@@ -6,6 +6,8 @@
 #include <denali/concepts/graph_attributes.h>
 #include <denali/concepts/graph_iterators.h>
 #include <denali/concepts/graph_maps.h>
+#include <denali/concepts/contour_tree.h>
+#include <denali/concepts/landscape.h>
 
 
 TEST(GraphObjects)
@@ -178,6 +180,43 @@ TEST(GraphMaps)
                 >,
                 int> 
             > ();
+}
+
+
+TEST(ContourTree)
+{
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ScalarSimplicialComplex
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::Members
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ContourTree
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::UndirectedScalarMemberIDGraph
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::ContourTreeAlgorithm
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::RandomAccessComparisonFunctor<std::vector<double> >
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::TotalOrder
+            > ();
+}
+
+
+TEST(Landscape)
+{
 
 }
 
