@@ -318,7 +318,7 @@ namespace denali {
 
     protected:
         ContourTreeBase(boost::shared_ptr<Graph> graph)
-            : _graph(graph), Mixin(*_graph) { }
+            : _graph(graph), Mixin(*graph) { }
 
     public:
 

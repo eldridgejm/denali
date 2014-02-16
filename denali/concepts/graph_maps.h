@@ -105,6 +105,86 @@ namespace denali {
             };
         };
 
+
+        /// \brief A node map that does not grow.
+        /// \ingroup concepts_graph_maps
+        template <typename GraphType, typename ValueType>
+        class StaticNodeMap
+        {
+            public:
+            StaticNodeMap(GraphType& graph) { }
+
+            ValueType& operator[](typename GraphType::Node node) { }
+            const ValueType& operator[](typename GraphType::Node node) const { }
+
+            template <typename _StaticNodeMap>
+            struct Constraints
+            {
+                void constraints()
+                {
+                    _StaticNodeMap new_map(_graph);
+                    ValueType value = _map[_Node()];
+                    const ValueType const_value = _map[_Node()];
+                }
+                _StaticNodeMap& _map;
+                GraphType& _graph;
+                typedef typename GraphType::Node _Node;
+            };
+        };
+
+
+        /// \brief An arc map that does not grow.
+        /// \ingroup concepts_graph_maps
+        template <typename GraphType, typename ValueType>
+        class StaticArcMap
+        {
+            public:
+            StaticArcMap(GraphType& graph) { }
+
+            ValueType& operator[](typename GraphType::Arc arc) { }
+            const ValueType& operator[](typename GraphType::Arc arc) const { }
+
+            template <typename _StaticArcMap>
+            struct Constraints
+            {
+                void constraints()
+                {
+                    _StaticArcMap new_map(_graph);
+                    ValueType value = _map[_Arc()];
+                    const ValueType const_value = _map[_Arc()];
+                }
+                _StaticArcMap& _map;
+                GraphType& _graph;
+                typedef typename GraphType::Arc _Arc;
+            };
+        };
+
+
+        /// \brief An edge map that does not grow.
+        /// \ingroup concepts_graph_maps
+        template <typename GraphType, typename ValueType>
+        class StaticEdgeMap
+        {
+            public:
+            StaticEdgeMap(GraphType& graph) { }
+
+            ValueType& operator[](typename GraphType::Edge edge) { }
+            const ValueType& operator[](typename GraphType::Edge edge) const { }
+
+            template <typename _StaticEdgeMap>
+            struct Constraints
+            {
+                void constraints()
+                {
+                    _StaticEdgeMap new_map(_graph);
+                    ValueType value = _map[_Edge()];
+                    const ValueType const_value = _map[_Edge()];
+                }
+                _StaticEdgeMap& _map;
+                GraphType& _graph;
+                typedef typename GraphType::Edge _Edge;
+            };
+        };
     }
 }
 

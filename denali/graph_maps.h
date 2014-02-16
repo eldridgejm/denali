@@ -8,7 +8,7 @@ namespace denali {
     /// \brief An observing node map.
     /// \ingroup graph_implementations_maps
     /*!
-     *  The observed map must conform to both concepts::NodeObservable
+     *  The observed graph must conform to both concepts::NodeObservable
      *  and concepts::NodeMappable.
      *
      *  The map will resize itself whenever the watched graph grows or shrinks.
@@ -52,7 +52,7 @@ namespace denali {
     /// \brief An observing arc map.
     /// \ingroup graph_implementations_maps
     /*!
-     *  The observed map must conform to both concepts::ArcObservable
+     *  The observed graph must conform to both concepts::ArcObservable
      *  and concepts::ArcMappable.
      *
      *  The map will resize itself whenever the watched graph grows or shrinks.
@@ -96,7 +96,7 @@ namespace denali {
     /// \brief An observing edge map.
     /// \ingroup graph_implementations_maps
     /*!
-     *  The observed map must conform to both concepts::EdgeObservable
+     *  The observed graph must conform to both concepts::EdgeObservable
      *  and concepts::EdgeMappable.
      *
      *  The map will resize itself whenever the watched graph grows or shrinks.
@@ -135,6 +135,88 @@ namespace denali {
         }
 
     };
+
+
+    /// \brief A static node map.
+    /// \ingroup graph_implementations_maps
+    /*!
+     *  The observed graph must conform to concepts::NodeMappable
+     */
+    template <typename NodeMappable, typename ValueType>
+    class StaticNodeMap 
+    {
+        NodeMappable& _graph;
+        std::vector<ValueType> _values;
+
+        public:
+        StaticNodeMap(NodeMappable& graph)
+            : _graph(graph), _values(_graph.getMaxNodeIdentifier()+1) {}
+
+        ValueType& operator[](typename NodeMappable::Node node)
+        {
+            return _values[_graph.getNodeIdentifier(node)];
+        }
+
+        const ValueType& operator[](typename NodeMappable::Node node) const
+        {
+            return _values[_graph.getNodeIdentifier(node)];
+        }
+    };
+
+
+    /// \brief A static arc map.
+    /// \ingroup graph_implementations_maps
+    /*!
+     *  The observed graph must conform to concepts::ArcMappable
+     */
+    template <typename ArcMappable, typename ValueType>
+    class StaticArcMap 
+    {
+        ArcMappable& _graph;
+        std::vector<ValueType> _values;
+
+        public:
+        StaticArcMap(ArcMappable& graph)
+            : _graph(graph), _values(_graph.getMaxArcIdentifier()+1) {}
+
+        ValueType& operator[](typename ArcMappable::Arc arc)
+        {
+            return _values[_graph.getArcIdentifier(arc)];
+        }
+
+        const ValueType& operator[](typename ArcMappable::Arc arc) const
+        {
+            return _values[_graph.getArcIdentifier(arc)];
+        }
+    };
+
+
+    /// \brief A static edge map.
+    /// \ingroup graph_implementations_maps
+    /*!
+     *  The observed graph must conform to concepts::EdgeMappable
+     */
+    template <typename EdgeMappable, typename ValueType>
+    class StaticEdgeMap 
+    {
+        EdgeMappable& _graph;
+        std::vector<ValueType> _values;
+
+        public:
+        StaticEdgeMap(EdgeMappable& graph)
+            : _graph(graph), _values(_graph.getMaxEdgeIdentifier()+1) {}
+
+        ValueType& operator[](typename EdgeMappable::Edge edge)
+        {
+            return _values[_graph.getEdgeIdentifier(edge)];
+        }
+
+        const ValueType& operator[](typename EdgeMappable::Edge edge) const
+        {
+            return _values[_graph.getEdgeIdentifier(edge)];
+        }
+    };
+
 }
 
 #endif

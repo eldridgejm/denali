@@ -180,6 +180,30 @@ TEST(GraphMaps)
                 >,
                 int> 
             > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::StaticNodeMap<
+                denali::concepts::NodeMappable<
+                    denali::concepts::BaseUndirectedGraph
+                    >,
+                int> 
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::StaticArcMap<
+                denali::concepts::ArcMappable<
+                    denali::concepts::BaseDirectedGraph
+                    >,
+                int> 
+            > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::StaticEdgeMap<
+                denali::concepts::EdgeMappable<
+                    denali::concepts::BaseUndirectedGraph
+                    >,
+                int> 
+            > ();
 }
 
 
@@ -217,7 +241,9 @@ TEST(ContourTree)
 
 TEST(Landscape)
 {
-
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::LandscapeTree<denali::concepts::ContourTree> 
+            > ();
 }
 
 

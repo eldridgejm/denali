@@ -12,6 +12,7 @@
 #include <denali/graph_iterators.h>
 #include <denali/graph_structures.h>
 #include <denali/contour_tree.h>
+#include <denali/landscape.h>
 
 double wenger_vertex_values[] = 
     // 0   1   2   3   4   5   6   7   8   9  10  11
@@ -353,7 +354,7 @@ SUITE(ContourTree)
             > ();
     }
 
-    TEST(ContourTreeAlgorithm)
+    TEST(CarrsAlgorithm)
     {
         denali::concepts::checkConcept
             <
@@ -378,13 +379,6 @@ SUITE(ContourTree)
 
         alg.compute(plex, graph);
 
-        typedef denali::UndirectedScalarMemberIDGraph Graph;
-        for (denali::EdgeIterator<Graph> it(graph); !it.done(); ++it) {
-            std::cout << graph.getID(graph.u(it.edge())) << " <--> " <<
-                         graph.getID(graph.v(it.edge())) << std::endl;
-        }
-
-
     }
 
     TEST(ComputedContourTree)
@@ -394,8 +388,55 @@ SUITE(ContourTree)
             denali::concepts::ContourTree,
             denali::ComputedContourTree
             > ();
+
+
+        denali::ScalarSimplicialComplex plex;
+
+        for (int i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);    
+        }
+
+        for (int i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                    plex.getNode(wenger_edges[i][0]),
+                    plex.getNode(wenger_edges[i][1]));
+        }
+
+        denali::CarrsAlgorithm alg;
+        denali::ComputedContourTree tree = 
+                denali::ComputedContourTree::compute(plex, alg);
+                
     }
 
+}
+
+
+SUITE(Landscape)
+{
+
+    TEST(LandscapeTree)
+    {
+        denali::ScalarSimplicialComplex plex;
+
+        for (int i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);    
+        }
+
+        for (int i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                    plex.getNode(wenger_edges[i][0]),
+                    plex.getNode(wenger_edges[i][1]));
+        }
+
+        denali::CarrsAlgorithm alg;
+        denali::ComputedContourTree tree = 
+                denali::ComputedContourTree::compute(plex, alg);
+
+        denali::LandscapeTreeBase<
+                denali::ComputedContourTree, 
+                denali::DirectedGraph>
+            lscape(tree, tree.getNode(4));
+    }
 
 }
 
