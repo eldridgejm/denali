@@ -31,6 +31,29 @@ namespace denali {
 
         };
 
+
+        class Triangle
+        {
+        public:
+            unsigned int i() const { return 0; }
+            unsigned int j() const { return 0; }
+            unsigned int k() const { return 0; }
+
+            template <typename _Triangle>
+            struct Constraints
+            {
+                void constraints()
+                {
+                    unsigned int x = triangle.i();
+                    x = triangle.j();
+                    x = triangle.k();
+                }
+
+                _Triangle& triangle;
+            };
+
+        };
+
         /// \brief A directed tree representing the tree structure of a landscape.
         /// \ingroup concepts_landscape
         template <typename ContourTree>

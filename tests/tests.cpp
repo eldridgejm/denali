@@ -510,6 +510,12 @@ SUITE(RectangularLandscape)
         denali::rectangular::Embedder<LandscapeTree> embedder(lscape_tree, weights, embedding);
         embedder.embed();
 
+        denali::rectangular::Triangularization<LandscapeTree> tris;
+        denali::rectangular::Triangularizer<LandscapeTree> 
+                triangularizer(lscape_tree, embedding, tris);
+
+        triangularizer.triangularize();
+
     }
 }
 

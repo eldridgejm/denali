@@ -21,6 +21,8 @@ namespace denali {
         template <typename LandscapeTree> class Embedding;
         template <typename LandscapeTree> class Embedder;
 
+        template <typename LandscapeTree> class Triangularization;
+        template <typename LandscapeTree> class Triangularizer;
 
 
     }
@@ -415,6 +417,36 @@ public:
         }
     }
 
+    Point getContourPoint(Node node, size_t i) const
+    {
+        return _contour_points[node][i];
+    }
+
+    Point getCornerPoint(Node node, size_t i) const
+    {
+        return _contour_corners[node][i];
+    }
+
+    Point getContainerPoint(Node node, size_t i) const
+    {
+        return _contour_containers[node][i];
+    }
+
+    size_t getNumberOfContourPoints(Node node) const
+    {
+        return _contour_points[node].size();
+    }
+
+    size_t getNumberOfCornerPoints(Node node) const
+    {
+        return _contour_corners[node].size();
+    }
+
+    size_t getNumberOfContainerPoints(Node node) const
+    {
+        return _contour_containers[node].size();
+    }
+
 };
 
 
@@ -517,7 +549,137 @@ private:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-class Triangularization
+template <typename LandscapeTree>
+class denali::rectangular::Triangularization
 {
+    typedef typename LandscapeTree::Node Node;
+    typedef typename LandscapeTree::Arc Arc;
+
+    class Triangle
+    {
+        friend class Triangularization;
+        unsigned int _id;
+        unsigned int _i, _j, _k;
+
+    public:
+        Triangle(unsigned int i, unsigned int j, unsigned int k)
+                : _i(i), _j(j), _k(k) { }
+    };
+
+private:
+
+    std::vector<Triangle> _triangles;
+    std::vector<Arc> _arcs;
+
+public:
+
+    void insertTriangle(unsigned int i, unsigned int j, unsigned int k, Arc arc)
+    {
+        _triangles.push_back(Triangle(i,j,k));
+        _arcs.push_back(arc);
+    }
+
+    Arc getArc(Triangle tri)
+    {
+        return _arcs[tri._id];
+    }
+
+};
+
+
+
+template <typename LandscapeTree>
+class denali::rectangular::Triangularizer
+{
+    typedef typename LandscapeTree::Node Node;
+    typedef typename LandscapeTree::Arc Arc;
+    typedef rectangular::Triangularization<LandscapeTree> 
+            Triangularization;
+
+    const LandscapeTree& _tree;
+    const Embedding<LandscapeTree>& _embedding;
+    Triangularization& _triangularization;
+
+public:
+    Triangularizer(
+            const LandscapeTree& tree,
+            const Embedding<LandscapeTree>& embedding,
+            Triangularization& triangularization)
+            : _tree(tree), _embedding(embedding), 
+              _triangularization(triangularization) {}
+
+    void triangularize()
+    {
+        // first, we triangulate the region between the root and its child
+        Arc arc = _tree.getFirstOutArc(_tree.getRoot());
+        triangulateNestedRectangle(arc);
+
+        // now recurse
+        for (ChildIterator<LandscapeTree> it(_tree, _tree.target(arc));
+                !it.done(); ++it) {
+            if (_tree.outDegree(it.child()) == 0) {
+                triangularizeLeafArc(it.arc());
+            } else {
+                triangularizeBranchArc(it.arc());
+            }
+        }
+    }
+
+private:
+
+    void triangularizeBranchArc(Arc arc)
+    {
+        triangulateNestedRectangle(arc);
+
+        for (ChildIterator<LandscapeTree> it(_tree, _tree.target(arc));
+                !it.done(); ++it) {
+            if (_tree.outDegree(it.child()) == 0) {
+                triangularizeLeafArc(it.arc());
+            } else {
+                triangularizeBranchArc(it.arc());
+            }
+        }
+    }
+
+    void triangularizeLeafArc(Arc arc)
+    {
+        triangulateNestedPoint(arc);
+    }
+    
+    void triangulateNestedRectangle(Arc arc)
+    {
+        Node outer = _tree.source(arc);
+        Node inner = _tree.target(arc);
+
+        for (int i=0; i<4; ++i) {
+            _triangularization.insertTriangle(
+                    _embedding.getCornerPoint(outer, i).id(),
+                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    _embedding.getCornerPoint(inner, i).id(),
+                    arc);
+        }
+
+        for (int i=0; i<4; ++i) {
+            _triangularization.insertTriangle(
+                    _embedding.getCornerPoint(inner, i).id(),
+                    _embedding.getCornerPoint(inner, (i+1)%4).id(),
+                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    arc);
+        }
+    }
+
+    void triangulateNestedPoint(Arc arc)
+    {
+        Node outer = _tree.source(arc);
+        Node inner = _tree.target(arc);
+
+        for (int i=0; i<4; ++i) {
+            _triangularization.insertTriangle(
+                    _embedding.getCornerPoint(outer, i).id(),
+                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    _embedding.getContourPoint(inner, 0).id(),
+                    arc);
+        }
+    }
 
 };
