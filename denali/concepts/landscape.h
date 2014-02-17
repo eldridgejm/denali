@@ -6,6 +6,7 @@ namespace denali {
     namespace concepts {
 
         /// \brief A point in a landscape.
+        /// \ingroup concepts_landscape
         class Point
         {
         public:
@@ -26,7 +27,7 @@ namespace denali {
                 }
 
                 _Point& point;
-            }
+            };
 
         };
 

@@ -15,6 +15,8 @@
 #include <denali/graph_structures.h>
 #include <denali/contour_tree.h>
 #include <denali/landscape.h>
+#include <denali/rectangular_landscape.h>
+#include <denali/rectangular_landscape.cpp>
 
 double wenger_vertex_values[] = 
     // 0   1   2   3   4   5   6   7   8   9  10  11
@@ -28,6 +30,7 @@ unsigned int wenger_edges[][2] =
     {1, 5}, {3, 7}, {4, 8}, {6, 10}, {7, 11}};
 
 const size_t n_wenger_edges = sizeof(wenger_edges)/sizeof(unsigned int[2]);
+
 
 TEST(Mixins)
 {
@@ -476,7 +479,38 @@ SUITE(Landscape)
         CHECK_EQUAL(12, weights.getTotalNodeWeight(lscape.getRoot()));
 
     }
+}
 
+SUITE(RectangularLandscape)
+{
+    TEST(Embedding)
+    {
+        denali::ScalarSimplicialComplex plex;
+
+        for (int i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);    
+        }
+
+        for (int i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                    plex.getNode(wenger_edges[i][0]),
+                    plex.getNode(wenger_edges[i][1]));
+        }
+
+        denali::CarrsAlgorithm alg;
+        denali::ComputedContourTree tree = 
+                denali::ComputedContourTree::compute(plex, alg);
+
+        typedef denali::LandscapeTree<denali::ComputedContourTree> LandscapeTree;
+
+        LandscapeTree lscape_tree(tree, tree.getNode(4));
+        denali::LandscapeWeights<LandscapeTree> weights(lscape_tree);
+
+        denali::rectangular::Embedding<LandscapeTree> embedding(lscape_tree);
+        denali::rectangular::Embedder<LandscapeTree> embedder(lscape_tree, embedding);
+        embedder.embed();
+
+    }
 }
 
 

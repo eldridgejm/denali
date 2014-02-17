@@ -3,3 +3,6 @@ include_directories(
         ${PROJECT_BINARY_DIR}
         )
 
+add_library(denalicore SHARED
+        rectangular_landscape.cpp
+        )

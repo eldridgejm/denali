@@ -2,5 +2,6 @@ TODO
 ====
 
 - Fix LandscapeTree concept (concrete implementation is not being checked)
+- Add landscape weights concept
 
 
