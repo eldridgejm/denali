@@ -318,6 +318,44 @@ namespace denali {
     };
 
 
+    /// \brief Iterate through the arcs of a directed graph in BFS order.
+    template <typename GraphType>
+    class DirectedBFSIterator
+    {
+        typedef typename GraphType::Node Node;
+        typedef typename GraphType::Arc Arc;
+
+        const GraphType& _graph;
+        std::queue<Arc> _bfs_queue;
+
+    public:
+        
+        DirectedBFSIterator(const GraphType& graph, Node root)
+                : _graph(graph)
+        {
+            for (ChildIterator<GraphType> it(graph, root); !it.done(); ++it) {
+                _bfs_queue.push(it.arc());
+            }
+        }
+
+        bool done() const { return _bfs_queue.size() == 0; }
+
+        void operator++()
+        {
+            Arc arc = _bfs_queue.front();
+            _bfs_queue.pop();
+            for (ChildIterator<GraphType> it(_graph, _graph.target(arc)); 
+                    !it.done(); ++it) {
+                _bfs_queue.push(it.arc());
+            }
+        }
+
+        Node parent() const { return _graph.source(_bfs_queue.front()); }
+        Node child() const { return _graph.target(_bfs_queue.front()); }
+        Arc arc() const { return _bfs_queue.front(); }
+    };
+
+
 
 }
 

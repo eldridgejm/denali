@@ -8,6 +8,7 @@
 #include <denali/concepts/check.h>
 #include <denali/concepts/graph_attributes.h>
 #include <denali/concepts/contour_tree.h>
+#include <denali/concepts/landscape.h>
 #include <denali/graph_mixins.h>
 #include <denali/graph_maps.h>
 #include <denali/graph_iterators.h>
@@ -467,6 +468,12 @@ SUITE(Landscape)
         denali::CarrsAlgorithm alg;
         denali::ComputedContourTree tree = 
                 denali::ComputedContourTree::compute(plex, alg);
+
+        denali::LandscapeTree<denali::ComputedContourTree> lscape(tree, tree.getNode(4));
+
+        denali::LandscapeWeights<denali::LandscapeTree<denali::ComputedContourTree> > weights(lscape);
+
+        CHECK_EQUAL(12, weights.getTotalNodeWeight(lscape.getRoot()));
 
     }
 

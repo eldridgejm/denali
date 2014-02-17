@@ -15,8 +15,9 @@
     /// \defgroup graph_implementations_maps Maps
     /// \ingroup graph_implementations
 
-
 /// \defgroup contour_tree Contour Tree
+
+/// \defgroup landscape Landscape
 
 /*!
  *  Concepts

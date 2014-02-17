@@ -330,16 +330,16 @@ namespace denali {
         double getValue(Node node) const { return _graph->getValue(node); }
 
         /// \brief Get a node's ID
-        unsigned int getID(Node node) { return _graph->getID(node); }
+        unsigned int getID(Node node) const { return _graph->getID(node); }
 
         /// \brief Retrieve the members of the node
-        const Members& getNodeMembers(Node node) { return _graph->getNodeMembers(node); }
+        const Members& getNodeMembers(Node node) const { return _graph->getNodeMembers(node); }
 
         /// \brief Retrieve a node by its ID
-        Node getNode(unsigned int id) { return _graph->getNode(id); }
+        Node getNode(unsigned int id) const { return _graph->getNode(id); }
 
         /// \brief Retrieve the members of the edge.
-        const Members& getEdgeMembers(Edge edge) { return _graph->getEdgeMembers(edge); }
+        const Members& getEdgeMembers(Edge edge) const { return _graph->getEdgeMembers(edge); }
     };
 
     //////////////////////////////////////////////////////////////////////////// 
