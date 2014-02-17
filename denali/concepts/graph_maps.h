@@ -112,7 +112,7 @@ namespace denali {
         class StaticNodeMap
         {
             public:
-            StaticNodeMap(GraphType& graph) { }
+            StaticNodeMap(const GraphType& graph) { }
 
             ValueType& operator[](typename GraphType::Node node) { }
             const ValueType& operator[](typename GraphType::Node node) const { }
@@ -127,7 +127,7 @@ namespace denali {
                     const ValueType const_value = _map[_Node()];
                 }
                 _StaticNodeMap& _map;
-                GraphType& _graph;
+                const GraphType& _graph;
                 typedef typename GraphType::Node _Node;
             };
         };
@@ -139,7 +139,7 @@ namespace denali {
         class StaticArcMap
         {
             public:
-            StaticArcMap(GraphType& graph) { }
+            StaticArcMap(const GraphType& graph) { }
 
             ValueType& operator[](typename GraphType::Arc arc) { }
             const ValueType& operator[](typename GraphType::Arc arc) const { }
@@ -154,7 +154,7 @@ namespace denali {
                     const ValueType const_value = _map[_Arc()];
                 }
                 _StaticArcMap& _map;
-                GraphType& _graph;
+                const GraphType& _graph;
                 typedef typename GraphType::Arc _Arc;
             };
         };
@@ -166,7 +166,7 @@ namespace denali {
         class StaticEdgeMap
         {
             public:
-            StaticEdgeMap(GraphType& graph) { }
+            StaticEdgeMap(const GraphType& graph) { }
 
             ValueType& operator[](typename GraphType::Edge edge) { }
             const ValueType& operator[](typename GraphType::Edge edge) const { }
@@ -181,7 +181,7 @@ namespace denali {
                     const ValueType const_value = _map[_Edge()];
                 }
                 _StaticEdgeMap& _map;
-                GraphType& _graph;
+                const GraphType& _graph;
                 typedef typename GraphType::Edge _Edge;
             };
         };

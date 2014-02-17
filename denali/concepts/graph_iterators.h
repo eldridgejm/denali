@@ -1,6 +1,8 @@
 #ifndef DENALI_GRAPH_ITERATORS_H
 #define DENALI_GRAPH_ITERATORS_H
 
+#include <queue>
+
 namespace denali {
     namespace concepts {
 
@@ -13,7 +15,7 @@ namespace denali {
         class NodeIterator
         {
             typedef typename NodeIterable::Node Node;
-            public:
+        public:
             /// Constructs an iterator to read nodes from the graph.
             NodeIterator(NodeIterable& graph) {}
 
@@ -54,7 +56,7 @@ namespace denali {
         class ArcIterator
         {
             typedef typename ArcIterable::Arc Arc;
-            public:
+        public:
             /// Constructs an iterator to read arcs from the graph.
             ArcIterator(ArcIterable& graph) {}
 
@@ -95,7 +97,7 @@ namespace denali {
         class EdgeIterator
         {
             typedef typename EdgeIterable::Edge Edge;
-            public:
+        public:
             /// Constructs an iterator to read edges from the graph.
             EdgeIterator(EdgeIterable& graph) {}
 
@@ -136,7 +138,7 @@ namespace denali {
         {
             typedef typename ParentIterable::Node Node;
             typedef typename ParentIterable::Arc Arc;
-            public:
+        public:
             /// \brief
             /// Constructs an iterator to read the parents of the node from the
             /// graph.
@@ -182,7 +184,7 @@ namespace denali {
         {
             typedef typename ChildIterable::Node Node;
             typedef typename ChildIterable::Arc Arc;
-            public:
+        public:
             /// \brief
             /// Constructs an iterator to read the children of the node from
             /// the graph.
@@ -228,7 +230,7 @@ namespace denali {
         {
             typedef typename DirectedNeighborIterable::Node Node;
             typedef typename DirectedNeighborIterable::Arc Arc;
-            public:
+        public:
             /// \brief
             /// Constructs an iterator to read the neighboring nodes from the
             /// directed graph.
@@ -274,7 +276,7 @@ namespace denali {
         {
             typedef typename UndirectedNeighborIterable::Node Node;
             typedef typename UndirectedNeighborIterable::Edge Edge;
-            public:
+        public:
             /// \brief
             /// Constructs an iterator to read the neighboring nodes from the
             /// undirected graph.
@@ -312,6 +314,59 @@ namespace denali {
         };   
 
 
+        /// \brief BFS edge iterator.
+        /// \ingroup concepts_graph_iterators
+        /*!
+         *  Iterate over the edges of an undirected graph in BFS order.
+         *
+         *  GraphType must conform to concepts::UndirectedNeighborIterable
+         *  and concepts::
+         */
+        template <typename GraphType>
+        class UndirectedBFSIterator
+        {
+            typedef typename GraphType::Node Node;
+            typedef typename GraphType::Edge Edge;
+        public:
+            /// \brief Start the BFS at the root node.
+            UndirectedBFSIterator(const GraphType& graph, Node root)
+            { }
+
+            /// \brief Start the (truncated) BFS along the root edge.
+            UndirectedBFSIterator(const GraphType&, Node parent, Node child)
+            { }
+
+            /// \brief Returns true when done iterating.
+            bool done() const { return false; }
+
+            /// \brief The parent of the current edge.
+            Node parent() const { return Node(); }
+
+            /// \brief The child of the current edge.
+            Node child() const { return Node(); }
+
+            /// \brief The current edge in the BFS.
+            Edge edge() const { return Edge(); }
+
+
+            template <typename _UndirectedBFSIterator>
+            struct Constraints
+            {
+                void constraints()
+                {
+                    _UndirectedBFSIterator it1(_graph, Node());
+                    _UndirectedBFSIterator it2(_graph, Node(), Node());
+
+                    bool x = it1.done();
+
+                    Node node = it1.parent();
+                    node = it1.child();
+                    Edge edge = it1.edge();
+                }
+
+                const GraphType& _graph;
+            };
+        };
 
     }
 }

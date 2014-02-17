@@ -1,6 +1,9 @@
 #ifndef DENALI_GRAPH_ITERATORS_H
 #define DENALI_GRAPH_ITERATORS_H
 
+#include <queue>
+#include <denali/graph_maps.h>
+
 /// \file 
 /// \brief Implementations of generic graph iterators
 
@@ -236,6 +239,85 @@ namespace denali {
         /// Returns the edge at which the iterator is currently at.
         Edge edge() const { return _edge; }
     };     
+
+
+    /// \brief Performs a BFS on an undirected graph.
+    template <typename GraphType>
+    class UndirectedBFSIterator
+    {
+        typedef typename GraphType::Node Node;
+        typedef typename GraphType::Edge Edge;
+        typedef std::pair<Node,Node> Direction;
+        typedef std::pair<Edge, Direction> Visit;
+
+        const GraphType& _graph;
+        std::queue<Visit> _bfs_queue;
+        StaticNodeMap<GraphType, bool> _visited;
+
+    private:
+        void visit(Node node)
+        {
+            // visit the node and add it's unvisited children to the queue
+            for (UndirectedNeighborIterator<GraphType> it(_graph, node);
+                    !it.done(); ++it) {
+                if (!_visited[it.neighbor()]) {
+                    _bfs_queue.push(Visit(it.edge(), Direction(node, it.neighbor())));
+                    _visited[it.neighbor()] = true;
+                }
+            }
+        }
+
+
+    public:
+        UndirectedBFSIterator(const GraphType& graph, Node root)
+            : _graph(graph), _visited(graph)
+        {
+            // no nodes have been visited
+            for (NodeIterator<GraphType> node_it(graph); !node_it.done(); ++node_it) {
+                _visited[node_it.node()] = false;
+            }
+
+            // except for the root node
+            _visited[root] = true;
+
+            // now visit the children
+            visit(root);
+        }
+
+        UndirectedBFSIterator(const GraphType& graph, Node parent, Node child)
+            : _graph(graph), _visited(graph)
+        {
+            // no nodes have been visited
+            for (NodeIterator<GraphType> node_it(graph); !node_it.done(); ++node_it) {
+                _visited[node_it.node()] = false;
+            }
+
+            // except for the root node
+            _visited[parent] = true;
+            _visited[child] = true;
+
+            // now visit the child on the edge
+            visit(child);
+
+        }
+
+        bool done() const { return _bfs_queue.size() == 0; }
+
+        void operator++()
+        {
+            Visit v = _bfs_queue.front();
+            _bfs_queue.pop();
+            Node child = v.second.second;
+            visit(child);
+        }
+
+        Node parent() const { return _bfs_queue.front().second.first; }
+        Node child() const { return _bfs_queue.front().second.second; }
+        Edge edge() const { return _bfs_queue.front().first; }
+
+    };
+
+
 
 }
 

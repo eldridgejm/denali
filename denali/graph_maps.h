@@ -36,12 +36,14 @@ namespace denali {
             _values.resize(_graph.getMaxNodeIdentifier() + 1);
         }
 
-        ValueType& operator[](typename NodeObservable::Node node)
+        typename std::vector<ValueType>::reference
+        operator[](typename NodeObservable::Node node)
         {
             return _values[_graph.getNodeIdentifier(node)];
         }
 
-        const ValueType& operator[](typename NodeObservable::Node node) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename NodeObservable::Node node) const
         {
             return _values[_graph.getNodeIdentifier(node)];
         }
@@ -80,12 +82,14 @@ namespace denali {
             _values.resize(_graph.getMaxArcIdentifier() + 1);
         }
 
-        ValueType& operator[](typename ArcObservable::Arc arc)
+        typename std::vector<ValueType>::reference
+        operator[](typename ArcObservable::Arc arc)
         {
             return _values[_graph.getArcIdentifier(arc)];
         }
 
-        const ValueType& operator[](typename ArcObservable::Arc arc) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename ArcObservable::Arc arc) const
         {
             return _values[_graph.getArcIdentifier(arc)];
         }
@@ -124,12 +128,14 @@ namespace denali {
             _values.resize(_graph.getMaxEdgeIdentifier() + 1);
         }
 
-        ValueType& operator[](typename EdgeObservable::Edge edge)
+        typename std::vector<ValueType>::reference
+        operator[](typename EdgeObservable::Edge edge)
         {
             return _values[_graph.getEdgeIdentifier(edge)];
         }
 
-        const ValueType& operator[](typename EdgeObservable::Edge edge) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename EdgeObservable::Edge edge) const
         {
             return _values[_graph.getEdgeIdentifier(edge)];
         }
@@ -145,19 +151,21 @@ namespace denali {
     template <typename NodeMappable, typename ValueType>
     class StaticNodeMap 
     {
-        NodeMappable& _graph;
+        const NodeMappable& _graph;
         std::vector<ValueType> _values;
 
         public:
-        StaticNodeMap(NodeMappable& graph)
+        StaticNodeMap(const NodeMappable& graph)
             : _graph(graph), _values(_graph.getMaxNodeIdentifier()+1) {}
 
-        ValueType& operator[](typename NodeMappable::Node node)
+        typename std::vector<ValueType>::reference 
+        operator[](typename NodeMappable::Node node)
         {
             return _values[_graph.getNodeIdentifier(node)];
         }
 
-        const ValueType& operator[](typename NodeMappable::Node node) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename NodeMappable::Node node) const
         {
             return _values[_graph.getNodeIdentifier(node)];
         }
@@ -172,19 +180,21 @@ namespace denali {
     template <typename ArcMappable, typename ValueType>
     class StaticArcMap 
     {
-        ArcMappable& _graph;
+        const ArcMappable& _graph;
         std::vector<ValueType> _values;
 
         public:
-        StaticArcMap(ArcMappable& graph)
+        StaticArcMap(const ArcMappable& graph)
             : _graph(graph), _values(_graph.getMaxArcIdentifier()+1) {}
 
-        ValueType& operator[](typename ArcMappable::Arc arc)
+        typename std::vector<ValueType>::reference
+        operator[](typename ArcMappable::Arc arc)
         {
             return _values[_graph.getArcIdentifier(arc)];
         }
 
-        const ValueType& operator[](typename ArcMappable::Arc arc) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename ArcMappable::Arc arc) const
         {
             return _values[_graph.getArcIdentifier(arc)];
         }
@@ -199,19 +209,21 @@ namespace denali {
     template <typename EdgeMappable, typename ValueType>
     class StaticEdgeMap 
     {
-        EdgeMappable& _graph;
+        const EdgeMappable& _graph;
         std::vector<ValueType> _values;
 
         public:
-        StaticEdgeMap(EdgeMappable& graph)
+        StaticEdgeMap(const EdgeMappable& graph)
             : _graph(graph), _values(_graph.getMaxEdgeIdentifier()+1) {}
 
-        ValueType& operator[](typename EdgeMappable::Edge edge)
+        typename std::vector<ValueType>::reference
+        operator[](typename EdgeMappable::Edge edge)
         {
             return _values[_graph.getEdgeIdentifier(edge)];
         }
 
-        const ValueType& operator[](typename EdgeMappable::Edge edge) const
+        typename std::vector<ValueType>::const_reference 
+        operator[](typename EdgeMappable::Edge edge) const
         {
             return _values[_graph.getEdgeIdentifier(edge)];
         }

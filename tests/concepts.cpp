@@ -140,6 +140,13 @@ TEST(GraphIterators)
             denali::concepts::UndirectedNeighborIterable<
             denali::concepts::BaseUndirectedGraph
             > > > ();
+
+    denali::concepts::checkSelfConsistent <
+            denali::concepts::UndirectedBFSIterator <
+            denali::concepts::NodeMappable <
+            denali::concepts::UndirectedNeighborIterable <
+            denali::concepts::BaseUndirectedGraph
+            > > > > ();
 }
 
 

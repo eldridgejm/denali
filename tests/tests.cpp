@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <vector>
 
 #include <denali/concepts/check.h>
 #include <denali/concepts/graph_attributes.h>
@@ -306,6 +307,41 @@ SUITE(GraphStructures)
         CHECK(graph.isEdgeValid(graph.findEdge(n2,n1)));
         CHECK(!graph.isEdgeValid(graph.findEdge(n3,n1)));
     }
+
+
+    TEST(UndirectedBFSIterator)
+    {
+        typedef denali::UndirectedGraph Graph;
+
+        Graph graph;
+        denali::ObservingNodeMap<Graph, int> node_ids(graph);
+        std::vector<Graph::Node> nodes;
+
+        for (int i=0; i<13; ++i) {
+            Graph::Node node = graph.addNode();
+            node_ids[node] = i;
+            nodes.push_back(node);
+        }
+
+        unsigned int edges[][2] = 
+                {{0,1}, {1,4}, {1,5}, {1,3}, {9,3}, {0,3}, {2,0},
+                 {2,6}, {7,2}, {2,8}, {8,11}, {12,8}};
+
+        size_t n_edges = 12;
+
+        for (int i=0; i<n_edges; ++i) {
+            graph.addEdge(nodes[edges[i][0]], nodes[edges[i][1]]);
+        }
+
+        /*
+        for (denali::UndirectedBFSIterator<Graph> it(graph, nodes[0], nodes[2]);
+                !it.done(); ++it) {
+            std::cout << node_ids[it.parent()] << " --> "
+                    << node_ids[it.child()] << std::endl;
+        }
+        */
+
+    }
 }
 
 
@@ -432,10 +468,6 @@ SUITE(Landscape)
         denali::ComputedContourTree tree = 
                 denali::ComputedContourTree::compute(plex, alg);
 
-        denali::LandscapeTreeBase<
-                denali::ComputedContourTree, 
-                denali::DirectedGraph>
-            lscape(tree, tree.getNode(4));
     }
 
 }
