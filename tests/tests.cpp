@@ -507,7 +507,7 @@ SUITE(RectangularLandscape)
         denali::LandscapeWeights<LandscapeTree> weights(lscape_tree);
 
         denali::rectangular::Embedding<LandscapeTree> embedding(lscape_tree);
-        denali::rectangular::Embedder<LandscapeTree> embedder(lscape_tree, embedding);
+        denali::rectangular::Embedder<LandscapeTree> embedder(lscape_tree, weights, embedding);
         embedder.embed();
 
     }

@@ -1,6 +1,8 @@
 #ifndef DENALI_LANDSCAPE_H
 #define DENALI_LANDSCAPE_H
 
+#include <denali/graph_structures.h>
+#include <denali/graph_mixins.h>
 #include <denali/graph_iterators.h>
 #include <stack>
 
