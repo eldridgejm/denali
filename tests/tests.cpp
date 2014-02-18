@@ -16,7 +16,6 @@
 #include <denali/contour_tree.h>
 #include <denali/landscape.h>
 #include <denali/rectangular_landscape.h>
-#include <denali/rectangular_landscape.cpp>
 
 double wenger_vertex_values[] = 
     // 0   1   2   3   4   5   6   7   8   9  10  11
