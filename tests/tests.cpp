@@ -501,20 +501,20 @@ SUITE(RectangularLandscape)
         denali::ComputedContourTree tree = 
                 denali::ComputedContourTree::compute(plex, alg);
 
-        typedef denali::LandscapeTree<denali::ComputedContourTree> LandscapeTree;
+        typedef denali::RectangularLandscape<denali::ComputedContourTree> RectangularLandscape;
+        RectangularLandscape rlscape(tree, tree.getNode(4));
 
-        LandscapeTree lscape_tree(tree, tree.getNode(4));
-        denali::LandscapeWeights<LandscapeTree> weights(lscape_tree);
+        for (int i=0; i<rlscape.numberOfPoints(); ++i) {
+            RectangularLandscape::Point pt = rlscape.getPoint(i);
+            std::cout << pt.x() << " " << pt.y() << " " << pt.z() << std::endl;
+        }
 
-        denali::rectangular::Embedding<LandscapeTree> embedding(lscape_tree);
-        denali::rectangular::Embedder<LandscapeTree> embedder(lscape_tree, weights, embedding);
-        embedder.embed();
+        for (int i=0; i<rlscape.numberOfTriangles(); ++i) {
+            RectangularLandscape::Triangle tri = rlscape.getTriangle(i);
+            std::cout << tri.i() << " " << tri.j() << " " << tri.k() << std::endl;
+        }
 
-        denali::rectangular::Triangularization<LandscapeTree> tris;
-        denali::rectangular::Triangularizer<LandscapeTree> 
-                triangularizer(lscape_tree, embedding, tris);
 
-        triangularizer.triangularize();
 
     }
 }

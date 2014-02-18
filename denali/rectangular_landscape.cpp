@@ -27,6 +27,8 @@ namespace denali {
 
 
     }
+
+    template <typename ContourTree> class RectangularLandscape;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -338,7 +340,7 @@ public:
 
     public:
         Point(double x, double y, double z, unsigned int id) 
-                : _x(x), _y(y), _z(), _id(id) { }
+                : _x(x), _y(y), _z(z), _id(id) { }
 
         double x() const { return _x; }
         double y() const { return _y; }
@@ -416,6 +418,7 @@ public:
                 int index = split.getIndexOfRectangleCorner(i, j); 
                 insertContainerPoint(inserted_points[index], it.child());
             }
+            ++i;
         }
     }
 
@@ -434,19 +437,29 @@ public:
         return _contour_containers[node][i];
     }
 
-    size_t getNumberOfContourPoints(Node node) const
+    size_t numberOfContourPoints(Node node) const
     {
         return _contour_points[node].size();
     }
 
-    size_t getNumberOfCornerPoints(Node node) const
+    size_t numberOfCornerPoints(Node node) const
     {
         return _contour_corners[node].size();
     }
 
-    size_t getNumberOfContainerPoints(Node node) const
+    size_t numberOfContainerPoints(Node node) const
     {
         return _contour_containers[node].size();
+    }
+
+    size_t numberOfPoints() const 
+    {
+        return _points.size();
+    }
+
+    Point getPoint(size_t i) const
+    {
+        return _points[i];
     }
 
 };
@@ -554,9 +567,7 @@ private:
 template <typename LandscapeTree>
 class denali::rectangular::Triangularization
 {
-    typedef typename LandscapeTree::Node Node;
-    typedef typename LandscapeTree::Arc Arc;
-
+public:
     class Triangle
     {
         friend class Triangularization;
@@ -566,9 +577,15 @@ class denali::rectangular::Triangularization
     public:
         Triangle(unsigned int i, unsigned int j, unsigned int k)
                 : _i(i), _j(j), _k(k) { }
+
+        unsigned int i() const { return _i; }
+        unsigned int j() const { return _j; }
+        unsigned int k() const { return _k; }
     };
 
 private:
+    typedef typename LandscapeTree::Node Node;
+    typedef typename LandscapeTree::Arc Arc;
 
     std::vector<Triangle> _triangles;
     std::vector<Arc> _arcs;
@@ -584,6 +601,16 @@ public:
     Arc getArc(Triangle tri)
     {
         return _arcs[tri._id];
+    }
+
+    size_t numberOfTriangles() const
+    {
+        return _triangles.size();
+    }
+
+    Triangle getTriangle(size_t i) const
+    {
+        return _triangles[i];
     }
 
 };
@@ -649,13 +676,12 @@ private:
     
     void triangulateNestedRectangle(Arc arc)
     {
-        Node outer = _tree.source(arc);
         Node inner = _tree.target(arc);
 
         for (int i=0; i<4; ++i) {
             _triangularization.insertTriangle(
-                    _embedding.getCornerPoint(outer, i).id(),
-                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    _embedding.getContainerPoint(inner, i).id(),
+                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
                     _embedding.getCornerPoint(inner, i).id(),
                     arc);
         }
@@ -664,20 +690,19 @@ private:
             _triangularization.insertTriangle(
                     _embedding.getCornerPoint(inner, i).id(),
                     _embedding.getCornerPoint(inner, (i+1)%4).id(),
-                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
                     arc);
         }
     }
 
     void triangulateNestedPoint(Arc arc)
     {
-        Node outer = _tree.source(arc);
         Node inner = _tree.target(arc);
 
         for (int i=0; i<4; ++i) {
             _triangularization.insertTriangle(
-                    _embedding.getCornerPoint(outer, i).id(),
-                    _embedding.getCornerPoint(outer, (i+1)%4).id(),
+                    _embedding.getContainerPoint(inner, i).id(),
+                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
                     _embedding.getContourPoint(inner, 0).id(),
                     arc);
         }
@@ -690,3 +715,61 @@ private:
 // RectangularLandscape
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+template <typename ContourTree>
+class denali::RectangularLandscape
+{
+    typedef denali::LandscapeTree<ContourTree> LandscapeTree;
+    typedef denali::LandscapeWeights<LandscapeTree> LandscapeWeights;
+    typedef denali::rectangular::Embedding<LandscapeTree> Embedding;
+    typedef denali::rectangular::Triangularization<LandscapeTree> Triangularization;
+
+    LandscapeTree _tree;
+    LandscapeWeights _weights;
+    Embedding _embedding;
+    Triangularization _triangularization;
+
+public:
+
+    typedef typename Embedding::Point Point;
+    typedef typename Triangularization::Triangle Triangle;
+
+    RectangularLandscape(
+            const ContourTree& tree,
+            typename ContourTree::Node root)
+            : _tree(tree, root), _weights(_tree), _embedding(_tree)
+    {
+        std::cout << "Computing rectangular landscape." << std::endl;
+
+        // create an embedder
+        rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);
+        embedder.embed();
+
+        // create a triangularizer
+        rectangular::Triangularizer<LandscapeTree> 
+                triangularizer(_tree, _embedding, _triangularization);
+        triangularizer.triangularize();
+    }
+
+    size_t numberOfPoints() const
+    {
+        return _embedding.numberOfPoints();
+    }
+
+    Point getPoint(size_t index) const 
+    {
+        return _embedding.getPoint(index);
+    }
+
+    size_t numberOfTriangles() const
+    {
+        return _triangularization.numberOfTriangles();
+    }
+
+    Triangle getTriangle(size_t index) const
+    {
+        return _triangularization.getTriangle(index);
+    }
+
+
+};

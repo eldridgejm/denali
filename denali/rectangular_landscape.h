@@ -3,11 +3,6 @@
 
 namespace denali {
 
-    template <typename ContourTree>
-    class RectangularLandscape
-    {
-
-    };
 
 }
 
