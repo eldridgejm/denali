@@ -19,6 +19,8 @@
 
 /// \defgroup landscape Landscape
 
+/// \defgroup fileio File IO Utilities
+
 /*!
  *  Concepts
  */

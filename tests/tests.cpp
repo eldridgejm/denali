@@ -9,6 +9,7 @@
 #include <denali/concepts/graph_attributes.h>
 #include <denali/concepts/contour_tree.h>
 #include <denali/concepts/landscape.h>
+#include <denali/fileio.h>
 #include <denali/graph_mixins.h>
 #include <denali/graph_maps.h>
 #include <denali/graph_iterators.h>
@@ -502,19 +503,6 @@ SUITE(RectangularLandscape)
 
         typedef denali::RectangularLandscape<denali::ComputedContourTree> RectangularLandscape;
         RectangularLandscape rlscape(tree, tree.getNode(4));
-
-        for (int i=0; i<rlscape.numberOfPoints(); ++i) {
-            RectangularLandscape::Point pt = rlscape.getPoint(i);
-            std::cout << pt.x() << " " << pt.y() << " " << pt.z() << std::endl;
-        }
-
-        for (int i=0; i<rlscape.numberOfTriangles(); ++i) {
-            RectangularLandscape::Triangle tri = rlscape.getTriangle(i);
-            std::cout << tri.i() << " " << tri.j() << " " << tri.k() << std::endl;
-        }
-
-
-
     }
 }
 

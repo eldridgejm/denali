@@ -3,6 +3,7 @@
 
 #include <denali/graph_iterators.h>
 #include <denali/graph_maps.h>
+#include <denali/graph_mixins.h>
 #include <denali/landscape.h>
 #include <denali/rectangular_landscape.h>
 
@@ -719,9 +720,19 @@ private:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+/// \brief An embedding of the contour tree as a rectangular landscape.
+/// \ingroup landscape
 template <typename ContourTree>
-class denali::RectangularLandscape
+class denali::RectangularLandscape :
+        public
+        ReadableDirectedGraphMixin < LandscapeTree <ContourTree> ,
+        BaseGraphMixin < LandscapeTree <ContourTree> > >
 {
+    typedef
+    ReadableDirectedGraphMixin < denali::LandscapeTree <ContourTree> ,
+    BaseGraphMixin < denali::LandscapeTree <ContourTree> > >
+    Mixin;
+
     typedef denali::LandscapeTree<ContourTree> LandscapeTree;
     typedef denali::LandscapeWeights<LandscapeTree> LandscapeWeights;
     typedef denali::rectangular::Embedding<LandscapeTree> Embedding;
@@ -740,7 +751,7 @@ public:
     RectangularLandscape(
             const ContourTree& tree,
             typename ContourTree::Node root)
-            : _tree(tree, root), _weights(_tree), _embedding(_tree)
+            : _tree(tree, root), _weights(_tree), _embedding(_tree), Mixin(_tree)
     {
         std::cout << "Computing rectangular landscape." << std::endl;
 

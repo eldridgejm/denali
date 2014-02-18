@@ -348,6 +348,8 @@ namespace denali {
     //
     //////////////////////////////////////////////////////////////////////////// 
 
+    /// \brief A contour tree computed from data.
+    /// \ingroup contour_tree
     class ComputedContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
     {
         typedef UndirectedScalarMemberIDGraph Graph;
