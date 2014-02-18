@@ -1,9 +1,15 @@
 #ifndef DENALI_CONTOUR_TREE_H
 #define DENALI_CONTOUR_TREE_H
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 #include <queue>
-#include <boost/shared_ptr.hpp>
+#include <set>
+
+#include <denali/graph_iterators.h>
+#include <denali/graph_maps.h>
+#include <denali/graph_mixins.h>
+#include <denali/graph_structures.h>
 
 namespace denali {
 

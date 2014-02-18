@@ -1,10 +1,11 @@
 #ifndef DENALI_FILEIO_H
 #define DENALI_FILEIO_H
 
-#include <fstream>
-#include <stdexcept>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
+#include <stdexcept>
+#include <sstream>
 
 namespace denali {
 
@@ -105,7 +106,7 @@ namespace denali {
     /// \brief Read vertex values into a scalar simplicial complex.
     /// \ingroup fileio
     template <typename ScalarSimplicialComplex>
-    void readVertexValueFile(
+    void readSimplicialVertexFile(
             const char * filename,
             ScalarSimplicialComplex& plex)
     {
@@ -151,7 +152,7 @@ namespace denali {
                 throw std::runtime_error(msg.str());
             }
             lineno++;
-            plex.addEdge(u,v);
+            plex.addEdge(plex.getNode(u),plex.getNode(v));
         }
     };
 
@@ -159,7 +160,7 @@ namespace denali {
     /// \brief Read edges into a scalar simplicial complex.
     /// \ingroup fileio
     template <typename ScalarSimplicialComplex>
-    void readEdgeFile(
+    void readSimplicialEdgeFile(
             const char * filename,
             ScalarSimplicialComplex& plex)
     {
