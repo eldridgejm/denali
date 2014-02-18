@@ -5,6 +5,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <cmath>
+#include <stdexcept>
 #include <vector>
 
 namespace denali {
@@ -332,15 +333,16 @@ class denali::rectangular::Embedding
 public:
     class Point
     {
-        double _x, _y;
+        double _x, _y, _z;
         unsigned int _id;
 
     public:
-        Point(double x, double y, unsigned int id) 
-                : _x(x), _y(y), _id(id) { }
+        Point(double x, double y, double z, unsigned int id) 
+                : _x(x), _y(y), _z(), _id(id) { }
 
         double x() const { return _x; }
         double y() const { return _y; }
+        double z() const { return _z; }
         unsigned int id() const { return _id; }
     };
 
@@ -374,7 +376,7 @@ public:
     Point insertPoint(double x, double y, Node owner)
     {
         // make a new point
-        Point point(x,y,_points.size());
+        Point point(x,y,_tree.getValue(owner),_points.size());
 
         // insert the point into the vector of points
         _points.push_back(point);
@@ -587,7 +589,6 @@ public:
 };
 
 
-
 template <typename LandscapeTree>
 class denali::rectangular::Triangularizer
 {
@@ -683,3 +684,9 @@ private:
     }
 
 };
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// RectangularLandscape
+//
+////////////////////////////////////////////////////////////////////////////////
