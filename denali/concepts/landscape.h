@@ -32,6 +32,8 @@ namespace denali {
         };
 
 
+        /// \brief A triangle in the landscape.
+        /// \ingroup concepts_landscape
         class Triangle
         {
         public:

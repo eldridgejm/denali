@@ -140,6 +140,10 @@ namespace denali {
             //      an invalid node is returned.
             Node getNode(unsigned int id) const { return Node(); }
 
+            /// \brief Gets a node by ID, but checks to make sure it exists. If the
+            ///     ID is invalid, the returned node is invalid.
+            Node getNodeChecked(unsigned int id) const { return Node(); }
+
             /// \brief Retrieve the members of the edge.
             const Members& getEdgeMembers(Edge edge) { return members; }
 
@@ -159,7 +163,9 @@ namespace denali {
                     unsigned int id = _tree.getID(_Node());
                     const _Members& node_members = _tree.getNodeMembers(_Node());
                     _Node node = _tree.getNode(id);
+                    node = _tree.getNodeChecked(id);
                     const _Members& edge_members = _tree.getEdgeMembers(_Edge());
+                    
                 }
 
                 _ContourTree& _tree;
@@ -233,6 +239,10 @@ namespace denali {
             /// \brief Retrieve a node by its ID
             Node getNode(unsigned int id) const { return Node(); }
 
+            /// \brief Gets a node by ID, but checks to make sure it exists. If the
+            ///     ID is invalid, the returned node is invalid.
+            Node getNodeChecked(unsigned int id) const { return Node(); }
+
             /// \brief Retrieve the members of the edge.
             const Members& getEdgeMembers(Edge edge) { return members; }
 
@@ -269,6 +279,8 @@ namespace denali {
                     _graph.clearEdges();
                     _graph.removeNode(_Node());
                     _graph.removeEdge(_Edge());
+
+                    node = _graph.getNodeChecked(0);
                 }
 
                 _UndirectedScalarMemberIDGraph& _graph;

@@ -6,6 +6,8 @@
 
 #include <denali/contour_tree.h>
 #include <denali/fileio.h>
+#include <denali/rectangular_landscape.h>
+#include <denali/visualize.h>
 
 // the following two functions are pasted from a stack overflow post
 // see: http://stackoverflow.com/questions/865668/parse-command-line-arguments
@@ -143,20 +145,26 @@ int cli_visualize(int argc, char ** argv)
                     throw std::runtime_error("Invalid root specified.");
                 }
 
-                /*
-                // does the tree have the node?
-                if (!ct.hasNode(root)) {
+                // try to get the root
+                root = contour_tree.getNodeChecked(root_id);
+                if (!contour_tree.isNodeValid(root)) {
                     throw std::runtime_error("Invalid root specified. Node is not in the tree.");
                 }
 
-                denali::ContourTree::Node root_node = ct.getNode(root);
-                if (ct.numberOfNeighbors(root_node) != 1) {
+                // make sure it is a leaf node
+                if (contour_tree.degree(root) != 1) {
                     throw std::runtime_error("Invalid root specified. It is not a leaf node.");
                 }
-                */
-
             }
         }
+
+        // now compute the landscape
+        typedef denali::RectangularLandscape<denali::ContourTree> Landscape;
+        Landscape rlscape(contour_tree, root);
+
+        denali::Visualizer visualizer;
+        visualizer.visualize(rlscape);
+
         
 
     }

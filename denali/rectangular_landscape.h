@@ -363,11 +363,14 @@ private:
     StaticNodeMap<LandscapeTree, Points> _contour_corners;
     StaticNodeMap<LandscapeTree, Points> _contour_containers;
 
+    Point _max_point;
+    Point _min_point;
+
 public:
 
     Embedding(const LandscapeTree& tree) 
             : _tree(tree), _contour_points(tree), _contour_corners(tree),
-              _contour_containers(tree) { }
+              _contour_containers(tree), _max_point(0,0,0,0), _min_point(0,0,0,0) { }
 
     void insertCornerPoint(Point point, Node owner)
     {
@@ -382,13 +385,26 @@ public:
     Point insertPoint(double x, double y, Node owner)
     {
         // make a new point
-        Point point(x,y,_tree.getValue(owner),_points.size());
+        unsigned int index = _points.size();
+        Point point(x, y, _tree.getValue(owner), index);
 
         // insert the point into the vector of points
         _points.push_back(point);
 
         // add the point to the owner's list of points
         _contour_points[owner].push_back(point);
+
+        // record the max and min point
+        if (index == 0) {
+            _min_point = point;
+            _max_point = point;
+        } else {
+            if (point.z() < _min_point.z()) {
+                _min_point = point;
+            } else if (point.z() > _max_point.z()) {
+                _max_point = point; 
+            }
+        }
 
         return point;
     }
@@ -464,6 +480,16 @@ public:
     Point getPoint(size_t i) const
     {
         return _points[i];
+    }
+
+    Point getMaxPoint() const
+    {
+        return _max_point;
+    }
+
+    Point getMinPoint() const
+    {
+        return _min_point;
     }
 
 };
@@ -771,6 +797,16 @@ public:
     Point getPoint(size_t index) const 
     {
         return _embedding.getPoint(index);
+    }
+
+    Point getMaxPoint() const
+    {
+        return _embedding.getMaxPoint();
+    }
+
+    Point getMinPoint() const
+    {
+        return _embedding.getMinPoint();
     }
 
     size_t numberOfTriangles() const

@@ -4,3 +4,4 @@ include_directories(
         )
 
 add_executable(denali cli.cpp)
+target_link_libraries(denali ${VTK_LIBRARIES})
