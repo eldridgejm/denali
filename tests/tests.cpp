@@ -507,6 +507,15 @@ SUITE(RectangularLandscape)
 }
 
 
+SUITE(fileio)
+{
+    TEST(readContourTree)
+    {
+
+    }
+}
+
+
 
 int main()
 {

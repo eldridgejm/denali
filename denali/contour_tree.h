@@ -382,6 +382,52 @@ namespace denali {
 
     };
 
+
+    /// \brief A contour tree that is pre-built.
+    /// \ingroup contour_tree
+    class BuiltContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
+    {
+        typedef UndirectedScalarMemberIDGraph Graph;
+
+    public:
+        class Builder
+        {
+            friend class BuiltContourTree;
+            boost::shared_ptr<Graph> _graph;
+
+        public:
+
+            Builder() : _graph(boost::shared_ptr<Graph>(new Graph)) { }
+
+            typedef typename Graph::Node Node;
+            typedef typename Graph::Edge Edge;
+            
+            Node addNode(unsigned int id, double value)
+                    { _graph->addNode(id, value); }
+
+            /// \brief Add an edge to the graph.
+            Edge addEdge(Node u, Node v)
+                    { _graph->addEdge(u, v); }
+
+            /// \brief Insert a member into the node's member set.
+            void insertNodeMember(Node node, unsigned int member)
+                    { _graph->insertNodeMember(node, member); }
+
+            /// \brief Insert a member into the edge's member set.
+            void insertEdgeMember(Edge edge, unsigned int member)
+                    { _graph->insertEdgeMember(edge, member); }
+        };
+
+        BuiltContourTree(Builder& builder)
+                : ContourTreeBase(builder._graph)
+        {
+            builder._graph = boost::shared_ptr<Graph>(new Graph);
+        }
+        
+    };
+
+
+
     ////////////////////////////////////////////////////////////////////////////////
     //
     // DisjointSetForest

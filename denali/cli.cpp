@@ -61,20 +61,6 @@ int cli_compute(int argc, char ** argv)
     }
 
     try {
-        /*
-        // create a simplicial complex
-        denali::SimplicialComplex plex;
-
-        // read the vertices and edges into it
-        denali::readSimplicialVertexFile(argv[2], plex);
-        denali::readSimplicialEdgeFile(argv[3], plex);
-
-        // compute the contour tree
-        denali::ContourTree contour_tree = denali::ContourTree::compute(plex);
-
-        // write it to the file
-        denali::writeContourTreeFile(argv[4], contour_tree);
-        */
         // create a simplicial complex
         denali::ScalarSimplicialComplex plex;
 
@@ -84,11 +70,11 @@ int cli_compute(int argc, char ** argv)
 
         // compute the contour tree
         denali::CarrsAlgorithm carrs_algorithm;
-        denali::ComputedContourTree tree = 
+        denali::ComputedContourTree contour_tree = 
                 denali::ComputedContourTree::compute(plex, carrs_algorithm);
 
-
-
+        // write it to disk
+        denali::writeContourTreeFile(argv[4], contour_tree);
     }
     catch (std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl; 
