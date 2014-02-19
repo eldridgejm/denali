@@ -554,6 +554,16 @@ namespace denali {
             return arc;
         }
 
+        Node getInvalidNode() const
+        {
+            return Node(-1);
+        }
+
+        Arc getInvalidArc() const
+        {
+            return Arc(-1);
+        }
+
         void clearNodes()
         {
             for (int i=0; i<nodes.size(); ++i) {
@@ -755,6 +765,9 @@ namespace denali {
                 return Edge(impl.findArc(bigger, smaller));
             }
         }
+
+        Node getInvalidNode() const { return impl.getInvalidNode(); }
+        Edge getInvalidEdge() const { return Edge(impl.getInvalidArc()); }
         
     };
 

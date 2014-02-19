@@ -512,16 +512,7 @@ SUITE(fileio)
     TEST(readContourTree)
     {
 
-        boost::shared_ptr<denali::ContourTree::Graph> 
-                graph(new denali::ContourTree::Graph);
-
-        denali::ContourTreeFormatParser<denali::ContourTree::Graph> 
-                format_parser(*graph);
-
-        denali::TabularFileParser parser;
-        parser.parse("wenger_tree", format_parser);
-
-        denali::ContourTree ct = denali::ContourTree::fromPrecomputed(graph);
+        denali::ContourTree ct = denali::readContourTreeFile("wenger_tree");
 
         CHECK_EQUAL(9, ct.numberOfNodes());
         CHECK_EQUAL(8, ct.numberOfEdges());

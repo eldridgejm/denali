@@ -85,6 +85,91 @@ int cli_compute(int argc, char ** argv)
 }
 
 
+int cli_visualize(int argc, char ** argv)
+{
+    std::string usage = 
+    "usage: denali visualize <contour tree file> [--root (max | min | <node>)]\n"
+    "\n"
+    "<contour tree file>\n"
+    "\tThe file resulting from using 'denali compute' to compute a contour tree.\n"
+    "\n"
+    "Options:\n"
+    "--root\n"
+    "\tThe node to use as the root of the tree. Must be a node of degree one.\n"
+    "\tValid options are:\n"
+    "\t\tmax:     Use the node with the maximum vertex value as the root.\n"
+    "\t\tmin:     Use the node with the minimum vertex value as the root.\n"
+    "\t\t<node>:  Use the specified node as the root.\n"
+    "\tDefault: min\n";
+
+    if (cmdOptionExists(argv, argv + argc, "-h") || 
+            cmdOptionExists(argv, argv + argc, "--help")) {
+        std::cout << usage << std::endl;
+        return 0;
+    }
+
+    if (argc < 3) {
+        std::cerr << "Insufficient number of arguments provided to visualize." << std::endl;
+        std::cerr << usage << std::endl;
+        return 1;
+    }
+
+    char * option_root = 0;
+    if (argc > 4) {
+        option_root = getCmdOption(argv + 3, argv + argc, "--root");
+    }
+
+    try {
+        // read the contour tree
+        denali::ContourTree contour_tree = denali::readContourTreeFile(argv[2]);
+
+        // an error return used in the following parsers
+        char * err;
+
+        // we use the min leaf by default
+        denali::ContourTree::Node root = denali::findMinLeaf(contour_tree);
+
+        if (option_root) {
+            if (strcmp(option_root, "min") == 0) {
+                // do nothing, we already have the min
+            } else if (strcmp(option_root, "max") == 0) {
+                // get the maximum leaf
+                root = denali::findMaxLeaf(contour_tree);
+            } else {
+                // we have to check to make sure that the root node is valid.
+                // first, was it converted to an int?
+                unsigned int root_id = strtol(option_root, &err, 10);
+                if (*err != 0) {
+                    throw std::runtime_error("Invalid root specified.");
+                }
+
+                /*
+                // does the tree have the node?
+                if (!ct.hasNode(root)) {
+                    throw std::runtime_error("Invalid root specified. Node is not in the tree.");
+                }
+
+                denali::ContourTree::Node root_node = ct.getNode(root);
+                if (ct.numberOfNeighbors(root_node) != 1) {
+                    throw std::runtime_error("Invalid root specified. It is not a leaf node.");
+                }
+                */
+
+            }
+        }
+        
+
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
+
+
+
 int main(int argc, char ** argv) try
 {
     std::string usage = 
@@ -105,10 +190,10 @@ int main(int argc, char ** argv) try
     // select the command to run
     if (strcmp(argv[1], "compute") == 0) {
         return cli_compute(argc, argv);
-    }
-    /*
     } else if (strcmp(argv[1], "visualize") == 0) {
         return cli_visualize(argc, argv);
+    }
+    /*
     } else if (strcmp(argv[1], "trim") == 0) {
         return cli_trim(argc, argv);
     } else {

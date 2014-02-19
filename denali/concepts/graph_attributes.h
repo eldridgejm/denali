@@ -621,6 +621,12 @@ namespace denali {
              */
             Arc findArc(Node source, Node target) { return Arc(); }
 
+            /// \brief Get an invalid node
+            Node getInvalidNode() const { return Node(); }
+
+            /// \brief Get and invalid arc
+            Arc getInvalidArc() const { return Arc(); }
+
 
             template <typename _ReadableDirectedGraph>
             struct Constraints
@@ -668,6 +674,8 @@ namespace denali {
                     n = _graph.numberOfNodes();
                     n = _graph.numberOfArcs();
                     _Arc arc = _graph.findArc(_Node(), _Node());
+                    _Node node = _graph.getInvalidNode();
+                    arc = _graph.getInvalidArc();
 
                 }
 
@@ -728,6 +736,11 @@ namespace denali {
              */
             Edge findEdge(Node u, Node v) { return Edge(); }
 
+            /// \brief Get an invalid node
+            Node getInvalidNode() const { return Node(); }
+
+            /// \brief Get and invalid arc
+            Edge getInvalidEdge() const { return Edge(); }
 
             template <typename _ReadableUndirectedGraph>
             struct Constraints
@@ -765,6 +778,8 @@ namespace denali {
                     n = _graph.numberOfNodes();
                     n = _graph.numberOfEdges();
                     _Edge edge = _graph.findEdge(node,node);
+                    node = _graph.getInvalidNode();
+                    edge = _graph.getInvalidEdge();
 
                 }
 

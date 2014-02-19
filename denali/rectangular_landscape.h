@@ -753,8 +753,6 @@ public:
             typename ContourTree::Node root)
             : _tree(tree, root), _weights(_tree), _embedding(_tree), Mixin(_tree)
     {
-        std::cout << "Computing rectangular landscape." << std::endl;
-
         // create an embedder
         rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);
         embedder.embed();

@@ -165,7 +165,8 @@ namespace denali {
 
         ObservingNodeMap<GraphType, unsigned int> _node_to_id;
         ObservingNodeMap<GraphType, double> _node_to_value;
-        std::map<unsigned int, typename GraphType::Node> _id_to_node;
+        typedef std::map<unsigned int, typename GraphType::Node> IDToNode;
+        IDToNode _id_to_node;
 
         ObservingNodeMap<GraphType, Members> _node_to_members;
         ObservingEdgeMap<GraphType, Members> _edge_to_members;
@@ -263,7 +264,7 @@ namespace denali {
             return _node_to_members[node];
         }
 
-        /// \brief Retrieve a node by its ID
+        /// \brief Retrieve a node by its ID.
         Node getNode(unsigned int id)
         {
             return _id_to_node[id];
@@ -399,7 +400,77 @@ namespace denali {
     };
 
 
+    namespace {
 
+        template <typename T>
+        struct LesserComparator
+        {
+            bool operator()(const T& x, const T& y) const
+            {
+                return x < y;
+            }
+        };
+
+        template <typename T>
+        struct GreaterComparator
+        {
+            bool operator()(const T& x, const T& y) const
+            {
+                return x > y;
+            }
+        };
+
+        template <typename GraphType, typename Comparator>
+        typename GraphType::Node findLeafByComparator(
+                const GraphType& tree,
+                const Comparator& comparator)
+        {
+            typedef typename GraphType::Node Node;
+
+            bool found = false;
+
+            Node best_node = tree.getFirstNode();
+            double best_value = tree.getValue(best_node);
+
+            for (NodeIterator<GraphType> it(tree); !it.done(); ++it) {
+                // get the value of this node
+                double value = tree.getValue(it.node());
+
+                // check to see if it is a leaf
+                bool is_leaf = tree.degree(it.node()) == 1;
+
+                if (is_leaf && (!found || comparator(value, best_value))) {
+                    best_node = it.node();
+                    best_value = tree.getValue(it.node());
+                }
+                found = true;
+            }
+
+            return best_node;
+        }
+    }
+
+
+    /// \brief Find the leaf with the minimum scalar value.
+    /// \ingroup contour_tree
+    template <typename GraphType>
+    typename GraphType::Node findMinLeaf(
+            const GraphType& tree)
+    {
+        LesserComparator<double> comparator;
+        return findLeafByComparator(tree, comparator);
+    }
+
+
+    /// \brief Find the leaf with the maximum scalar value.
+    /// \ingroup contour_tree
+    template <typename GraphType>
+    typename GraphType::Node findMaxLeaf(
+            const GraphType& tree)
+    {
+        GreaterComparator<double> comparator;
+        return findLeafByComparator(tree, comparator);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     //

@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <sstream>
 
+#include <denali/contour_tree.h>
 #include <denali/graph_iterators.h>
 
 namespace denali {
@@ -341,6 +342,25 @@ namespace denali {
 
     };
 
+
+    ContourTree readContourTreeFile(
+            const char * filename)
+    {
+        // make a new graph object
+        boost::shared_ptr<ContourTree::Graph> graph(new ContourTree::Graph);
+
+        // make a new contour tree format parser
+        ContourTreeFormatParser<ContourTree::Graph> format_parser(*graph);
+
+        // and a tabular file parser
+        TabularFileParser parser;
+
+        // now parse
+        parser.parse(filename, format_parser);
+
+        // return the contour tree
+        return denali::ContourTree::fromPrecomputed(graph);
+    }
     
             
 }

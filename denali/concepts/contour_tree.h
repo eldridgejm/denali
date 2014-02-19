@@ -136,7 +136,8 @@ namespace denali {
             /// \brief Retrieve the members of the node
             const Members& getNodeMembers(Node node) { return members; }
 
-            /// \brief Retrieve a node by its ID
+            /// \brief Retrieve a node by its ID. If there is no node with such an ID,
+            //      an invalid node is returned.
             Node getNode(unsigned int id) const { return Node(); }
 
             /// \brief Retrieve the members of the edge.
