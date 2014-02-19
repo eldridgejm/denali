@@ -350,22 +350,24 @@ namespace denali {
 
     //////////////////////////////////////////////////////////////////////////// 
     //
-    // ComputedContourTree
+    // ContourTree
     //
     //////////////////////////////////////////////////////////////////////////// 
 
     /// \brief A contour tree computed from data.
     /// \ingroup contour_tree
-    class ComputedContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
+    class ContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
     {
-        typedef UndirectedScalarMemberIDGraph Graph;
-        ComputedContourTree(boost::shared_ptr<Graph> graph)
+
+        ContourTree(boost::shared_ptr<UndirectedScalarMemberIDGraph> graph)
             : ContourTreeBase(graph) {} 
 
     public:
 
+        typedef UndirectedScalarMemberIDGraph Graph;
+
         template <typename ScalarSimplicialComplex, typename ContourTreeAlgorithm>
-        static ComputedContourTree
+        static ContourTree
         compute(
                 const ScalarSimplicialComplex& simplicial_complex,
                 ContourTreeAlgorithm& algorithm)
@@ -377,54 +379,25 @@ namespace denali {
             algorithm.compute(simplicial_complex, *graph);
 
             // return the result as a contour tree
-            return ComputedContourTree(graph);
+            return ContourTree(graph);
+        }
+
+        /// \brief Load a contour tree from a UndirectedScalarMemberIDGraph.
+        /*!
+         *  The utility of having this function as opposed to exposing the constructor
+         *  publically is that we may choose to perform checks in this function that 
+         *  the constructor can avoid for reasons of efficiency.
+         */
+        static ContourTree
+        fromPrecomputed(boost::shared_ptr<Graph>& graph)
+        {
+            boost::shared_ptr<Graph> old_graph = graph;
+            graph = boost::shared_ptr<Graph>(new Graph);
+            return ContourTree(old_graph);
         }
 
     };
 
-
-    /// \brief A contour tree that is pre-built.
-    /// \ingroup contour_tree
-    class BuiltContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
-    {
-        typedef UndirectedScalarMemberIDGraph Graph;
-
-    public:
-        class Builder
-        {
-            friend class BuiltContourTree;
-            boost::shared_ptr<Graph> _graph;
-
-        public:
-
-            Builder() : _graph(boost::shared_ptr<Graph>(new Graph)) { }
-
-            typedef typename Graph::Node Node;
-            typedef typename Graph::Edge Edge;
-            
-            Node addNode(unsigned int id, double value)
-                    { _graph->addNode(id, value); }
-
-            /// \brief Add an edge to the graph.
-            Edge addEdge(Node u, Node v)
-                    { _graph->addEdge(u, v); }
-
-            /// \brief Insert a member into the node's member set.
-            void insertNodeMember(Node node, unsigned int member)
-                    { _graph->insertNodeMember(node, member); }
-
-            /// \brief Insert a member into the edge's member set.
-            void insertEdgeMember(Edge edge, unsigned int member)
-                    { _graph->insertEdgeMember(edge, member); }
-        };
-
-        BuiltContourTree(Builder& builder)
-                : ContourTreeBase(builder._graph)
-        {
-            builder._graph = boost::shared_ptr<Graph>(new Graph);
-        }
-        
-    };
 
 
 

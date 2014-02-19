@@ -239,22 +239,105 @@ namespace denali {
     // ReadContourTree
     //
     ////////////////////////////////////////////////////////////////////////////
-
-    template <typename ContourTreeBuilder>
+    
+    template <typename GraphType>
     class ContourTreeFormatParser
     {
-        unsigned int lineno;
-        ContourTreeBuilder& _builder;
+        typedef std::vector<std::string> Line;
+        typedef typename GraphType::Node Node;
+        typedef typename GraphType::Edge Edge;
+
+        GraphType& _graph;
+        unsigned int _lineno;
+        unsigned int _n_vertices;
 
     public:
-        ContourTreeFormatParser(ContourTreeBuilder& builder)
-                : _builder(builder), lineno(0) { }
 
-        void insert(std::vector<std::string>& line)
+        ContourTreeFormatParser(GraphType& graph) 
+                : _graph(graph), _lineno(0) { }
+
+        void insert(const Line& line)
         {
-            std::cout << "Inserting: " << line[0] << std::endl;
+            if (_lineno == 0) {
+                readNumberOfVertices(line);
+            } else if (_lineno <= _n_vertices) {
+                readVertexLine(line);
+            } else {
+                readEdgeLine(line);
+            }
+            _lineno++;
         }
 
+        void readNumberOfVertices(const Line& line)
+        {
+            if (line.size() != 1) {
+                throw std::runtime_error(
+                        "The contour tree file's first line is malformed. It "
+                        "should be a single integer describing the number "
+                        "of vertices in the file.");
+            }
+
+            char * err;
+            _n_vertices = strtol(line[0].c_str(), &err, 10);
+
+            if (*err != 0) {
+                throw std::runtime_error(
+                        "Could not interpret first line of contour tree file.");
+            }
+
+        }
+
+        void readVertexLine(const Line& line)
+        {
+            std::stringstream msg;
+            msg << "The contour tree file has a malformed vertex definition on line " 
+                << _lineno + 1 << ".";
+
+            if (line.size() != 2) {
+                throw std::runtime_error(msg.str());
+            }
+
+            char * id_err;
+            unsigned int id = strtol(line[0].c_str(), &id_err, 10);
+
+            char * value_err;
+            double value = strtod(line[1].c_str(), &value_err);
+
+            if (*id_err != 0 || *value_err != 0) {
+                throw std::runtime_error(msg.str());
+            }
+
+            _graph.addNode(id, value);
+        }
+
+        void readEdgeLine(const Line& line)
+        {
+            std::stringstream msg;
+            msg << "The contour tree file has a malformed edge definition on line " 
+                << _lineno+1 << ".";
+
+            if (line.size() < 2)
+                throw std::runtime_error(msg.str());
+
+            char * u_err;
+            char * v_err;
+            unsigned int u = strtol(line[0].c_str(), &u_err, 10);
+            unsigned int v = strtol(line[1].c_str(), &v_err, 10);
+
+            if (*u_err != 0 || *v_err != 0)
+                throw std::runtime_error(msg.str());
+
+            Edge edge = _graph.addEdge(_graph.getNode(u), _graph.getNode(v));
+
+            for (int i=2; i<line.size(); ++i) {
+                char * err;
+                unsigned int member = strtol(line[i].c_str(), &err, 10);
+                if (*err != 0)
+                    throw std::runtime_error(msg.str());
+                _graph.insertEdgeMember(edge, member);
+            }
+
+        }
 
     };
 

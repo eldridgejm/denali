@@ -421,12 +421,12 @@ SUITE(ContourTree)
 
     }
 
-    TEST(ComputedContourTree)
+    TEST(ContourTree)
     {
         denali::concepts::checkConcept
             <
             denali::concepts::ContourTree,
-            denali::ComputedContourTree
+            denali::ContourTree
             > ();
 
 
@@ -443,8 +443,8 @@ SUITE(ContourTree)
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ComputedContourTree tree = 
-                denali::ComputedContourTree::compute(plex, alg);
+        denali::ContourTree tree = 
+                denali::ContourTree::compute(plex, alg);
                 
     }
 
@@ -469,12 +469,12 @@ SUITE(Landscape)
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ComputedContourTree tree = 
-                denali::ComputedContourTree::compute(plex, alg);
+        denali::ContourTree tree = 
+                denali::ContourTree::compute(plex, alg);
 
-        denali::LandscapeTree<denali::ComputedContourTree> lscape(tree, tree.getNode(4));
+        denali::LandscapeTree<denali::ContourTree> lscape(tree, tree.getNode(4));
 
-        denali::LandscapeWeights<denali::LandscapeTree<denali::ComputedContourTree> > weights(lscape);
+        denali::LandscapeWeights<denali::LandscapeTree<denali::ContourTree> > weights(lscape);
 
         CHECK_EQUAL(12, weights.getTotalNodeWeight(lscape.getRoot()));
 
@@ -498,10 +498,10 @@ SUITE(RectangularLandscape)
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ComputedContourTree tree = 
-                denali::ComputedContourTree::compute(plex, alg);
+        denali::ContourTree tree = 
+                denali::ContourTree::compute(plex, alg);
 
-        typedef denali::RectangularLandscape<denali::ComputedContourTree> RectangularLandscape;
+        typedef denali::RectangularLandscape<denali::ContourTree> RectangularLandscape;
         RectangularLandscape rlscape(tree, tree.getNode(4));
     }
 }
@@ -512,6 +512,19 @@ SUITE(fileio)
     TEST(readContourTree)
     {
 
+        boost::shared_ptr<denali::ContourTree::Graph> 
+                graph(new denali::ContourTree::Graph);
+
+        denali::ContourTreeFormatParser<denali::ContourTree::Graph> 
+                format_parser(*graph);
+
+        denali::TabularFileParser parser;
+        parser.parse("wenger_tree", format_parser);
+
+        denali::ContourTree ct = denali::ContourTree::fromPrecomputed(graph);
+
+        CHECK_EQUAL(9, ct.numberOfNodes());
+        CHECK_EQUAL(8, ct.numberOfEdges());
     }
 }
 

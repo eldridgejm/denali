@@ -70,8 +70,8 @@ int cli_compute(int argc, char ** argv)
 
         // compute the contour tree
         denali::CarrsAlgorithm carrs_algorithm;
-        denali::ComputedContourTree contour_tree = 
-                denali::ComputedContourTree::compute(plex, carrs_algorithm);
+        denali::ContourTree contour_tree = 
+                denali::ContourTree::compute(plex, carrs_algorithm);
 
         // write it to disk
         denali::writeContourTreeFile(argv[4], contour_tree);
