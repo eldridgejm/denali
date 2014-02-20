@@ -254,7 +254,7 @@ namespace denali {
         WritableReadableDirectedGraph& _graph;
         typedef ReadableDirectedGraphMixin <WritableReadableDirectedGraph, Super> RDGM;
 
-        public:
+    public:
         WritableReadableDirectedGraphMixin(WritableReadableDirectedGraph& graph)
             : _graph(graph), RDGM(graph) {}
 

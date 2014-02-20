@@ -17,6 +17,7 @@
 #include <denali/contour_tree.h>
 #include <denali/landscape.h>
 #include <denali/rectangular_landscape.h>
+#include <denali/simplify.h>
 
 double wenger_vertex_values[] = 
     // 0   1   2   3   4   5   6   7   8   9  10  11
@@ -383,6 +384,9 @@ SUITE(ContourTree)
             denali::concepts::UndirectedScalarMemberIDGraph,
             denali::UndirectedScalarMemberIDGraph
             > ();
+
+        typedef denali::UndirectedScalarMemberIDGraph Graph;
+        Graph graph;
     }
 
     TEST(TotalOrder)
@@ -517,6 +521,56 @@ SUITE(fileio)
         CHECK_EQUAL(9, ct.numberOfNodes());
         CHECK_EQUAL(8, ct.numberOfEdges());
     }
+}
+
+
+SUITE(Simplify)
+{
+
+    TEST(PersistenceSimplifier)
+    {
+        
+        denali::ScalarSimplicialComplex plex;
+
+        for (int i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);    
+        }
+
+        for (int i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                    plex.getNode(wenger_edges[i][0]),
+                    plex.getNode(wenger_edges[i][1]));
+        }
+
+        typedef denali::ContourTree ContourTree;
+        typedef denali::SimplifiedContourTree<ContourTree> SimplifiedContourTree;
+        typedef denali::PersistenceSimplifier PersistenceSimplifier;
+
+        denali::CarrsAlgorithm alg;
+
+        ContourTree tree = ContourTree::compute(plex, alg);
+
+        PersistenceSimplifier simplifier(15);
+
+
+        SimplifiedContourTree simplified = 
+                SimplifiedContourTree::simplify(tree, simplifier);
+
+        /*
+        for (denali::EdgeIterator<SimplifiedContourTree> it(simplified); 
+                !it.done(); ++it) {
+
+            SimplifiedContourTree::Node u = simplified.u(it.edge());
+            SimplifiedContourTree::Node v = simplified.v(it.edge());
+            std::cout << simplified.getID(u) << " <---> " << simplified.getID(v) << std::endl;
+        }
+        */
+
+
+
+    }
+
+
 }
 
 

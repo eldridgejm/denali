@@ -190,7 +190,12 @@ namespace denali {
          *
          *  Conforms to the concepts::ReadableUndirectedGraph concept.
          */
-        class UndirectedScalarMemberIDGraph : public concepts::ReadableUndirectedGraph
+        class UndirectedScalarMemberIDGraph : 
+                public 
+                concepts::EdgeObservable <
+                concepts::NodeObservable <
+                concepts::BaseObservable <
+                concepts::ReadableUndirectedGraph > > >
         {
 
             concepts::Members members;

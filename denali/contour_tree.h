@@ -144,21 +144,28 @@ namespace denali {
      *   - concepts::NodeObservable
      *   - concepts::EdgeObservable
      *
-     *  Conforms to concepts::UndirectedScalarMemberIDGraph
+     *  Conforms to 
+     *   - concepts::UndirectedScalarMemberIDGraph
+     *   - concepts::NodeObservable
+     *   - concepts::EdgeObservable
      */
     template <typename GraphType>
     class UndirectedScalarMemberIDGraphBase :
         public
+        EdgeObservableMixin < GraphType,
+        NodeObservableMixin < GraphType,
         ReadableUndirectedGraphMixin <GraphType,
-        BaseGraphMixin <GraphType> >
+        BaseGraphMixin <GraphType> > > >
     {
     public:
         typedef std::set<unsigned int> Members;
 
     private:
         typedef
+        EdgeObservableMixin < GraphType,
+        NodeObservableMixin < GraphType,
         ReadableUndirectedGraphMixin <GraphType,
-        BaseGraphMixin <GraphType> >
+        BaseGraphMixin <GraphType> > > >
         Mixin;
 
         GraphType _graph; 
@@ -178,7 +185,9 @@ namespace denali {
 
         UndirectedScalarMemberIDGraphBase()
             : _node_to_id(_graph), _node_to_value(_graph), _node_to_members(_graph),
-              _edge_to_members(_graph), Mixin(_graph) {}
+              _edge_to_members(_graph), Mixin(_graph)
+        {
+        }
 
         /// \brief Add a node to the graph.
         /*!
@@ -311,24 +320,71 @@ namespace denali {
         typedef typename Base::Node Node;
         typedef typename Base::Edge Edge;
         typedef typename Base::Members Members;
+
     };
 
     //////////////////////////////////////////////////////////////////////////// 
     //
-    // ContourTreeBase
+    // ContourTree
     //
     //////////////////////////////////////////////////////////////////////////// 
+    
+    /// \brief Forwards the contour tree interface.
+    template <typename GraphType, typename Super>
+    class ContourTreeMixin :
+            public
+            ReadableUndirectedGraphMixin<GraphType, Super>
+    {
+            typedef ReadableUndirectedGraphMixin<GraphType, Super> Base;
+
+            GraphType& _graph;
+
+    public:
+
+        typedef typename Base::Node Node;
+        typedef typename Base::Edge Edge;
+        typedef typename GraphType::Members Members;
+
+        ContourTreeMixin(GraphType& graph)
+            : Base(graph), _graph(graph) {}
+
+        /// \brief Get a node's scalar value
+        double getValue(Node node) const 
+                { return _graph.getValue(node); }
+
+        /// \brief Get a node's ID
+        unsigned int getID(Node node) const 
+                { return _graph.getID(node); }
+
+        /// \brief Retrieve the members of the node
+        const Members& getNodeMembers(Node node) const 
+                { return _graph.getNodeMembers(node); }
+
+        /// \brief Retrieve a node by its ID
+        Node getNode(unsigned int id) const 
+                { return _graph.getNode(id); }
+
+        /// \brief Gets a node by ID, but checks to make sure it exists. If the
+        ///     ID is invalid, the returned node is invalid.
+        Node getNodeChecked(unsigned int id) const 
+                { return _graph.getNodeChecked(id); }
+
+        /// \brief Retrieve the members of the edge.
+        const Members& getEdgeMembers(Edge edge) const 
+                { return _graph.getEdgeMembers(edge); }
+
+    };
 
     template <typename UndirectedScalarMemberIDGraph>
     class ContourTreeBase :
             public
-            ReadableUndirectedGraphMixin <UndirectedScalarMemberIDGraph,
+            ContourTreeMixin <UndirectedScalarMemberIDGraph,
             BaseGraphMixin <UndirectedScalarMemberIDGraph> >
     {
         typedef UndirectedScalarMemberIDGraph Graph;
 
         typedef
-        ReadableUndirectedGraphMixin <UndirectedScalarMemberIDGraph,
+        ContourTreeMixin <UndirectedScalarMemberIDGraph,
         BaseGraphMixin <UndirectedScalarMemberIDGraph> >
         Mixin;
 
@@ -344,31 +400,8 @@ namespace denali {
         typedef typename Graph::Edge Edge;
         typedef typename Graph::Members Members;
 
-        /// \brief Get a node's scalar value
-        double getValue(Node node) const { return _graph->getValue(node); }
-
-        /// \brief Get a node's ID
-        unsigned int getID(Node node) const { return _graph->getID(node); }
-
-        /// \brief Retrieve the members of the node
-        const Members& getNodeMembers(Node node) const { return _graph->getNodeMembers(node); }
-
-        /// \brief Retrieve a node by its ID
-        Node getNode(unsigned int id) const { return _graph->getNode(id); }
-
-        /// \brief Gets a node by ID, but checks to make sure it exists. If the
-        ///     ID is invalid, the returned node is invalid.
-        Node getNodeChecked(unsigned int id) const { return _graph->getNodeChecked(id); }
-
-        /// \brief Retrieve the members of the edge.
-        const Members& getEdgeMembers(Edge edge) const { return _graph->getEdgeMembers(edge); }
     };
 
-    //////////////////////////////////////////////////////////////////////////// 
-    //
-    // ContourTree
-    //
-    //////////////////////////////////////////////////////////////////////////// 
 
     /// \brief A contour tree computed from data.
     /// \ingroup contour_tree
@@ -414,6 +447,11 @@ namespace denali {
 
     };
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //
+    // ContourTree helpers
+    //
+    ////////////////////////////////////////////////////////////////////////////////
 
     namespace {
 
@@ -1087,9 +1125,6 @@ namespace denali {
                 tree.removeNode(v);
             }
         }
-                
-
-                
     };
 
 

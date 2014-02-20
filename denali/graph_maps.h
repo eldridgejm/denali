@@ -21,7 +21,7 @@ namespace denali {
 
         public:
         ObservingNodeMap(NodeObservable& graph)
-            : _graph(graph), _values(_graph.getMaxNodeIdentifier()+1)
+            : _graph(graph), _values(_graph.getMaxNodeIdentifier())
         {
             _graph.attachNodeObserver(*this);
         }
@@ -33,7 +33,7 @@ namespace denali {
 
         void notify() 
         {
-            _values.resize(_graph.getMaxNodeIdentifier() + 1);
+            _values.resize(_graph.getMaxNodeIdentifier());
         }
 
         typename std::vector<ValueType>::reference
@@ -67,7 +67,7 @@ namespace denali {
 
         public:
         ObservingArcMap(ArcObservable& graph)
-            : _graph(graph), _values(_graph.getMaxArcIdentifier()+1)
+            : _graph(graph), _values(_graph.getMaxArcIdentifier())
         {
             _graph.attachArcObserver(*this);
         }
@@ -79,7 +79,7 @@ namespace denali {
 
         void notify() 
         {
-            _values.resize(_graph.getMaxArcIdentifier() + 1);
+            _values.resize(_graph.getMaxArcIdentifier());
         }
 
         typename std::vector<ValueType>::reference
@@ -113,7 +113,7 @@ namespace denali {
 
         public:
         ObservingEdgeMap(EdgeObservable& graph)
-            : _graph(graph), _values(_graph.getMaxEdgeIdentifier()+1)
+            : _graph(graph), _values(_graph.getMaxEdgeIdentifier())
         {
             _graph.attachEdgeObserver(*this);
         }
@@ -125,7 +125,7 @@ namespace denali {
 
         void notify() 
         {
-            _values.resize(_graph.getMaxEdgeIdentifier() + 1);
+            _values.resize(_graph.getMaxEdgeIdentifier());
         }
 
         typename std::vector<ValueType>::reference
@@ -156,7 +156,7 @@ namespace denali {
 
         public:
         StaticNodeMap(const NodeMappable& graph)
-            : _graph(graph), _values(_graph.getMaxNodeIdentifier()+1) {}
+            : _graph(graph), _values(_graph.getMaxNodeIdentifier()) {}
 
         typename std::vector<ValueType>::reference 
         operator[](typename NodeMappable::Node node)
@@ -185,7 +185,7 @@ namespace denali {
 
         public:
         StaticArcMap(const ArcMappable& graph)
-            : _graph(graph), _values(_graph.getMaxArcIdentifier()+1) {}
+            : _graph(graph), _values(_graph.getMaxArcIdentifier()) {}
 
         typename std::vector<ValueType>::reference
         operator[](typename ArcMappable::Arc arc)
@@ -214,7 +214,7 @@ namespace denali {
 
         public:
         StaticEdgeMap(const EdgeMappable& graph)
-            : _graph(graph), _values(_graph.getMaxEdgeIdentifier()+1) {}
+            : _graph(graph), _values(_graph.getMaxEdgeIdentifier()) {}
 
         typename std::vector<ValueType>::reference
         operator[](typename EdgeMappable::Edge edge)

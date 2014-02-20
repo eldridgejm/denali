@@ -427,7 +427,7 @@ namespace denali {
             // we iterate through the nodes until we find one with an out arc
             // that isn't invalid
             Node node = getFirstNode();
-            while (nodes[node.index].first_out == -1 && isNodeValid(node)) {
+            while (isNodeValid(node) && nodes[node.index].first_out == -1) {
                 node = getNextNode(node);
             }
 
@@ -444,7 +444,7 @@ namespace denali {
                 return Arc(arcs[arc.index].next_out);
             } else {
                 Node node = nodes[source(arc).index].next;
-                while (nodes[node.index].first_out == -1 && isNodeValid(node)) {
+                while (isNodeValid(node) && nodes[node.index].first_out == -1) {
                     node = getNextNode(node);
                 }
 
@@ -511,12 +511,12 @@ namespace denali {
 
         unsigned int getMaxNodeIdentifier() const
         {
-            return nodes.size() - 1;
+            return nodes.size() ;
         }
 
         unsigned int getMaxArcIdentifier() const
         {
-            return arcs.size() - 1;
+            return arcs.size();
         }
 
         void attachNodeObserver(Observer& ob)
