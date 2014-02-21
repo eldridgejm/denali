@@ -259,11 +259,74 @@ namespace denali {
                 removeNode(*it);
             }
         }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 
+    // UndirectedFoldedTree
+    //
+    ////////////////////////////////////////////////////////////////////////////
+
+    /// \brief A folded tree.
+    template <typename CollapsedTree, typename ExpandedTree>
+    class UndirectedFoldedTree :
+            public
+            ReadableUndirectedGraphMixin < UndirectedSpliceTree<CollapsedTree, ExpandedTree>,
+            BaseGraphMixin <UndirectedSpliceTree<CollapsedTree, ExpandedTree> > >
+    {
+        typedef
+        ReadableUndirectedGraphMixin < UndirectedSpliceTree<CollapsedTree, ExpandedTree>,
+        BaseGraphMixin <UndirectedSpliceTree<CollapsedTree, ExpandedTree> > >
+        Mixin;
+
+        typedef UndirectedSpliceTree<CollapsedTree, ExpandedTree> SpliceTree;
+
+        const CollapsedTree& _collapsed;
+        const ExpandedTree& _expanded;
+        SpliceTree _splice_tree;
+
+        /*
+         *  The folded tree starts collapsed. When an unfold operation takes place,
+         *  the result is a "hybrid" edge, where the parent node is from the collapsed
+         *  tree, but the child node is from the expanded tree. Only hybrid edges
+         *  can be unfolded. Therefore, we keep an EdgeMap of "unfoldable" edges,
+         *  and a corresponding edgemap of the edges in the collapsed tree that these
+         *  edges should be folded into.
+         */
+
+    public:
+        
+        typedef typename SpliceTree::Node Node;
+        typedef typename SpliceTree::Edge Edge;
+
+        UndirectedFoldedTree(const CollapsedTree& collapsed, const ExpandedTree& expanded)
+            : _collapsed(collapsed), _expanded(expanded), 
+              _splice_tree(SpliceTree::fromAlphaTree(collapsed, expanded)),
+              Mixin(_splice_tree)
+        {}
+
+        bool isNodeCollapsed(Node node)
+        {
+            return _splice_tree.isNodeAlpha(node);
+        }
+
+        bool isEdgeCollapsed(Edge edge)
+        {
+            return _splice_tree.isEdgeAlpha(edge);
+        }
+
+        bool isEdgeFoldable(Edge edge)
+        {
+            Node u = _splice_tree.u(edge);
+            Node v = _splice_tree.v(edge);
+            return isNodeCollapsed(u) != isNodeCollapsed(v);
+        }
+
 
     };
 
-
 }
+
 
 
 #endif
