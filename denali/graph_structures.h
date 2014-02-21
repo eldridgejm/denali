@@ -372,13 +372,13 @@ namespace denali {
             return nodes[node.index].out_degree;
         }
 
-        Arc firstOutArc(const Node node)
+        Arc firstOutArc(const Node node) const
         {
             // Returns the first out arc of the node.
             return Arc(nodes[node.index].first_out);
         }
 
-        Arc firstInArc(const Node node)
+        Arc firstInArc(const Node node) const
         {
             // Returns the first in arc of the node.
             return Arc(nodes[node.index].first_in);
@@ -539,7 +539,7 @@ namespace denali {
             _arc_observers.remove(&ob);
         }
 
-        Arc findArc(const Node source_node, const Node target_node)
+        Arc findArc(const Node source_node, const Node target_node) const
         {
             // we iterate through the out arcs of the source, and check
             // the target. If we make it all the way through, we return
@@ -744,7 +744,7 @@ namespace denali {
         void attachEdgeObserver(Observer& ob) { impl.attachArcObserver(ob); }
         void detachEdgeObserver(Observer& ob) { impl.detachArcObserver(ob); }
 
-        Edge findEdge(Node u, Node v)
+        Edge findEdge(Node u, Node v) const
         {
             // We can gain some performance by searching the node with
             // the smaller out degree first.

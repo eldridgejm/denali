@@ -619,7 +619,7 @@ namespace denali {
             /*!
              *  If no such arc exists, an invalid arc is returned.
              */
-            Arc findArc(Node source, Node target) { return Arc(); }
+            Arc findArc(Node source, Node target) const { return Arc(); }
 
             /// \brief Get an invalid node
             Node getInvalidNode() const { return Node(); }
@@ -734,7 +734,7 @@ namespace denali {
             /*!
              *  If no such edge exists, an invalid edge is returned.
              */
-            Edge findEdge(Node u, Node v) { return Edge(); }
+            Edge findEdge(Node u, Node v) const { return Edge(); }
 
             /// \brief Get an invalid node
             Node getInvalidNode() const { return Node(); }

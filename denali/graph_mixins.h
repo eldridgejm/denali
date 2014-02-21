@@ -126,7 +126,7 @@ namespace denali {
         /*!
          *  If no such arc exists, an invalid arc is returned.
          */
-        Arc findArc(Node source, Node target) { _graph.findArc(source, target); }
+        Arc findArc(Node source, Node target) const { _graph.findArc(source, target); }
 
         /// \brief Get an invalid node
         Node getInvalidNode() const { return _graph.getInvalidNode(); }
@@ -230,7 +230,7 @@ namespace denali {
         /*!
          *  If no such edge exists, an invalid edge is returned.
          */
-        Edge findEdge(Node u, Node v) { return _graph.findEdge(u,v); }
+        Edge findEdge(Node u, Node v) const { return _graph.findEdge(u,v); }
 
         /// \brief Get an invalid node
         Node getInvalidNode() const { return _graph.getInvalidNode(); }
