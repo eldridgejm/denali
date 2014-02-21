@@ -242,6 +242,7 @@ namespace denali {
 
 
     /// \brief Performs a BFS on an undirected graph.
+    /// \ingroup graph_implementations_iterators
     template <typename GraphType>
     class UndirectedBFSIterator
     {
@@ -269,6 +270,7 @@ namespace denali {
 
 
     public:
+        /// \brief Perform a full BFS, starting at the root.
         UndirectedBFSIterator(const GraphType& graph, Node root)
             : _graph(graph), _visited(graph)
         {
@@ -284,6 +286,8 @@ namespace denali {
             visit(root);
         }
 
+        /// \brief Perform a partial BFS, starting at the parent and searching down the edge
+        ///     containing the child.
         UndirectedBFSIterator(const GraphType& graph, Node parent, Node child)
             : _graph(graph), _visited(graph)
         {
@@ -319,6 +323,7 @@ namespace denali {
 
 
     /// \brief Iterate through the arcs of a directed graph in BFS order.
+    /// \ingroup graph_implementations_iterators
     template <typename GraphType>
     class DirectedBFSIterator
     {

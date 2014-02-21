@@ -9,7 +9,7 @@ namespace denali {
     class BaseGraphMixin
     {
         public:
-        BaseGraphMixin(Anything&) {}
+        BaseGraphMixin(const Anything&) {}
     };
 
 
@@ -22,11 +22,11 @@ namespace denali {
     template <typename ReadableDirectedGraph, typename Super>
     class ReadableDirectedGraphMixin : public Super
     {
-        ReadableDirectedGraph& _graph;
+        const ReadableDirectedGraph& _graph;
 
         public:
         /// \brief Constructor taking a graph conforming to concepts::ReadableDirectedGraph.
-        ReadableDirectedGraphMixin(ReadableDirectedGraph& graph)
+        ReadableDirectedGraphMixin(const ReadableDirectedGraph& graph)
             : _graph(graph), Super(graph) {}
 
         public:
@@ -146,11 +146,11 @@ namespace denali {
     template <typename ReadableUndirectedGraph, typename Super>
     class ReadableUndirectedGraphMixin : public Super
     {
-        ReadableUndirectedGraph& _graph;
+        const ReadableUndirectedGraph& _graph;
 
         public:
 
-        ReadableUndirectedGraphMixin(ReadableUndirectedGraph& graph)
+        ReadableUndirectedGraphMixin(const ReadableUndirectedGraph& graph)
             : _graph(graph), Super(graph) {}
 
         /// A node in the graph

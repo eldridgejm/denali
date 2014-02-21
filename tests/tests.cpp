@@ -583,9 +583,6 @@ SUITE(Folded)
 
         typedef denali::UndirectedTabbedScalarMemberIDGraph<Tab> Collapsed;
 
-        // typedef denali::SplicedUndirectedTree SplicedTree;
-
-
         Expanded expanded;
         Collapsed collapsed;
 
@@ -609,6 +606,18 @@ SUITE(Folded)
         Collapsed::Edge ce14 = collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(4));
 
         collapsed.setTab(ce14, collapsed.getNode(4), ee43, collapsed.getNode(1), ee13);
+
+        denali::UndirectedDonorTreeMixin<Expanded> expanded_donor(expanded);
+
+        /*
+        denali::DonorTreeView<Collapsed> collapsed_donor(collapsed);
+
+        denali::UndirectedSpliceTree splice_tree = 
+                denali::UndirectedSpliceTree::fromDonor(collapsed_donor);
+
+        std::cout << splice_tree.numberOfNodes() << std::endl;
+        */
+
 
 
     }
