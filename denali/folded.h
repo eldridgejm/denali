@@ -5,6 +5,7 @@
 #include <denali/graph_maps.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/variant.hpp>
 
 namespace denali {
 
@@ -14,160 +15,252 @@ namespace denali {
     //
     ////////////////////////////////////////////////////////////////////////////
 
-    template <typename GraphType>
-    class UndirectedSpliceTreeBase :
+    template <typename AlphaTree, typename BetaTree>
+    class UndirectedSpliceTree :
             public
-            ReadableUndirectedGraphMixin <GraphType,
-            BaseGraphMixin <GraphType> >
+            ReadableUndirectedGraphMixin <UndirectedGraph,
+            BaseGraphMixin <UndirectedGraph> >
     {
         typedef
-        ReadableUndirectedGraphMixin <GraphType,
-        BaseGraphMixin <GraphType> >
+        ReadableUndirectedGraphMixin <UndirectedGraph,
+        BaseGraphMixin <UndirectedGraph> >
         Mixin;
 
     public:
-        typedef typename GraphType::Node Node;
-        typedef typename GraphType::Edge Edge;
+        typedef UndirectedGraph::Node Node;
+        typedef UndirectedGraph::Edge Edge;
 
-        GraphType _graph;
+        typedef typename AlphaTree::Node AlphaNode;
+        typedef typename AlphaTree::Edge AlphaEdge;
 
-        ObservingNodeMap<GraphType, unsigned int> _node_owner;
-        ObservingEdgeMap<GraphType, unsigned int> _edge_owner;
+        typedef typename BetaTree::Node BetaNode;
+        typedef typename BetaTree::Edge BetaEdge;
+
+    private:
+        UndirectedGraph _graph;
+        const AlphaTree& _alpha;
+        const BetaTree& _beta;
+
+        typedef boost::variant<AlphaNode, BetaNode> NodeVariant;
+        typedef boost::variant<AlphaEdge, BetaEdge> EdgeVariant;
+
+        ObservingNodeMap<UndirectedGraph, bool> _is_node_alpha;
+        ObservingEdgeMap<UndirectedGraph, bool> _is_edge_alpha;
+
+        ObservingNodeMap<UndirectedGraph, NodeVariant> _spliced_to_donor_node;
+        ObservingEdgeMap<UndirectedGraph, EdgeVariant> _spliced_to_donor_edge;
+
+        StaticNodeMap<AlphaTree, Node> _alpha_to_spliced_node;
+        StaticEdgeMap<AlphaTree, Edge> _alpha_to_spliced_edge;
+
+        StaticNodeMap<BetaTree, Node> _beta_to_spliced_node;
+        StaticEdgeMap<BetaTree, Edge> _beta_to_spliced_edge;
 
     public:
 
-        UndirectedSpliceTreeBase()
-            : Mixin(_graph), _node_owner(_graph), _edge_owner(_graph) {}
+        
+        UndirectedSpliceTree(const AlphaTree& alpha, const BetaTree& beta)
+            : _alpha(alpha), _beta(beta), Mixin(_graph),
+              _is_node_alpha(_graph), _is_edge_alpha(_graph),
+              _spliced_to_donor_node(_graph), _spliced_to_donor_edge(_graph),
+              _alpha_to_spliced_node(_alpha), _alpha_to_spliced_edge(_alpha),
+              _beta_to_spliced_node(_beta), _beta_to_spliced_edge(_beta)
+            {}
 
-        Node addNode(unsigned int owner)
+        Node addAlphaNode(AlphaNode alpha_node)
         {
             Node node = _graph.addNode();
-            _node_owner[node] = owner;
+            _is_node_alpha[node] = true;
+            _spliced_to_donor_node[node] = NodeVariant(alpha_node);
+            _alpha_to_spliced_node[alpha_node] = node;
             return node;
         }
 
-        Edge addEdge(Node u, Node v, unsigned int owner)
+        Node addBetaNode(BetaNode beta_node)
+        {
+            Node node = _graph.addNode();
+            _is_node_alpha[node] = false;
+            _spliced_to_donor_node[node] = NodeVariant(beta_node);
+            _beta_to_spliced_node[beta_node] = node;
+            return node;
+        }
+
+        void removeNode(Node node)
+        {
+            _graph.removeNode(node);
+        }
+
+        Edge addAlphaEdge(Node u, Node v, AlphaEdge alpha_edge)
         {
             Edge edge = _graph.addEdge(u,v);
-            _edge_owner[edge] = owner;
-            return edge; 
+            _is_edge_alpha[edge] = true;
+            _spliced_to_donor_edge[edge] = alpha_edge;
+            _alpha_to_spliced_edge[alpha_edge] = edge;
+            return edge;
         }
 
-        void removeNode(Node node) { _graph.removeNode(node); }
-        void removeEdge(Edge edge) { _graph.removeEdge(edge); }
+        Edge addBetaEdge(Node u, Node v, BetaEdge beta_edge)
+        {
+            Edge edge = _graph.addEdge(u,v);
+            _is_edge_alpha[edge] = false;
+            _spliced_to_donor_edge[edge] = beta_edge;
+            _beta_to_spliced_edge[beta_edge] = edge;
+            return edge;
+        }
 
-        void clearNodes() const { _graph.clearNodes(); }
-        void clearEdges() const { _graph.clearEdges(); }
+        void removeEdge(Edge edge)
+        {
+            _graph.removeEdge(edge);
+        }
 
-        unsigned int getNodeOwner(Node node) const { return _node_owner[node]; }
-        unsigned int getEdgeOwner(Edge edge) const { return _edge_owner[edge]; }
+        AlphaNode getAlphaNode(Node node)
+        {
+            return boost::get<AlphaNode>(_spliced_to_donor_node[node]);
+        }
 
-        template <typename Tree>
-        void splice(
-                Edge this_edge, 
+        BetaNode getBetaNode(Node node)
+        {
+            return boost::get<BetaNode>(_spliced_to_donor_node[node]);
+        }
+
+        AlphaEdge getAlphaEdge(Edge edge)
+        {
+            return boost::get<AlphaEdge>(_spliced_to_donor_edge[edge]);
+        }
+
+        BetaEdge getBetaEdge(Edge edge)
+        {
+            return boost::get<BetaEdge>(_spliced_to_donor_edge[edge]);
+        }
+
+        bool isNodeAlpha(Node node)
+        {
+            return _is_node_alpha[node];
+        }
+
+        bool isEdgeAlpha(Edge edge)
+        {
+            return _is_edge_alpha[edge];
+        }
+
+        Node getNodeFromAlpha(AlphaNode alpha_node)
+        {
+            return _alpha_to_spliced_node[alpha_node];
+        }
+
+        Node getNodeFromBeta(BetaNode beta_node)
+        {
+            return _beta_to_spliced_node[beta_node];
+        }
+
+        Edge getEdgeFromAlpha(AlphaEdge alpha_edge)
+        {
+            return _alpha_to_spliced_edge[alpha_edge];
+        }
+
+        Edge getEdgeFromBeta(BetaEdge beta_edge)
+        {
+            return _beta_to_spliced_edge[beta_edge];
+        }
+
+        void spliceFromAlpha(
                 Node this_parent, 
-                const Tree& tree, 
-                typename Tree::Edge donor_edge,
-                typename Tree::Node donor_node)
+                Edge this_edge,
+                AlphaNode alpha_parent,
+                AlphaEdge alpha_edge)
         {
             Node this_child = _graph.opposite(this_parent, this_edge);
+            AlphaNode alpha_child = _alpha.opposite(alpha_parent, alpha_edge);
 
-            // first, we build a list of nodes to remove
-            std::list<Node> nodes_to_remove;
-            for (UndirectedBFSIterator<GraphType> it(_graph, this_parent, this_child);
+            // remove the subtree
+            removeSubtree(this_parent, this_child);
+
+            // now splice in the alpha tree
+            Node child = addAlphaNode(alpha_child);
+            addAlphaEdge(this_parent, child, alpha_edge);
+
+            for (UndirectedBFSIterator<AlphaTree> it(_alpha, alpha_parent, alpha_child);
                     !it.done(); ++it) {
-                nodes_to_remove.push_back(it.child());
-            }
+                // we have already added the parent, so just add the child
+                Node child = addAlphaNode(it.child());
 
-            // now actually remove the nodes
-            for (typename std::list<Node>::iterator it = nodes_to_remove.begin();
-                    it != nodes_to_remove.end(); ++it) {
-                _graph.removeNode(*it);
+                // connect it to its parent
+                addAlphaEdge(getNodeFromAlpha(it.parent()), child, it.edge());
             }
         }
-    };
 
-
-    /// \brief Represents the splicing of multiple trees.
-    class UndirectedSpliceTree : public UndirectedSpliceTreeBase<UndirectedGraph>
-    {
-        typedef UndirectedSpliceTreeBase<UndirectedGraph> Base;
-    public:
-        typedef typename Base::Node Node;
-        typedef typename Base::Edge Edge;
-
-        template <typename DonorTree>
-        static UndirectedSpliceTree
-        fromDonor(DonorTree& donor, unsigned int owner=0)
+        void spliceFromBeta(
+                Node this_parent, 
+                Edge this_edge,
+                BetaNode beta_parent,
+                BetaEdge beta_edge)
         {
-            // create a new splice tree
-            UndirectedSpliceTree splice_tree;
+            Node this_child = _graph.opposite(this_parent, this_edge);
+            BetaNode beta_child = _beta.opposite(beta_parent, beta_edge);
 
-            std::cout << "Donor has " << donor.numberOfNodes() << std::endl;
+            // remove the subtree
+            removeSubtree(this_parent, this_child);
 
-            // add the nodes from the donor to the splice tree
-            for (NodeIterator<DonorTree> it(donor); !it.done(); ++it) {
-                Node node = splice_tree.addNode(owner);
-                donor.setSpliceTreeNode(it.node(), node);
+            // now splice in the beta tree
+            Node child = addBetaNode(beta_child);
+            addBetaEdge(this_parent, child, beta_edge);
+
+            for (UndirectedBFSIterator<BetaTree> it(_beta, beta_parent, beta_child);
+                    !it.done(); ++it) {
+                // we have already added the parent, so just add the child
+                Node child = addBetaNode(it.child());
+
+                // connect it to its parent
+                addBetaEdge(getNodeFromBeta(it.parent()), child, it.edge());
+            }
+        }
+
+
+        static UndirectedSpliceTree<AlphaTree, BetaTree>
+        fromAlphaTree(const AlphaTree& alpha, const BetaTree& beta)
+        {
+            UndirectedSpliceTree<AlphaTree, BetaTree> splice_tree(alpha, beta);
+
+            // copy the structure of the alpha tree into this
+            for (NodeIterator<AlphaTree> it(alpha); !it.done(); ++it) {
+                splice_tree.addAlphaNode(it.node());
             }
 
-            for (EdgeIterator<DonorTree> it(donor); !it.done(); ++it) {
-                Node u = donor.getSpliceTreeNode(donor.u(it.edge()));
-                Node v = donor.getSpliceTreeNode(donor.v(it.edge()));
-                Edge edge = splice_tree.addEdge(u,v,owner);
-                donor.setSpliceTreeEdge(it.edge(), edge);
+            for (EdgeIterator<AlphaTree> it(alpha); !it.done(); ++it) {
+                AlphaNode alpha_u = alpha.u(it.edge());
+                AlphaNode alpha_v = alpha.v(it.edge());
+                Node u = splice_tree.getNodeFromAlpha(alpha_u);
+                Node v = splice_tree.getNodeFromAlpha(alpha_v);
+                splice_tree.addAlphaEdge(u, v, it.edge());
             }
 
             return splice_tree;
         }
 
+    private:
+        
+        void removeSubtree(
+                Node this_parent,
+                Node this_child)
+        {
+            // make a list of nodes to delete
+            std::list<Node> marked_nodes;
+            marked_nodes.push_back(this_child);
+
+            for (UndirectedBFSIterator<UndirectedGraph> it(_graph, this_parent, this_child);
+                    !it.done(); ++it) {
+                // the parent has already been marked
+                marked_nodes.push_back(it.child());
+            }
+
+            // actually remove the nodes
+            for (std::list<Node>::iterator it = marked_nodes.begin();
+                    it != marked_nodes.end(); ++it) {
+                removeNode(*it);
+            }
+        }
+
     };
-
-
-    /// \brief A mixin that allows a tree to become a donor in a splicing.
-    template <typename TreeType>
-    class UndirectedDonorTreeMixin : 
-            public 
-            ReadableUndirectedGraphMixin <TreeType,
-            BaseGraphMixin <TreeType> >
-    {
-        typedef
-        ReadableUndirectedGraphMixin <TreeType,
-        BaseGraphMixin <TreeType> >
-        Mixin;
-
-        StaticNodeMap<TreeType, UndirectedSpliceTree::Node> _donor_to_spliced_node;
-        StaticEdgeMap<TreeType, UndirectedSpliceTree::Edge> _donor_to_spliced_edge;
-
-    public:
-        typedef typename TreeType::Node Node;
-        typedef typename TreeType::Edge Edge;
-
-        UndirectedDonorTreeMixin(const TreeType& tree)
-                : Mixin(tree), _donor_to_spliced_node(tree), 
-                  _donor_to_spliced_edge(tree) {}
-
-        UndirectedSpliceTree::Node getSpliceTreeNode(Node node)
-        {
-            return _donor_to_spliced_node[node];
-        }
-
-        UndirectedSpliceTree::Edge getSpliceTreeEdge(Edge edge)
-        {
-            return _donor_to_spliced_edge[edge];
-        }
-
-        void setSpliceTreeNode(Node node, UndirectedSpliceTree::Node splice_node)
-        {
-            _donor_to_spliced_node[node] = splice_node;
-        }
-
-        void setSpliceTreeEdge(Edge edge, UndirectedSpliceTree::Edge splice_edge)
-        {
-            _donor_to_spliced_edge[edge] = splice_edge;
-        }
-    };
-
 
 
 }

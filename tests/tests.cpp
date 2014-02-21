@@ -607,19 +607,47 @@ SUITE(Folded)
 
         collapsed.setTab(ce14, collapsed.getNode(4), ee43, collapsed.getNode(1), ee13);
 
-        denali::UndirectedDonorTreeMixin<Expanded> expanded_donor(expanded);
+        typedef denali::UndirectedSpliceTree<Collapsed,Expanded> SpliceTree;
 
-        /*
-        denali::DonorTreeView<Collapsed> collapsed_donor(collapsed);
+        SpliceTree splice_tree = SpliceTree::fromAlphaTree(collapsed, expanded);
 
-        denali::UndirectedSpliceTree splice_tree = 
-                denali::UndirectedSpliceTree::fromDonor(collapsed_donor);
+        CHECK_EQUAL(4, splice_tree.numberOfNodes());
+        CHECK_EQUAL(3, splice_tree.numberOfEdges());
 
-        std::cout << splice_tree.numberOfNodes() << std::endl;
-        */
+        splice_tree.spliceFromBeta(
+                splice_tree.getNodeFromAlpha(collapsed.getNode(1)),
+                splice_tree.getEdgeFromAlpha(ce14),
+                expanded.getNode(1),
+                ee13);
 
+        CHECK_EQUAL(6, splice_tree.numberOfNodes());
+        CHECK_EQUAL(5, splice_tree.numberOfEdges());
 
+        for (denali::EdgeIterator<SpliceTree> it(splice_tree); !it.done(); ++it) {
+            SpliceTree::Node splice_u = splice_tree.u(it.edge());
+            SpliceTree::Node splice_v = splice_tree.v(it.edge());
 
+            if (splice_tree.isNodeAlpha(splice_u)) {
+                Collapsed::Node node = splice_tree.getAlphaNode(splice_u);
+                std::cout << collapsed.getID(node);
+            } else {
+                Expanded::Node node = splice_tree.getBetaNode(splice_u);
+                std::cout << expanded.getID(node);
+            }
+
+            std::cout << " <---> ";
+
+            if (splice_tree.isNodeAlpha(splice_v)) {
+                Collapsed::Node node = splice_tree.getAlphaNode(splice_v);
+                std::cout << collapsed.getID(node);
+            } else {
+                Expanded::Node node = splice_tree.getBetaNode(splice_v);
+                std::cout << expanded.getID(node);
+            }
+
+            std::cout << std::endl;
+
+        }
     }
 
 }
