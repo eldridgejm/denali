@@ -18,6 +18,7 @@
 #include <denali/landscape.h>
 #include <denali/rectangular_landscape.h>
 #include <denali/simplify.h>
+#include <denali/folded.h>
 
 double wenger_vertex_values[] = 
     // 0   1   2   3   4   5   6   7   8   9  10  11
@@ -569,7 +570,48 @@ SUITE(Simplify)
 
 
     }
+}
 
+
+SUITE(Folded)
+{
+
+    TEST(SplicedUndirectedTree)
+    {
+        typedef denali::UndirectedScalarMemberIDGraph Expanded;
+        typedef Expanded::Edge Tab;
+
+        typedef denali::UndirectedTabbedScalarMemberIDGraph<Tab> Collapsed;
+
+        // typedef denali::SplicedUndirectedTree SplicedTree;
+
+
+        Expanded expanded;
+        Collapsed collapsed;
+
+        for (int i=0; i<6; ++i) {
+            expanded.addNode(i, 0.);
+        }
+
+        expanded.addEdge(expanded.getNode(0), expanded.getNode(1));
+        expanded.addEdge(expanded.getNode(1), expanded.getNode(2));
+        Expanded::Edge ee13 = expanded.addEdge(expanded.getNode(1), expanded.getNode(3));
+        Expanded::Edge ee43 = expanded.addEdge(expanded.getNode(4), expanded.getNode(3));
+        expanded.addEdge(expanded.getNode(5), expanded.getNode(3));
+
+        collapsed.addNode(0, 0.);
+        collapsed.addNode(1, 0.);
+        collapsed.addNode(2, 0.);
+        collapsed.addNode(4, 0.);
+
+        collapsed.addEdge(collapsed.getNode(0), collapsed.getNode(1));
+        collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(2));
+        Collapsed::Edge ce14 = collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(4));
+
+        collapsed.setTab(ce14, collapsed.getNode(4), ee43, collapsed.getNode(1), ee13);
+
+
+    }
 
 }
 
