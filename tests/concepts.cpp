@@ -13,244 +13,244 @@
 TEST(GraphObjects)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::GraphObject> ();
+    denali::concepts::GraphObject> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::Node> ();
+    denali::concepts::Node> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::Arc> ();
+    denali::concepts::Arc> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::Edge> ();
+    denali::concepts::Edge> ();
 }
 
 
 TEST(GraphAttributes)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::NodeIterable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::NodeIterable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ArcIterable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::ArcIterable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::EdgeIterable <
-            denali::concepts::BaseUndirectedGraph> > ();
+    denali::concepts::EdgeIterable <
+    denali::concepts::BaseUndirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ParentIterable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::ParentIterable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ChildIterable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::ChildIterable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::DirectedNeighborIterable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::DirectedNeighborIterable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::UndirectedNeighborIterable <
-            denali::concepts::BaseUndirectedGraph> > ();
+    denali::concepts::UndirectedNeighborIterable <
+    denali::concepts::BaseUndirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::NodeMappable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::NodeMappable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ArcMappable <
-            denali::concepts::BaseDirectedGraph> > ();
+    denali::concepts::ArcMappable <
+    denali::concepts::BaseDirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::EdgeMappable <
-            denali::concepts::BaseUndirectedGraph> > ();
+    denali::concepts::EdgeMappable <
+    denali::concepts::BaseUndirectedGraph> > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::NodeObservable <
-            denali::concepts::BaseObservable <
-            denali::concepts::BaseDirectedGraph> > > ();
+    denali::concepts::NodeObservable <
+    denali::concepts::BaseObservable <
+    denali::concepts::BaseDirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ArcObservable <
-            denali::concepts::BaseObservable <
-            denali::concepts::BaseDirectedGraph> > > ();
+    denali::concepts::ArcObservable <
+    denali::concepts::BaseObservable <
+    denali::concepts::BaseDirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::EdgeObservable <
-            denali::concepts::BaseObservable <
-            denali::concepts::BaseUndirectedGraph> > > ();
+    denali::concepts::EdgeObservable <
+    denali::concepts::BaseObservable <
+    denali::concepts::BaseUndirectedGraph> > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ReadableDirectedGraph> ();
+    denali::concepts::ReadableDirectedGraph> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ReadableUndirectedGraph> ();
+    denali::concepts::ReadableUndirectedGraph> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::WritableReadableDirectedGraph> ();
+    denali::concepts::WritableReadableDirectedGraph> ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::WritableReadableUndirectedGraph> ();
+    denali::concepts::WritableReadableUndirectedGraph> ();
 }
 
 
 TEST(GraphIterators)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::NodeIterator<
-            denali::concepts::NodeIterable<
-            denali::concepts::BaseDirectedGraph
-            > > > ();
+    denali::concepts::NodeIterator<
+    denali::concepts::NodeIterable<
+    denali::concepts::BaseDirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ArcIterator<
-            denali::concepts::ArcIterable<
-            denali::concepts::BaseDirectedGraph
-            > > > ();
+    denali::concepts::ArcIterator<
+    denali::concepts::ArcIterable<
+    denali::concepts::BaseDirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::EdgeIterator<
-            denali::concepts::EdgeIterable<
-            denali::concepts::BaseUndirectedGraph
-            > > > ();
+    denali::concepts::EdgeIterator<
+    denali::concepts::EdgeIterable<
+    denali::concepts::BaseUndirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ParentIterator<
-            denali::concepts::ParentIterable<
-            denali::concepts::BaseDirectedGraph
-            > > > ();
+    denali::concepts::ParentIterator<
+    denali::concepts::ParentIterable<
+    denali::concepts::BaseDirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ChildIterator<
-            denali::concepts::ChildIterable<
-            denali::concepts::BaseDirectedGraph
-            > > > ();
+    denali::concepts::ChildIterator<
+    denali::concepts::ChildIterable<
+    denali::concepts::BaseDirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::DirectedNeighborIterator<
-            denali::concepts::DirectedNeighborIterable<
-            denali::concepts::BaseDirectedGraph
-            > > > ();
+    denali::concepts::DirectedNeighborIterator<
+    denali::concepts::DirectedNeighborIterable<
+    denali::concepts::BaseDirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::UndirectedNeighborIterator<
-            denali::concepts::UndirectedNeighborIterable<
-            denali::concepts::BaseUndirectedGraph
-            > > > ();
+    denali::concepts::UndirectedNeighborIterator<
+    denali::concepts::UndirectedNeighborIterable<
+    denali::concepts::BaseUndirectedGraph
+    > > > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::UndirectedBFSIterator <
-            denali::concepts::NodeMappable <
-            denali::concepts::UndirectedNeighborIterable <
-            denali::concepts::BaseUndirectedGraph
-            > > > > ();
+    denali::concepts::UndirectedBFSIterator <
+    denali::concepts::NodeMappable <
+    denali::concepts::UndirectedNeighborIterable <
+    denali::concepts::BaseUndirectedGraph
+    > > > > ();
 }
 
 
 TEST(GraphMaps)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ObservingNodeMap<
-                denali::concepts::NodeObservable<
-                    denali::concepts::BaseObservable<
-                        denali::concepts::NodeMappable<
-                            denali::concepts::BaseDirectedGraph
-                        > 
-                    >
-                >,
-                int> 
-            > ();
+    denali::concepts::ObservingNodeMap<
+    denali::concepts::NodeObservable<
+    denali::concepts::BaseObservable<
+    denali::concepts::NodeMappable<
+    denali::concepts::BaseDirectedGraph
+    >
+    >
+    >,
+    int>
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ObservingArcMap<
-                denali::concepts::ArcObservable<
-                    denali::concepts::BaseObservable<
-                        denali::concepts::ArcMappable<
-                            denali::concepts::BaseDirectedGraph
-                        > 
-                    >
-                >,
-                int> 
-            > ();
+    denali::concepts::ObservingArcMap<
+    denali::concepts::ArcObservable<
+    denali::concepts::BaseObservable<
+    denali::concepts::ArcMappable<
+    denali::concepts::BaseDirectedGraph
+    >
+    >
+    >,
+    int>
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ObservingEdgeMap<
-                denali::concepts::EdgeObservable<
-                    denali::concepts::BaseObservable<
-                        denali::concepts::EdgeMappable<
-                            denali::concepts::BaseUndirectedGraph
-                        > 
-                    >
-                >,
-                int> 
-            > ();
+    denali::concepts::ObservingEdgeMap<
+    denali::concepts::EdgeObservable<
+    denali::concepts::BaseObservable<
+    denali::concepts::EdgeMappable<
+    denali::concepts::BaseUndirectedGraph
+    >
+    >
+    >,
+    int>
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::StaticNodeMap<
-                denali::concepts::NodeMappable<
-                    denali::concepts::BaseUndirectedGraph
-                    >,
-                int> 
-            > ();
+    denali::concepts::StaticNodeMap<
+    denali::concepts::NodeMappable<
+    denali::concepts::BaseUndirectedGraph
+    >,
+    int>
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::StaticArcMap<
-                denali::concepts::ArcMappable<
-                    denali::concepts::BaseDirectedGraph
-                    >,
-                int> 
-            > ();
+    denali::concepts::StaticArcMap<
+    denali::concepts::ArcMappable<
+    denali::concepts::BaseDirectedGraph
+    >,
+    int>
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::StaticEdgeMap<
-                denali::concepts::EdgeMappable<
-                    denali::concepts::BaseUndirectedGraph
-                    >,
-                int> 
-            > ();
+    denali::concepts::StaticEdgeMap<
+    denali::concepts::EdgeMappable<
+    denali::concepts::BaseUndirectedGraph
+    >,
+    int>
+    > ();
 }
 
 
 TEST(ContourTree)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ScalarSimplicialComplex
-            > ();
+    denali::concepts::ScalarSimplicialComplex
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::Members
-            > ();
+    denali::concepts::Members
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ContourTree
-            > ();
+    denali::concepts::ContourTree
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::UndirectedScalarMemberIDGraph
-            > ();
+    denali::concepts::UndirectedScalarMemberIDGraph
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::ContourTreeAlgorithm
-            > ();
+    denali::concepts::ContourTreeAlgorithm
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::RandomAccessComparisonFunctor<std::vector<double> >
-            > ();
+    denali::concepts::RandomAccessComparisonFunctor<std::vector<double> >
+    > ();
 
     denali::concepts::checkSelfConsistent <
-            denali::concepts::TotalOrder
-            > ();
+    denali::concepts::TotalOrder
+    > ();
 }
 
 
 TEST(Landscape)
 {
     denali::concepts::checkSelfConsistent <
-            denali::concepts::LandscapeTree<denali::concepts::ContourTree> 
-            > ();
+    denali::concepts::LandscapeTree<denali::concepts::ContourTree>
+    > ();
 }
 
 

@@ -13,26 +13,26 @@
 #include <vector>
 
 namespace denali {
-    namespace rectangular {
+namespace rectangular {
 
-        class Rectangle;
-        class RectangleSplitter;
+class Rectangle;
+class RectangleSplitter;
 
-        class RectangleSplit;
-        class OrientedRectangleSplit;
-        class HorizontalRectangleSplit;
-        class VerticalRectangleSplit;
+class RectangleSplit;
+class OrientedRectangleSplit;
+class HorizontalRectangleSplit;
+class VerticalRectangleSplit;
 
-        template <typename LandscapeTree> class Embedding;
-        template <typename LandscapeTree> class Embedder;
+template <typename LandscapeTree> class Embedding;
+template <typename LandscapeTree> class Embedder;
 
-        template <typename LandscapeTree> class Triangularization;
-        template <typename LandscapeTree> class Triangularizer;
+template <typename LandscapeTree> class Triangularization;
+template <typename LandscapeTree> class Triangularizer;
 
 
-    }
+}
 
-    template <typename ContourTree> class RectangularLandscape;
+template <typename ContourTree> class RectangularLandscape;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -49,31 +49,51 @@ class denali::rectangular::Rectangle
     double height_;
 
 public:
-    class Point 
+    class Point
     {
         double x_;
         double y_;
     public:
         Point(double x, double y) : x_(x), y_(y) {}
-        double x() const { return x_; }
-        double y() const { return y_; }
+        double x() const {
+            return x_;
+        }
+        double y() const {
+            return y_;
+        }
     };
 
     Rectangle(double x, double y, double width, double height)
-            : x(x), y(y), width_(width), height_(height)
+        : x(x), y(y), width_(width), height_(height)
     {
         if (width <= 0 || height <= 0)
             throw std::invalid_argument("Width and height must be positive.");
     }
 
-    double area() const { return width_*height_; }
-    double width() const { return width_; }
-    double height() const { return height_; }
-    Point center() const { return Point(x,y); }
-    Point sw() const { return Point(x-width_/2, y-height_/2); }
-    Point se() const { return Point(x+width_/2, y-height_/2); }
-    Point ne() const { return Point(x+width_/2, y+height_/2); }
-    Point nw() const { return Point(x-width_/2, y+height_/2); }
+    double area() const {
+        return width_*height_;
+    }
+    double width() const {
+        return width_;
+    }
+    double height() const {
+        return height_;
+    }
+    Point center() const {
+        return Point(x,y);
+    }
+    Point sw() const {
+        return Point(x-width_/2, y-height_/2);
+    }
+    Point se() const {
+        return Point(x+width_/2, y-height_/2);
+    }
+    Point ne() const {
+        return Point(x+width_/2, y+height_/2);
+    }
+    Point nw() const {
+        return Point(x-width_/2, y+height_/2);
+    }
     Rectangle shrink(const double) const;
     std::ostream& print(std::ostream& out) const;
 };
@@ -81,7 +101,7 @@ public:
 
 denali::rectangular::Rectangle
 denali::rectangular::Rectangle::shrink(
-        const double factor) const 
+    const double factor) const
 {
     if (factor <= 0 || factor > 1)
         throw std::invalid_argument("Shrink factor must be 0 < factor <= 1.");
@@ -93,7 +113,7 @@ denali::rectangular::Rectangle::shrink(
 
 std::ostream&
 denali::rectangular::Rectangle::print(
-        std::ostream& out) const
+    std::ostream& out) const
 {
     out << "Rectangle(sw=" << "(" << sw().x() << "," << sw().y() << "), "
         << "se=(" << se().x() << "," << se().y() << "), "
@@ -104,8 +124,8 @@ denali::rectangular::Rectangle::print(
 
 
 std::ostream& operator<<(
-        std::ostream& out, 
-        const denali::rectangular::Rectangle& rectangle)
+    std::ostream& out,
+    const denali::rectangular::Rectangle& rectangle)
 {
     return rectangle.print(out);
 }
@@ -127,12 +147,22 @@ protected:
 public:
     virtual ~OrientedRectangleSplit() { }
 
-    void addRectangle(Rectangle rect) { rectangles.push_back(rect); }
-    Rectangle getRectangle(size_t i) const { return rectangles[i]; }
-    size_t numberOfRectangles() const { return rectangles.size(); }
+    void addRectangle(Rectangle rect) {
+        rectangles.push_back(rect);
+    }
+    Rectangle getRectangle(size_t i) const {
+        return rectangles[i];
+    }
+    size_t numberOfRectangles() const {
+        return rectangles.size();
+    }
 
-    Rectangle::Point operator[](size_t i) const { return getBoundaryPoint(i); }
-    size_t size() const { return numberOfRectangles()*2 + 2; }
+    Rectangle::Point operator[](size_t i) const {
+        return getBoundaryPoint(i);
+    }
+    size_t size() const {
+        return numberOfRectangles()*2 + 2;
+    }
 
     virtual Rectangle::Point getBoundaryPoint(size_t id) const = 0;
     virtual size_t getIndexOfCorner(size_t i) const = 0;
@@ -182,8 +212,8 @@ public:
     virtual Rectangle::Point getBoundaryPoint(size_t i) const
     {
         unsigned int n = rectangles.size();
-        
-        if (i == n) return rectangles[n-1].se();        
+
+        if (i == n) return rectangles[n-1].se();
         if (i == 2*n+1) return rectangles[0].nw();
         if (i < n) return rectangles[i].sw();
         if (i > n) return rectangles[2*n-i].ne();
@@ -216,27 +246,41 @@ class denali::rectangular::RectangleSplit
     boost::shared_ptr<OrientedRectangleSplit> split;
 public:
     RectangleSplit(boost::shared_ptr<OrientedRectangleSplit> split)
-            : split(split) {}
+        : split(split) {}
 
-    Rectangle getRectangle(size_t i) const 
-            { return split->getRectangle(i); }
-    size_t numberOfRectangles() const 
-            { return split->numberOfRectangles(); }
+    Rectangle getRectangle(size_t i) const
+    {
+        return split->getRectangle(i);
+    }
+    size_t numberOfRectangles() const
+    {
+        return split->numberOfRectangles();
+    }
 
-    Rectangle::Point operator[](size_t i) const 
-            { return (*split)[i]; }
+    Rectangle::Point operator[](size_t i) const
+    {
+        return (*split)[i];
+    }
 
-    size_t size() const 
-            { return split->size(); }
+    size_t size() const
+    {
+        return split->size();
+    }
 
-    virtual Rectangle::Point getBoundaryPoint(size_t id) const 
-            { return split->getBoundaryPoint(id); }
+    virtual Rectangle::Point getBoundaryPoint(size_t id) const
+    {
+        return split->getBoundaryPoint(id);
+    }
 
-    virtual size_t getIndexOfCorner(size_t i) const 
-            { return split->getIndexOfCorner(i); }
+    virtual size_t getIndexOfCorner(size_t i) const
+    {
+        return split->getIndexOfCorner(i);
+    }
 
     virtual size_t getIndexOfRectangleCorner(size_t rectangle, size_t corner) const
-            { return split->getIndexOfRectangleCorner(rectangle, corner); }
+    {
+        return split->getIndexOfRectangleCorner(rectangle, corner);
+    }
 };
 
 
@@ -249,12 +293,18 @@ private:
     bool horizontal_;
 
 public:
-    RectangleSplitter(Rectangle rectangle) : 
-            rectangle(rectangle), sum_of_weights(0)
+    RectangleSplitter(Rectangle rectangle) :
+        rectangle(rectangle), sum_of_weights(0)
     {}
 
-    RectangleSplitter& horizontally() { horizontal_ = true; return *this; }
-    RectangleSplitter& vertically() { horizontal_ = false; return *this; }
+    RectangleSplitter& horizontally() {
+        horizontal_ = true;
+        return *this;
+    }
+    RectangleSplitter& vertically() {
+        horizontal_ = false;
+        return *this;
+    }
 
     RectangleSplitter& addWeight(const double weight)
     {
@@ -267,7 +317,7 @@ public:
         return *this;
     }
 
-    RectangleSplit split() const{
+    RectangleSplit split() const {
         if (horizontal_) {
             return splitHorizontally();
         } else {
@@ -279,7 +329,7 @@ private:
     RectangleSplit splitHorizontally() const
     {
         boost::shared_ptr<HorizontalRectangleSplit> hsplit =
-                boost::shared_ptr<HorizontalRectangleSplit>(new HorizontalRectangleSplit());
+            boost::shared_ptr<HorizontalRectangleSplit>(new HorizontalRectangleSplit());
 
         double cursor_x = rectangle.sw().x();
         double cursor_y = rectangle.sw().y();
@@ -288,10 +338,10 @@ private:
             double share = weights[i] / sum_of_weights;
             double height = share * rectangle.height();
             Rectangle new_rectangle(
-                    cursor_x + width/2, 
-                    cursor_y + height/2, 
-                    width, 
-                    height);
+                cursor_x + width/2,
+                cursor_y + height/2,
+                width,
+                height);
 
             hsplit->addRectangle(new_rectangle);
             cursor_y = new_rectangle.nw().y();
@@ -303,7 +353,7 @@ private:
     RectangleSplit splitVertically() const
     {
         boost::shared_ptr<VerticalRectangleSplit> vsplit =
-                boost::shared_ptr<VerticalRectangleSplit>(new VerticalRectangleSplit());
+            boost::shared_ptr<VerticalRectangleSplit>(new VerticalRectangleSplit());
 
         double cursor_x = rectangle.sw().x();
         double cursor_y = rectangle.sw().y();
@@ -312,10 +362,10 @@ private:
             double share = weights[i] / sum_of_weights;
             double width = share * rectangle.width();
             Rectangle new_rectangle(
-                    cursor_x + width/2, 
-                    cursor_y + height/2, 
-                    width, 
-                    height);
+                cursor_x + width/2,
+                cursor_y + height/2,
+                width,
+                height);
 
             vsplit->addRectangle(new_rectangle);
             cursor_x = new_rectangle.se().x();
@@ -343,13 +393,21 @@ public:
         unsigned int _id;
 
     public:
-        Point(double x, double y, double z, unsigned int id) 
-                : _x(x), _y(y), _z(z), _id(id) { }
+        Point(double x, double y, double z, unsigned int id)
+            : _x(x), _y(y), _z(z), _id(id) { }
 
-        double x() const { return _x; }
-        double y() const { return _y; }
-        double z() const { return _z; }
-        unsigned int id() const { return _id; }
+        double x() const {
+            return _x;
+        }
+        double y() const {
+            return _y;
+        }
+        double z() const {
+            return _z;
+        }
+        unsigned int id() const {
+            return _id;
+        }
     };
 
 private:
@@ -368,9 +426,9 @@ private:
 
 public:
 
-    Embedding(const LandscapeTree& tree) 
-            : _tree(tree), _contour_points(tree), _contour_corners(tree),
-              _contour_containers(tree), _max_point(0,0,0,0), _min_point(0,0,0,0) { }
+    Embedding(const LandscapeTree& tree)
+        : _tree(tree), _contour_points(tree), _contour_corners(tree),
+          _contour_containers(tree), _max_point(0,0,0,0), _min_point(0,0,0,0) { }
 
     void insertCornerPoint(Point point, Node owner)
     {
@@ -402,7 +460,7 @@ public:
             if (point.z() < _min_point.z()) {
                 _min_point = point;
             } else if (point.z() > _max_point.z()) {
-                _max_point = point; 
+                _max_point = point;
             }
         }
 
@@ -435,7 +493,7 @@ public:
         for (ChildIterator<LandscapeTree> it(_tree, owner);
                 !it.done(); ++it) {
             for (int j=0; j<4; ++j) {
-                int index = split.getIndexOfRectangleCorner(i, j); 
+                int index = split.getIndexOfRectangleCorner(i, j);
                 insertContainerPoint(inserted_points[index], it.child());
             }
             ++i;
@@ -472,7 +530,7 @@ public:
         return _contour_containers[node].size();
     }
 
-    size_t numberOfPoints() const 
+    size_t numberOfPoints() const
     {
         return _points.size();
     }
@@ -507,10 +565,10 @@ class denali::rectangular::Embedder
 
 public:
     Embedder(
-            const LandscapeTree& tree, 
-            const LandscapeWeights<LandscapeTree>& weights,
-            Embedding<LandscapeTree>& embedding)
-            : _tree(tree), _embedding(embedding), _weights(weights) { }
+        const LandscapeTree& tree,
+        const LandscapeWeights<LandscapeTree>& weights,
+        Embedding<LandscapeTree>& embedding)
+        : _tree(tree), _embedding(embedding), _weights(weights) { }
 
     void embed()
     {
@@ -534,10 +592,10 @@ public:
 
 private:
     void embedBranch(
-            Node current, 
-            Node parent, 
-            Rectangle parent_rectangle, 
-            bool split_vertically)
+        Node current,
+        Node parent,
+        Rectangle parent_rectangle,
+        bool split_vertically)
     {
         // shrink the parent rectangle by the ratio of total volumes
         double shrink_ratio = _weights.getTotalNodeWeight(current) /
@@ -545,7 +603,7 @@ private:
 
         Rectangle current_rectangle = parent_rectangle.shrink(shrink_ratio);
 
-        // we'll split the rectangle in alternating directions on every 
+        // we'll split the rectangle in alternating directions on every
         // call to this function
         RectangleSplitter splitter(current_rectangle);
         if (split_vertically) {
@@ -557,7 +615,7 @@ private:
         // now split the current rectangle according to the total volumes of the children
         for (ChildIterator<LandscapeTree> child_it(_tree, current);
                 !child_it.done(); ++child_it) {
-            double edge_weight = _weights.getArcWeight(child_it.arc()) + 
+            double edge_weight = _weights.getArcWeight(child_it.arc()) +
                                  _weights.getTotalNodeWeight(child_it.child());
 
             splitter.addWeight(edge_weight);
@@ -575,7 +633,7 @@ private:
                 embedLeaf(it.child(), split.getRectangle(i));
             } else {
                 // the child is a branch
-                embedBranch(it.child(), current, split.getRectangle(i), !split_vertically);  
+                embedBranch(it.child(), current, split.getRectangle(i), !split_vertically);
             }
             ++i;
         }
@@ -606,11 +664,17 @@ public:
 
     public:
         Triangle(unsigned int i, unsigned int j, unsigned int k)
-                : _i(i), _j(j), _k(k) { }
+            : _i(i), _j(j), _k(k) { }
 
-        unsigned int i() const { return _i; }
-        unsigned int j() const { return _j; }
-        unsigned int k() const { return _k; }
+        unsigned int i() const {
+            return _i;
+        }
+        unsigned int j() const {
+            return _j;
+        }
+        unsigned int k() const {
+            return _k;
+        }
     };
 
 private:
@@ -651,8 +715,8 @@ class denali::rectangular::Triangularizer
 {
     typedef typename LandscapeTree::Node Node;
     typedef typename LandscapeTree::Arc Arc;
-    typedef rectangular::Triangularization<LandscapeTree> 
-            Triangularization;
+    typedef rectangular::Triangularization<LandscapeTree>
+    Triangularization;
 
     const LandscapeTree& _tree;
     const Embedding<LandscapeTree>& _embedding;
@@ -660,11 +724,11 @@ class denali::rectangular::Triangularizer
 
 public:
     Triangularizer(
-            const LandscapeTree& tree,
-            const Embedding<LandscapeTree>& embedding,
-            Triangularization& triangularization)
-            : _tree(tree), _embedding(embedding), 
-              _triangularization(triangularization) {}
+        const LandscapeTree& tree,
+        const Embedding<LandscapeTree>& embedding,
+        Triangularization& triangularization)
+        : _tree(tree), _embedding(embedding),
+          _triangularization(triangularization) {}
 
     void triangularize()
     {
@@ -703,25 +767,25 @@ private:
     {
         triangulateNestedPoint(arc);
     }
-    
+
     void triangulateNestedRectangle(Arc arc)
     {
         Node inner = _tree.target(arc);
 
         for (int i=0; i<4; ++i) {
             _triangularization.insertTriangle(
-                    _embedding.getContainerPoint(inner, i).id(),
-                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
-                    _embedding.getCornerPoint(inner, i).id(),
-                    arc);
+                _embedding.getContainerPoint(inner, i).id(),
+                _embedding.getContainerPoint(inner, (i+1)%4).id(),
+                _embedding.getCornerPoint(inner, i).id(),
+                arc);
         }
 
         for (int i=0; i<4; ++i) {
             _triangularization.insertTriangle(
-                    _embedding.getCornerPoint(inner, i).id(),
-                    _embedding.getCornerPoint(inner, (i+1)%4).id(),
-                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
-                    arc);
+                _embedding.getCornerPoint(inner, i).id(),
+                _embedding.getCornerPoint(inner, (i+1)%4).id(),
+                _embedding.getContainerPoint(inner, (i+1)%4).id(),
+                arc);
         }
     }
 
@@ -731,10 +795,10 @@ private:
 
         for (int i=0; i<4; ++i) {
             _triangularization.insertTriangle(
-                    _embedding.getContainerPoint(inner, i).id(),
-                    _embedding.getContainerPoint(inner, (i+1)%4).id(),
-                    _embedding.getContourPoint(inner, 0).id(),
-                    arc);
+                _embedding.getContainerPoint(inner, i).id(),
+                _embedding.getContainerPoint(inner, (i+1)%4).id(),
+                _embedding.getContourPoint(inner, 0).id(),
+                arc);
         }
     }
 
@@ -750,14 +814,14 @@ private:
 /// \ingroup landscape
 template <typename ContourTree>
 class denali::RectangularLandscape :
-        public
-        ReadableDirectedGraphMixin < LandscapeTree <ContourTree> ,
-        BaseGraphMixin < LandscapeTree <ContourTree> > >
+    public
+    ReadableDirectedGraphMixin < LandscapeTree <ContourTree> ,
+    BaseGraphMixin < LandscapeTree <ContourTree> > >
 {
     typedef
     ReadableDirectedGraphMixin < denali::LandscapeTree <ContourTree> ,
-    BaseGraphMixin < denali::LandscapeTree <ContourTree> > >
-    Mixin;
+                               BaseGraphMixin < denali::LandscapeTree <ContourTree> > >
+                               Mixin;
 
     typedef denali::LandscapeTree<ContourTree> LandscapeTree;
     typedef denali::LandscapeWeights<LandscapeTree> LandscapeWeights;
@@ -775,17 +839,17 @@ public:
     typedef typename Triangularization::Triangle Triangle;
 
     RectangularLandscape(
-            const ContourTree& tree,
-            typename ContourTree::Node root)
-            : _tree(tree, root), _weights(_tree), _embedding(_tree), Mixin(_tree)
+        const ContourTree& tree,
+        typename ContourTree::Node root)
+        : _tree(tree, root), _weights(_tree), _embedding(_tree), Mixin(_tree)
     {
         // create an embedder
         rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);
         embedder.embed();
 
         // create a triangularizer
-        rectangular::Triangularizer<LandscapeTree> 
-                triangularizer(_tree, _embedding, _triangularization);
+        rectangular::Triangularizer<LandscapeTree>
+        triangularizer(_tree, _embedding, _triangularization);
         triangularizer.triangularize();
     }
 
@@ -794,7 +858,7 @@ public:
         return _embedding.numberOfPoints();
     }
 
-    Point getPoint(size_t index) const 
+    Point getPoint(size_t index) const
     {
         return _embedding.getPoint(index);
     }

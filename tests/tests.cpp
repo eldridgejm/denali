@@ -20,16 +20,17 @@
 #include <denali/simplify.h>
 #include <denali/folded.h>
 
-double wenger_vertex_values[] = 
+double wenger_vertex_values[] =
     // 0   1   2   3   4   5   6   7   8   9  10  11
-    { 25, 62, 45, 66, 16, 32, 64, 39, 58, 51, 53, 30 };
+{ 25, 62, 45, 66, 16, 32, 64, 39, 58, 51, 53, 30 };
 
 const size_t n_wenger_vertices = sizeof(wenger_vertex_values)/sizeof(double);
 
 unsigned int wenger_edges[][2] =
-   {{0, 1}, {1, 2}, {3, 4}, {4, 5}, {6, 7}, {7, 8}, {9, 10}, {10, 11}, {0, 3},
+{   {0, 1}, {1, 2}, {3, 4}, {4, 5}, {6, 7}, {7, 8}, {9, 10}, {10, 11}, {0, 3},
     {1, 4}, {2, 5}, {3, 6}, {4, 7}, {5, 8}, {6, 9}, {7, 10}, {8, 11}, {0, 4},
-    {1, 5}, {3, 7}, {4, 8}, {6, 10}, {7, 11}};
+    {1, 5}, {3, 7}, {4, 8}, {6, 10}, {7, 11}
+};
 
 const size_t n_wenger_edges = sizeof(wenger_edges)/sizeof(unsigned int[2]);
 
@@ -37,63 +38,63 @@ const size_t n_wenger_edges = sizeof(wenger_edges)/sizeof(unsigned int[2]);
 TEST(Mixins)
 {
     denali::concepts::checkConcept
-        <
-        denali::concepts::ReadableDirectedGraph,
-        denali::ReadableDirectedGraphMixin
-            <
-            denali::concepts::ReadableDirectedGraph,
-            denali::BaseGraphMixin<denali::concepts::ReadableDirectedGraph>
-            >
-        > ();
+    <
+    denali::concepts::ReadableDirectedGraph,
+           denali::ReadableDirectedGraphMixin
+           <
+           denali::concepts::ReadableDirectedGraph,
+           denali::BaseGraphMixin<denali::concepts::ReadableDirectedGraph>
+           >
+           > ();
 
     denali::concepts::checkConcept
-        <
-        denali::concepts::WritableReadableDirectedGraph,
-        denali::WritableReadableDirectedGraphMixin
-            <
-            denali::concepts::WritableReadableDirectedGraph,
-            denali::BaseGraphMixin<denali::concepts::WritableReadableDirectedGraph>
-            >
-        > ();
+    <
+    denali::concepts::WritableReadableDirectedGraph,
+           denali::WritableReadableDirectedGraphMixin
+           <
+           denali::concepts::WritableReadableDirectedGraph,
+           denali::BaseGraphMixin<denali::concepts::WritableReadableDirectedGraph>
+           >
+           > ();
 
     typedef denali::concepts::NodeObservable <
-                denali::concepts::BaseObservable<
-                        denali::concepts::BaseUndirectedGraph
-                        >
-                >
-        MockNodeObservable;
+    denali::concepts::BaseObservable<
+    denali::concepts::BaseUndirectedGraph
+    >
+    >
+    MockNodeObservable;
 
     typedef denali::concepts::ArcObservable <
-                denali::concepts::BaseObservable<
-                        denali::concepts::BaseDirectedGraph
-                        >
-                >
-        MockArcObservable;
+    denali::concepts::BaseObservable<
+    denali::concepts::BaseDirectedGraph
+    >
+    >
+    MockArcObservable;
 
     typedef denali::concepts::EdgeObservable <
-                denali::concepts::BaseObservable<
-                        denali::concepts::BaseUndirectedGraph
-                        >
-                >
-        MockEdgeObservable;
+    denali::concepts::BaseObservable<
+    denali::concepts::BaseUndirectedGraph
+    >
+    >
+    MockEdgeObservable;
 
     denali::concepts::checkConcept
-        <
-        MockNodeObservable,
-        denali::NodeObservableMixin<MockNodeObservable, MockNodeObservable>
-        > ();
+    <
+    MockNodeObservable,
+    denali::NodeObservableMixin<MockNodeObservable, MockNodeObservable>
+    > ();
 
     denali::concepts::checkConcept
-        <
-        MockArcObservable,
-        denali::ArcObservableMixin<MockArcObservable, MockArcObservable>
-        > ();
+    <
+    MockArcObservable,
+    denali::ArcObservableMixin<MockArcObservable, MockArcObservable>
+    > ();
 
     denali::concepts::checkConcept
-        <
-        MockEdgeObservable,
-        denali::EdgeObservableMixin<MockEdgeObservable, MockEdgeObservable>
-        > ();
+    <
+    MockEdgeObservable,
+    denali::EdgeObservableMixin<MockEdgeObservable, MockEdgeObservable>
+    > ();
 }
 
 
@@ -109,24 +110,24 @@ SUITE(GraphStructures)
          *   - WritableReadableDirectedGraph
          */
         typedef denali::concepts::NodeObservable <
-                denali::concepts::ArcObservable <
-                denali::concepts::BaseObservable <
-                denali::concepts::WritableReadableDirectedGraph > > >
-            Implementation;
-        
-        denali::concepts::checkConcept<
-                denali::concepts::NodeObservable<
-                    denali::concepts::BaseObservable<
-                    denali::concepts::BaseDirectedGraph> >,
-                denali::DirectedGraphBase<Implementation>
-                > ();
+        denali::concepts::ArcObservable <
+        denali::concepts::BaseObservable <
+        denali::concepts::WritableReadableDirectedGraph > > >
+        Implementation;
 
         denali::concepts::checkConcept<
-                denali::concepts::ArcObservable<
-                    denali::concepts::BaseObservable<
-                    denali::concepts::BaseDirectedGraph> >,
-                denali::DirectedGraphBase<Implementation>
-                > ();
+        denali::concepts::NodeObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseDirectedGraph> >,
+               denali::DirectedGraphBase<Implementation>
+               > ();
+
+        denali::concepts::checkConcept<
+        denali::concepts::ArcObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseDirectedGraph> >,
+               denali::DirectedGraphBase<Implementation>
+               > ();
 
     }
 
@@ -135,28 +136,28 @@ SUITE(GraphStructures)
         typedef denali::DirectedGraph Graph;
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::WritableReadableDirectedGraph,
-            Graph
-            > ();
+        <
+        denali::concepts::WritableReadableDirectedGraph,
+               Graph
+               > ();
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::NodeObservable<
-                    denali::concepts::BaseObservable<
-                        denali::concepts::BaseDirectedGraph >
-                >,
-            Graph
-            > ();
+        <
+        denali::concepts::NodeObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseDirectedGraph >
+        >,
+        Graph
+        > ();
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::ArcObservable<
-                    denali::concepts::BaseObservable<
-                        denali::concepts::BaseDirectedGraph >
-                >,
-            Graph
-            > ();
+        <
+        denali::concepts::ArcObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseDirectedGraph >
+        >,
+        Graph
+        > ();
 
         Graph graph;
         Graph::Node n1 = graph.addNode();
@@ -276,26 +277,26 @@ SUITE(GraphStructures)
         typedef denali::UndirectedGraph Graph;
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::WritableReadableUndirectedGraph,
-            Graph
-            > ();
+        <
+        denali::concepts::WritableReadableUndirectedGraph,
+               Graph
+               > ();
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::NodeObservable<
-                denali::concepts::BaseObservable<
-                denali::concepts::BaseUndirectedGraph> >,
-            Graph
-            > ();
+        <
+        denali::concepts::NodeObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseUndirectedGraph> >,
+               Graph
+               > ();
 
         denali::concepts::checkConcept
-            <
-            denali::concepts::EdgeObservable<
-                denali::concepts::BaseObservable<
-                denali::concepts::BaseUndirectedGraph> >,
-            Graph
-            > ();
+        <
+        denali::concepts::EdgeObservable<
+        denali::concepts::BaseObservable<
+        denali::concepts::BaseUndirectedGraph> >,
+               Graph
+               > ();
 
         Graph graph;
         Graph::Node n1 = graph.addNode();
@@ -329,9 +330,10 @@ SUITE(GraphStructures)
             nodes.push_back(node);
         }
 
-        unsigned int edges[][2] = 
-                {{0,1}, {1,4}, {1,5}, {1,3}, {9,3}, {0,3}, {2,0},
-                 {2,6}, {7,2}, {2,8}, {8,11}, {12,8}};
+        unsigned int edges[][2] =
+        {   {0,1}, {1,4}, {1,5}, {1,3}, {9,3}, {0,3}, {2,0},
+            {2,6}, {7,2}, {2,8}, {8,11}, {12,8}
+        };
 
         size_t n_edges = 12;
 
@@ -357,21 +359,21 @@ SUITE(ContourTree)
     TEST(ScalarSimplicialComplex)
     {
         denali::concepts::checkConcept
-            <
-            denali::concepts::ScalarSimplicialComplex,
-            denali::ScalarSimplicialComplex
-            > ();
+        <
+        denali::concepts::ScalarSimplicialComplex,
+               denali::ScalarSimplicialComplex
+               > ();
 
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         CHECK_EQUAL(n_wenger_vertices, plex.numberOfNodes());
@@ -381,10 +383,10 @@ SUITE(ContourTree)
     TEST(UndirectedScalarMemberIDGraph)
     {
         denali::concepts::checkConcept
-            <
-            denali::concepts::UndirectedScalarMemberIDGraph,
-            denali::UndirectedScalarMemberIDGraph
-            > ();
+        <
+        denali::concepts::UndirectedScalarMemberIDGraph,
+               denali::UndirectedScalarMemberIDGraph
+               > ();
 
         typedef denali::UndirectedScalarMemberIDGraph Graph;
         Graph graph;
@@ -393,30 +395,30 @@ SUITE(ContourTree)
     TEST(TotalOrder)
     {
         denali::concepts::checkConcept
-            <
-            denali::concepts::TotalOrder,
-            denali::TotalOrder
-            > ();
+        <
+        denali::concepts::TotalOrder,
+               denali::TotalOrder
+               > ();
     }
 
     TEST(CarrsAlgorithm)
     {
         denali::concepts::checkConcept
-            <
-            denali::concepts::ContourTreeAlgorithm,
-            denali::CarrsAlgorithm
-            > ();
+        <
+        denali::concepts::ContourTreeAlgorithm,
+               denali::CarrsAlgorithm
+               > ();
 
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         denali::CarrsAlgorithm alg;
@@ -429,28 +431,28 @@ SUITE(ContourTree)
     TEST(ContourTree)
     {
         denali::concepts::checkConcept
-            <
-            denali::concepts::ContourTree,
-            denali::ContourTree
-            > ();
+        <
+        denali::concepts::ContourTree,
+               denali::ContourTree
+               > ();
 
 
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ContourTree tree = 
-                denali::ContourTree::compute(plex, alg);
-                
+        denali::ContourTree tree =
+            denali::ContourTree::compute(plex, alg);
+
     }
 
 }
@@ -464,18 +466,18 @@ SUITE(Landscape)
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ContourTree tree = 
-                denali::ContourTree::compute(plex, alg);
+        denali::ContourTree tree =
+            denali::ContourTree::compute(plex, alg);
 
         denali::LandscapeTree<denali::ContourTree> lscape(tree, tree.getNode(4));
 
@@ -493,18 +495,18 @@ SUITE(RectangularLandscape)
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         denali::CarrsAlgorithm alg;
-        denali::ContourTree tree = 
-                denali::ContourTree::compute(plex, alg);
+        denali::ContourTree tree =
+            denali::ContourTree::compute(plex, alg);
 
         typedef denali::RectangularLandscape<denali::ContourTree> RectangularLandscape;
         RectangularLandscape rlscape(tree, tree.getNode(4));
@@ -530,17 +532,17 @@ SUITE(Simplify)
 
     TEST(PersistenceSimplifier)
     {
-        
+
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);    
+            plex.addNode(wenger_vertex_values[i]);
         }
 
         for (int i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
-                    plex.getNode(wenger_edges[i][0]),
-                    plex.getNode(wenger_edges[i][1]));
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
         }
 
         typedef denali::ContourTree ContourTree;
@@ -554,11 +556,11 @@ SUITE(Simplify)
         PersistenceSimplifier simplifier(15);
 
 
-        SimplifiedContourTree simplified = 
-                SimplifiedContourTree::simplify(tree, simplifier);
+        SimplifiedContourTree simplified =
+            SimplifiedContourTree::simplify(tree, simplifier);
 
         /*
-        for (denali::EdgeIterator<SimplifiedContourTree> it(simplified); 
+        for (denali::EdgeIterator<SimplifiedContourTree> it(simplified);
                 !it.done(); ++it) {
 
             SimplifiedContourTree::Node u = simplified.u(it.edge());
@@ -615,10 +617,10 @@ SUITE(Folded)
         CHECK_EQUAL(3, splice_tree.numberOfEdges());
 
         splice_tree.spliceFromBeta(
-                splice_tree.getNodeFromAlpha(collapsed.getNode(1)),
-                splice_tree.getEdgeFromAlpha(ce14),
-                expanded.getNode(1),
-                ee13);
+            splice_tree.getNodeFromAlpha(collapsed.getNode(1)),
+            splice_tree.getEdgeFromAlpha(ce14),
+            expanded.getNode(1),
+            ee13);
 
         CHECK_EQUAL(6, splice_tree.numberOfNodes());
         CHECK_EQUAL(5, splice_tree.numberOfEdges());

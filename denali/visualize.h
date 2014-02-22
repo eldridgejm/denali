@@ -28,14 +28,14 @@
 
 namespace denali {
 
-    namespace visualize {
+namespace visualize {
 
-        template <typename Landscape> 
-        vtkSmartPointer<vtkPolyData> buildMesh(const Landscape&, double);
+template <typename Landscape>
+vtkSmartPointer<vtkPolyData> buildMesh(const Landscape&, double);
 
-    }
+}
 
-    class Visualizer;
+class Visualizer;
 
 }
 
@@ -43,11 +43,11 @@ namespace denali {
 template <typename Landscape>
 vtkSmartPointer<vtkPolyData>
 denali::visualize::buildMesh(
-        const Landscape& landscape,
-        double squash_factor)
+    const Landscape& landscape,
+    double squash_factor)
 {
     // store some points
-    vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New(); 
+    vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
 
     // insert the vertices from the landscape into the vtk container
     double max_z = landscape.getMaxPoint().z();
@@ -94,41 +94,41 @@ class denali::Visualizer
 {
 
 public:
-    
+
     template <typename Landscape>
     void visualize(
-            const Landscape& landscape)
+        const Landscape& landscape)
     {
 
-        vtkSmartPointer<vtkPolyData> trianglePolyData = 
-                visualize::buildMesh(landscape, 1.);
+        vtkSmartPointer<vtkPolyData> trianglePolyData =
+            visualize::buildMesh(landscape, 1.);
 
         // visualize::colorizeLandscape(trianglePolyData);
-      
+
 
         // Create mapper and actor
         vtkSmartPointer<vtkPolyDataMapper> mapper =
-                vtkSmartPointer<vtkPolyDataMapper>::New();
+            vtkSmartPointer<vtkPolyDataMapper>::New();
 
-        #if VTK_MAJOR_VERSION <= 5
-            mapper->SetInput(trianglePolyData);
-        #else
-            mapper->SetInputData(trianglePolyData);
-        #endif
+#if VTK_MAJOR_VERSION <= 5
+        mapper->SetInput(trianglePolyData);
+#else
+        mapper->SetInputData(trianglePolyData);
+#endif
 
         vtkSmartPointer<vtkActor> actor =
-                vtkSmartPointer<vtkActor>::New();
+            vtkSmartPointer<vtkActor>::New();
         actor->SetMapper(mapper);
 
 
         // Create a renderer, render window, and an interactor
         vtkSmartPointer<vtkRenderer> renderer =
-                vtkSmartPointer<vtkRenderer>::New();
+            vtkSmartPointer<vtkRenderer>::New();
         vtkSmartPointer<vtkRenderWindow> renderWindow =
-                vtkSmartPointer<vtkRenderWindow>::New();
+            vtkSmartPointer<vtkRenderWindow>::New();
         renderWindow->AddRenderer(renderer);
         vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
-                vtkSmartPointer<vtkRenderWindowInteractor>::New();
+            vtkSmartPointer<vtkRenderWindowInteractor>::New();
         renderWindowInteractor->SetRenderWindow(renderWindow);
 
         // Mouse interactor style
@@ -142,7 +142,7 @@ public:
 
         // Add the actors to the scene
         renderer->AddActor(actor);
-        // renderer->SetBackground(bg_intensity_, bg_intensity_, bg_intensity_); 
+        // renderer->SetBackground(bg_intensity_, bg_intensity_, bg_intensity_);
 
 
         // Render and interact

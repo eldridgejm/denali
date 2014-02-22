@@ -30,27 +30,27 @@ bool cmdOptionExists(char** begin, char** end, const std::string& option)
 
 int cli_compute(int argc, char ** argv)
 {
-    std::string usage = 
-    "usage: denali compute <vertex value file> <edge file> <tree file>\n"
-    "\n"
-    "Given the 1-skeleton of a simplicial complex in the form of a list of vertex\n"
-    "values and a list of edges, prints the edges of the contour tree to stdout.\n"
-    "\n"
-    "<vertex value file>\n"
-    "\tA file containing the scalar values defined at the vertices of the simplicial\n"
-    "\tcomplex, one per line.\n"
-    "\n"
-    "<edge file>\n"
-    "\tA tab-delimited file containing the edges in the 1-skeleton of the\n"
-    "\tsimplicial complex. An edge is represented by the indices of the vertices\n"
-    "\tit connects, where indexing starts at zero. For more information, see the\n"
-    "\tdocumentation, or an example edge file.\n"
-    "\n"
-    "<tree file>\n"
-    "\tThe file in which to place the output. The file will be overwritten without\n"
-    "\twarning.";
+    std::string usage =
+        "usage: denali compute <vertex value file> <edge file> <tree file>\n"
+        "\n"
+        "Given the 1-skeleton of a simplicial complex in the form of a list of vertex\n"
+        "values and a list of edges, prints the edges of the contour tree to stdout.\n"
+        "\n"
+        "<vertex value file>\n"
+        "\tA file containing the scalar values defined at the vertices of the simplicial\n"
+        "\tcomplex, one per line.\n"
+        "\n"
+        "<edge file>\n"
+        "\tA tab-delimited file containing the edges in the 1-skeleton of the\n"
+        "\tsimplicial complex. An edge is represented by the indices of the vertices\n"
+        "\tit connects, where indexing starts at zero. For more information, see the\n"
+        "\tdocumentation, or an example edge file.\n"
+        "\n"
+        "<tree file>\n"
+        "\tThe file in which to place the output. The file will be overwritten without\n"
+        "\twarning.";
 
-    if (cmdOptionExists(argv, argv + argc, "-h") || 
+    if (cmdOptionExists(argv, argv + argc, "-h") ||
             cmdOptionExists(argv, argv + argc, "--help")) {
         std::cout << usage << std::endl;
         return 0;
@@ -72,14 +72,14 @@ int cli_compute(int argc, char ** argv)
 
         // compute the contour tree
         denali::CarrsAlgorithm carrs_algorithm;
-        denali::ContourTree contour_tree = 
-                denali::ContourTree::compute(plex, carrs_algorithm);
+        denali::ContourTree contour_tree =
+            denali::ContourTree::compute(plex, carrs_algorithm);
 
         // write it to disk
         denali::writeContourTreeFile(argv[4], contour_tree);
     }
     catch (std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl; 
+        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
 
@@ -89,22 +89,22 @@ int cli_compute(int argc, char ** argv)
 
 int cli_visualize(int argc, char ** argv)
 {
-    std::string usage = 
-    "usage: denali visualize <contour tree file> [--root (max | min | <node>)]\n"
-    "\n"
-    "<contour tree file>\n"
-    "\tThe file resulting from using 'denali compute' to compute a contour tree.\n"
-    "\n"
-    "Options:\n"
-    "--root\n"
-    "\tThe node to use as the root of the tree. Must be a node of degree one.\n"
-    "\tValid options are:\n"
-    "\t\tmax:     Use the node with the maximum vertex value as the root.\n"
-    "\t\tmin:     Use the node with the minimum vertex value as the root.\n"
-    "\t\t<node>:  Use the specified node as the root.\n"
-    "\tDefault: min\n";
+    std::string usage =
+        "usage: denali visualize <contour tree file> [--root (max | min | <node>)]\n"
+        "\n"
+        "<contour tree file>\n"
+        "\tThe file resulting from using 'denali compute' to compute a contour tree.\n"
+        "\n"
+        "Options:\n"
+        "--root\n"
+        "\tThe node to use as the root of the tree. Must be a node of degree one.\n"
+        "\tValid options are:\n"
+        "\t\tmax:     Use the node with the maximum vertex value as the root.\n"
+        "\t\tmin:     Use the node with the minimum vertex value as the root.\n"
+        "\t\t<node>:  Use the specified node as the root.\n"
+        "\tDefault: min\n";
 
-    if (cmdOptionExists(argv, argv + argc, "-h") || 
+    if (cmdOptionExists(argv, argv + argc, "-h") ||
             cmdOptionExists(argv, argv + argc, "--help")) {
         std::cout << usage << std::endl;
         return 0;
@@ -165,7 +165,7 @@ int cli_visualize(int argc, char ** argv)
         denali::Visualizer visualizer;
         visualizer.visualize(rlscape);
 
-        
+
 
     }
     catch (std::exception& e) {
@@ -180,14 +180,14 @@ int cli_visualize(int argc, char ** argv)
 
 int main(int argc, char ** argv) try
 {
-    std::string usage = 
-    "usage: denali <command> [<args>]\n"
-    "\n"
-    "Commands:\n"
-    "    compute     Computes a contour tree from a simplicial complex.\n"
-    "\n"
-    "To see more information about any command, type 'denali <command> -h'. To read\n"
-    "about typical workflow, see the README.";
+    std::string usage =
+        "usage: denali <command> [<args>]\n"
+        "\n"
+        "Commands:\n"
+        "    compute     Computes a contour tree from a simplicial complex.\n"
+        "\n"
+        "To see more information about any command, type 'denali <command> -h'. To read\n"
+        "about typical workflow, see the README.";
 
     if (argc < 2) {
         std::cerr << "Insufficient number of arguments provided!" << std::endl;
