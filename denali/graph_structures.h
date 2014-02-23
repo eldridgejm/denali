@@ -79,8 +79,13 @@ public:
         bool operator==(const Node& node) const {
             return index == node.index;
         }
+
         bool operator!=(const Node& node) const {
             return index != node.index;
+        }
+
+        bool operator<(const Node& node) const {
+            return index < node.index;
         }
     };
 
@@ -98,8 +103,13 @@ public:
         bool operator==(const Arc& arc) const {
             return index == arc.index;
         }
+
         bool operator!=(const Arc& arc) const {
             return index != arc.index;
+        }
+
+        bool operator<(const Arc& arc) const {
+            return index < arc.index;
         }
     };
 
@@ -691,11 +701,17 @@ public:
 
     public:
         Node() {}
-        bool operator==(const Node& node) {
+
+        bool operator==(const Node& node) const {
             return base == node.base;
         }
-        bool operator!=(const Node& node) {
+
+        bool operator!=(const Node& node) const {
             return base != node.base;
+        }
+
+        bool operator<(const Node& node) const {
+            return base < node.base;
         }
     };
 
@@ -709,11 +725,17 @@ public:
 
     public:
         Edge() {}
-        bool operator==(const Edge& edge) {
+
+        bool operator==(const Edge& edge) const {
             return base == edge.base;
         }
-        bool operator!=(const Edge& edge) {
+
+        bool operator!=(const Edge& edge) const {
             return base != edge.base;
+        }
+
+        bool operator<(const Edge& edge) const {
+            return base < edge.base;
         }
     };
 

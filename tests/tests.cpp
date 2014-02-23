@@ -21,7 +21,7 @@
 #include <denali/folded.h>
 
 double wenger_vertex_values[] =
-    // 0   1   2   3   4   5   6   7   8   9  10  11
+// 0   1   2   3   4   5   6   7   8   9  10  11
 { 25, 62, 45, 66, 16, 32, 64, 39, 58, 51, 53, 30 };
 
 const size_t n_wenger_vertices = sizeof(wenger_vertex_values)/sizeof(double);
@@ -33,6 +33,17 @@ unsigned int wenger_edges[][2] =
 };
 
 const size_t n_wenger_edges = sizeof(wenger_edges)/sizeof(unsigned int[2]);
+
+
+template <typename UndirectedGraph, typename IDMap>
+void printUndirectedGraph(const UndirectedGraph& graph, IDMap& idmap)
+{
+    for (denali::EdgeIterator<UndirectedGraph> it(graph); !it.done(); ++it) {
+        typename UndirectedGraph::Node u = graph.u(it.edge());
+        typename UndirectedGraph::Node v = graph.v(it.edge());
+        std::cout << idmap[u] << " <----> " << idmap[v] << std::endl;
+    }
+}
 
 
 TEST(Mixins)
@@ -577,119 +588,57 @@ SUITE(Simplify)
 
 SUITE(Folded)
 {
-
-    TEST(SplicedUndirectedTree)
+    TEST(FoldTree)
     {
-        typedef denali::UndirectedScalarMemberIDGraph Expanded;
-        typedef Expanded::Edge Tab;
+        typedef denali::FoldTree FoldTree;
 
-        typedef denali::UndirectedTabbedScalarMemberIDGraph<Tab> Collapsed;
+        FoldTree fold_tree;
+        std::map<FoldTree::Node, int> idmap;
 
-        Expanded expanded;
-        Collapsed collapsed;
+        FoldTree::Node n1 = fold_tree.addNode();
+        idmap[n1] = 1;
+        FoldTree::Node n2 = fold_tree.addNode();
+        idmap[n2] = 2;
+        FoldTree::Node n3 = fold_tree.addNode();
+        idmap[n3] = 3;
+        FoldTree::Node n4 = fold_tree.addNode();
+        idmap[n4] = 4;
+        FoldTree::Node n5 = fold_tree.addNode();
+        idmap[n5] = 5;
+        FoldTree::Node n6 = fold_tree.addNode();
+        idmap[n6] = 6;
 
-        for (int i=0; i<6; ++i) {
-            expanded.addNode(i, 0.);
-        }
+        FoldTree::Edge e12 = fold_tree.addEdge(n1,n2);
+        FoldTree::Edge e23 = fold_tree.addEdge(n2,n3);
+        FoldTree::Edge e24 = fold_tree.addEdge(n2,n4);
+        FoldTree::Edge e45 = fold_tree.addEdge(n5,n4);
+        FoldTree::Edge e46 = fold_tree.addEdge(n6,n4);
 
-        expanded.addEdge(expanded.getNode(0), expanded.getNode(1));
-        expanded.addEdge(expanded.getNode(1), expanded.getNode(2));
-        Expanded::Edge ee13 = expanded.addEdge(expanded.getNode(1), expanded.getNode(3));
-        Expanded::Edge ee43 = expanded.addEdge(expanded.getNode(4), expanded.getNode(3));
-        expanded.addEdge(expanded.getNode(5), expanded.getNode(3));
+        fold_tree.collapse(e45);
 
-        collapsed.addNode(0, 0.);
-        collapsed.addNode(1, 0.);
-        collapsed.addNode(2, 0.);
-        collapsed.addNode(4, 0.);
+        CHECK_EQUAL(5, fold_tree.numberOfNodes());
+        CHECK_EQUAL(6, fold_tree.numberOfNodeFolds());
+        CHECK_EQUAL(2, fold_tree.degree(n4));
 
-        collapsed.addEdge(collapsed.getNode(0), collapsed.getNode(1));
-        collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(2));
-        Collapsed::Edge ce14 = collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(4));
+        FoldTree::Edge e26 = fold_tree.reduce(n4);
 
-        collapsed.setTab(ce14, collapsed.getNode(4), ee43, collapsed.getNode(1), ee13);
+        CHECK(!fold_tree.isNodeValid(n4));
+        CHECK_EQUAL(4, fold_tree.numberOfNodes());
+        CHECK_EQUAL(1, fold_tree.degree(n6));
 
-        typedef denali::UndirectedSpliceTree<Collapsed,Expanded> SpliceTree;
+        printUndirectedGraph(fold_tree, idmap);
 
-        SpliceTree splice_tree = SpliceTree::fromAlphaTree(collapsed, expanded);
+        std::cout << "Reversing..." << std::endl;
 
-        CHECK_EQUAL(4, splice_tree.numberOfNodes());
-        CHECK_EQUAL(3, splice_tree.numberOfEdges());
+        n4 = fold_tree.unreduce(e26);
+        fold_tree.uncollapse(n4);
 
-        splice_tree.spliceFromBeta(
-            splice_tree.getNodeFromAlpha(collapsed.getNode(1)),
-            splice_tree.getEdgeFromAlpha(ce14),
-            expanded.getNode(1),
-            ee13);
+        printUndirectedGraph(fold_tree, idmap);
 
-        CHECK_EQUAL(6, splice_tree.numberOfNodes());
-        CHECK_EQUAL(5, splice_tree.numberOfEdges());
 
-        /*
-        for (denali::EdgeIterator<SpliceTree> it(splice_tree); !it.done(); ++it) {
-            SpliceTree::Node splice_u = splice_tree.u(it.edge());
-            SpliceTree::Node splice_v = splice_tree.v(it.edge());
 
-            if (splice_tree.isNodeAlpha(splice_u)) {
-                Collapsed::Node node = splice_tree.getAlphaNode(splice_u);
-                std::cout << collapsed.getID(node);
-            } else {
-                Expanded::Node node = splice_tree.getBetaNode(splice_u);
-                std::cout << expanded.getID(node);
-            }
-
-            std::cout << " <---> ";
-
-            if (splice_tree.isNodeAlpha(splice_v)) {
-                Collapsed::Node node = splice_tree.getAlphaNode(splice_v);
-                std::cout << collapsed.getID(node);
-            } else {
-                Expanded::Node node = splice_tree.getBetaNode(splice_v);
-                std::cout << expanded.getID(node);
-            }
-
-            std::cout << std::endl;
-
-        }
-        */
     }
 
-    TEST(FoldedTree)
-    {
-        typedef denali::UndirectedScalarMemberIDGraph Expanded;
-        typedef Expanded::Edge Tab;
-
-        typedef denali::UndirectedTabbedScalarMemberIDGraph<Tab> Collapsed;
-
-        Expanded expanded;
-        Collapsed collapsed;
-
-        for (int i=0; i<6; ++i) {
-            expanded.addNode(i, 0.);
-        }
-
-        expanded.addEdge(expanded.getNode(0), expanded.getNode(1));
-        expanded.addEdge(expanded.getNode(1), expanded.getNode(2));
-        Expanded::Edge ee13 = expanded.addEdge(expanded.getNode(1), expanded.getNode(3));
-        Expanded::Edge ee43 = expanded.addEdge(expanded.getNode(4), expanded.getNode(3));
-        expanded.addEdge(expanded.getNode(5), expanded.getNode(3));
-
-        collapsed.addNode(0, 0.);
-        collapsed.addNode(1, 0.);
-        collapsed.addNode(2, 0.);
-        collapsed.addNode(4, 0.);
-
-        collapsed.addEdge(collapsed.getNode(0), collapsed.getNode(1));
-        collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(2));
-        Collapsed::Edge ce14 = collapsed.addEdge(collapsed.getNode(1), collapsed.getNode(4));
-
-        collapsed.setTab(ce14, collapsed.getNode(4), ee43, collapsed.getNode(1), ee13);
-
-        typedef denali::UndirectedFoldedTree<Collapsed,Expanded> FoldedTree;
-
-        FoldedTree folded(collapsed, expanded);
-
-    }
 
 }
 
