@@ -7,6 +7,8 @@
 
 namespace denali {
 
+/// \brief A folded tree.
+/// \ingroup fold_tree
 class FoldTree :
         public
         ReadableUndirectedGraphMixin <UndirectedGraph,
@@ -17,15 +19,15 @@ public:
     class NodeFold;
     class EdgeFold;
 
-    typedef boost::shared_ptr<NodeFold> NodeFoldPtr;
-    typedef boost::shared_ptr<EdgeFold> EdgeFoldPtr;
-
 private:
 
     typedef
     ReadableUndirectedGraphMixin <UndirectedGraph,
     BaseGraphMixin <UndirectedGraph> >
     Mixin;
+
+    typedef boost::shared_ptr<NodeFold> NodeFoldPtr;
+    typedef boost::shared_ptr<EdgeFold> EdgeFoldPtr;
 
     typedef UndirectedGraph GraphType;
 
@@ -35,6 +37,7 @@ private:
     ObservingEdgeMap<GraphType, EdgeFoldPtr> _edge_to_fold;
 
     unsigned int _number_of_node_folds;
+    unsigned int _edge_fold_identifier;
 
     Node restoreNode(NodeFoldPtr v_fold)
     {
@@ -69,13 +72,43 @@ public:
     {
         friend class FoldTree;
 
-        unsigned int _id;
+        size_t _id;
         std::vector<EdgeFoldPtr> _collapsed;
         EdgeFoldPtr _uv_fold;
         EdgeFoldPtr _vw_fold;
         Node _node;
 
         NodeFold(Node node, unsigned int id) : _node(node), _id(id) {}
+
+    public:
+        
+        size_t numberOfCollapsedEdgeFolds() const {
+            return _collapsed.size();
+        }
+
+        const EdgeFold& getCollapsedEdgeFold(size_t i) const {
+            return *_collapsed[i];
+        }
+
+        const EdgeFold& uvFold() const {
+            return *_uv_fold;
+        }
+
+        const EdgeFold& vwFold() const {
+            return *_vw_fold;
+        }
+
+        Node getNode() const {
+            return _node;
+        }
+
+        bool isReduced() const {
+            return _uv_fold;
+        }
+
+        size_t getIdentifier() const {
+            return _id;
+        }
 
     };
 
@@ -87,16 +120,42 @@ public:
         NodeFoldPtr _v_fold;
         NodeFoldPtr _reduced_fold;
         Edge _edge;
+        size_t _id;
 
-        EdgeFold(Edge edge, NodeFoldPtr u_fold, NodeFoldPtr v_fold)
-            : _edge(edge), _u_fold(u_fold), _v_fold(v_fold) {}
+        EdgeFold(size_t id, Edge edge, NodeFoldPtr u_fold, NodeFoldPtr v_fold)
+            : _id(id), _edge(edge), _u_fold(u_fold), _v_fold(v_fold) {}
 
+    public:
+
+        const NodeFold& uFold() const {
+            return *_u_fold;
+        }
+
+        const NodeFold& vFold() const {
+            return *_v_fold;
+        }
+
+        const NodeFold& reducedFold() const {
+            return *_reduced_fold;
+        }
+
+        Edge getEdge() const {
+            return _edge;
+        }
+
+        bool hasReduced() const {
+            return _reduced_fold;
+        }
+
+        size_t getIdentifier() const {
+            return _id;
+        }
     };
 
 
     FoldTree() 
         : Mixin(_graph), _node_to_fold(_graph), _edge_to_fold(_graph),
-          _number_of_node_folds(0) {}
+          _number_of_node_folds(0), _edge_fold_identifier(0) {}
 
     /// \brief Add a node to the tree.
     Node addNode()
@@ -125,12 +184,24 @@ public:
         NodeFoldPtr v_fold = _node_to_fold[v];
 
         // make an edge fold
-        EdgeFoldPtr edge_fold = EdgeFoldPtr(new EdgeFold(edge, u_fold, v_fold));
+        EdgeFoldPtr edge_fold = EdgeFoldPtr(
+                new EdgeFold(_edge_fold_identifier, edge, u_fold, v_fold));
+        _edge_fold_identifier++;
 
         // link it to the edge
         _edge_to_fold[edge] = edge_fold;
 
         return edge;
+    }
+
+    /// \brief Retrieve a node's fold.
+    const NodeFold& getNodeFold(Node node) const {
+        return *_node_to_fold[node];
+    }
+
+    /// \brief Retrieve an edge's fold.
+    const EdgeFold& getEdgeFold(Edge edge) const {
+        return *_edge_to_fold[edge];
     }
 
     /// \brief Get the number of nodes that would exist in the fully unfolded tree.

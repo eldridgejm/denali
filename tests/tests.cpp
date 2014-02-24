@@ -46,6 +46,17 @@ void printUndirectedGraph(const UndirectedGraph& graph, IDMap& idmap)
 }
 
 
+template <typename ContourTree>
+void printContourTree(const ContourTree& tree)
+{
+    for (denali::EdgeIterator<ContourTree> it(tree); !it.done(); ++it) {
+        typename ContourTree::Node u = tree.u(it.edge());
+        typename ContourTree::Node v = tree.v(it.edge());
+        std::cout << tree.getID(u) << " <----> " << tree.getID(v) << std::endl;
+    }
+}
+
+
 TEST(Mixins)
 {
     denali::concepts::checkConcept
@@ -557,29 +568,27 @@ SUITE(Simplify)
         }
 
         typedef denali::ContourTree ContourTree;
-        typedef denali::SimplifiedContourTree<ContourTree> SimplifiedContourTree;
-        typedef denali::PersistenceSimplifier PersistenceSimplifier;
 
         denali::CarrsAlgorithm alg;
 
         ContourTree tree = ContourTree::compute(plex, alg);
 
-        PersistenceSimplifier simplifier(15);
 
+        denali::FoldedContourTreeSimplificationContext<ContourTree> context(tree);
 
-        SimplifiedContourTree simplified =
-            SimplifiedContourTree::simplify(tree, simplifier);
+        printContourTree(context);
 
-        /*
-        for (denali::EdgeIterator<SimplifiedContourTree> it(simplified);
-                !it.done(); ++it) {
+        std::cout << "Collapsing..." << std::endl;
+        context.collapse(context.findEdge(context.getNode(5), context.getNode(1)));
+        context.uncollapse(context.getNode(5));
 
-            SimplifiedContourTree::Node u = simplified.u(it.edge());
-            SimplifiedContourTree::Node v = simplified.v(it.edge());
-            std::cout << simplified.getID(u) << " <---> " << simplified.getID(v) << std::endl;
-        }
-        */
+        printContourTree(context);
 
+        denali::PersistenceSimplifier simplifier(15);
+        simplifier.simplify(context);
+
+        std::cout << "=====" << std::endl;
+        printContourTree(context);
 
 
     }
@@ -626,17 +635,8 @@ SUITE(Folded)
         CHECK_EQUAL(4, fold_tree.numberOfNodes());
         CHECK_EQUAL(1, fold_tree.degree(n6));
 
-        printUndirectedGraph(fold_tree, idmap);
-
-        std::cout << "Reversing..." << std::endl;
-
         n4 = fold_tree.unreduce(e26);
         fold_tree.uncollapse(n4);
-
-        printUndirectedGraph(fold_tree, idmap);
-
-
-
     }
 
 

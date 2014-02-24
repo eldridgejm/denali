@@ -2,659 +2,343 @@
 #define DENALI_SIMPLIFY_H
 
 #include <denali/graph_mixins.h>
+#include <denali/graph_iterators.h>
+#include <denali/folded.h>
 
 #include <boost/shared_ptr.hpp>
+#include <stdexcept>
+#include <queue>
+#include <vector>
 
 namespace denali {
 
-////////////////////////////////////////////////////////////////////////////
-//
-// UndirectedScalarMemberIDGraph
-//
-////////////////////////////////////////////////////////////////////////////
-
-
-template <typename GraphType, typename TabType>
-class UndirectedTabbedScalarMemberIDGraphBase :
-    public
-    EdgeObservableMixin < GraphType,
-    NodeObservableMixin < GraphType,
-    ReadableUndirectedGraphMixin <GraphType,
-    BaseGraphMixin <GraphType> > > >
-{
-    typedef
-    EdgeObservableMixin < GraphType,
-                        NodeObservableMixin < GraphType,
-                        ReadableUndirectedGraphMixin <GraphType,
-                        BaseGraphMixin <GraphType> > > >
-                        Mixin;
-
-public:
-    typedef typename Mixin::Node Node;
-    typedef typename Mixin::Edge Edge;
-    typedef typename GraphType::Members Members;
-    typedef TabType Tab;
-
-private:
-
-    GraphType _graph;
-
-    struct TabContainer
-    {
-        Node u;
-        Tab u_tab;
-        Node v;
-        Tab v_tab;
-
-        bool is_valid;
-
-        TabContainer() : is_valid(false) {}
-
-        Tab getTab(Node node)
-        {
-            return (node == u ? u_tab : v_tab);
-        }
-    };
-
-    ObservingEdgeMap<GraphType, TabContainer> _edge_to_tabs;
-
-public:
-
-    UndirectedTabbedScalarMemberIDGraphBase()
-        : Mixin(_graph), _edge_to_tabs(_graph) {}
-
-    /// \brief Set an edge's tabs.
-    void setTab(Edge edge, Node u, Tab u_tab, Node v, Tab v_tab)
-    {
-        TabContainer& tab = _edge_to_tabs[edge];
-        tab.u = u;
-        tab.u_tab = u_tab;
-        tab.v = v;
-        tab.v_tab = v_tab;
-        tab.is_valid = true;
-    }
-
-    /// \brief Retrieve a tab.
-    Tab getTab(Edge edge, Node node)
-    {
-        return _edge_to_tabs[edge].getTab(node);
-    }
-
-    /// \brief Checks if the edge has tabs.
-    bool hasTabs(Edge edge)
-    {
-        return _edge_to_tabs[edge].is_valid;
-    }
-
-    /// \brief Add a node to the graph.
-    /*!
-     *  \param  id      The id of the node.
-     *  \param  value   The scalar value of the node.
-     */
-    Node addNode(unsigned int id, double value)
-    {
-        return _graph.addNode(id, value);
-    }
-
-    /// \brief Add an edge to the graph.
-    Edge addEdge(Node u, Node v)
-    {
-        return _graph.addEdge(u,v);
-    }
-
-    /// \brief Remove the node.
-    void removeNode(Node node)
-    {
-        return _graph.removeNode(node);
-    }
-
-    /// \brief Remove the edge.
-    void removeEdge(Edge edge)
-    {
-        return _graph.removeEdge(edge);
-    }
-
-    /// \brief Insert a member into the node's member set.
-    void insertNodeMember(Node node, unsigned int member)
-    {
-        return _graph.insertNodeMember(node, member);
-    }
-
-    /// \brief Insert a member into the edge's member set.
-    void insertEdgeMember(Edge edge, unsigned int member)
-    {
-        return _graph.insertEdgeMember(edge, member);
-    }
-
-    /// \brief Insert members into node member set.
-    void insertNodeMembers(Node node, const Members& members)
-    {
-        return _graph.insertNodeMembers(node, members);
-    }
-
-    /// \brief Insert members into edge member set.
-    void insertEdgeMembers(Edge edge, const Members& members)
-    {
-        return _graph.insertEdgeMembers(edge, members);
-    }
-
-    /// \brief Get a node's scalar value
-    double getValue(Node node) const
-    {
-        return _graph.getValue(node);
-    }
-
-    /// \brief Get a node's ID
-    unsigned int getID(Node node) const
-    {
-        return _graph.getID(node);
-    }
-
-    /// \brief Retrieve the members of the node
-    const Members& getNodeMembers(Node node) const
-    {
-        return _graph.getNodeMembers(node);
-    }
-
-    /// \brief Retrieve a node by its ID.
-    Node getNode(unsigned int id)
-    {
-        return _graph.getNode(id);
-    }
-
-    Node getNodeChecked(unsigned int id)
-    {
-        return _graph.getNodeChecked(id);
-    }
-
-    /// \brief Retrieve the members of the edge.
-    const Members& getEdgeMembers(Edge edge) const
-    {
-        return _graph.getEdgeMembers(edge);
-    }
-
-    /// \brief Clear the nodes of the graph
-    void clearNodes() {
-        return _graph.clearNodes();
-    }
-
-    /// \brief Clear the edges of the graph
-    void clearEdges() {
-        return _graph.clearEdges();
-    }
-
-};
-
-
-/// \brief An undirected graph with tabs in each edge.
-/// \ingroup simplified_contour_tree
-template <typename Tab>
-class UndirectedTabbedScalarMemberIDGraph :
-    public UndirectedTabbedScalarMemberIDGraphBase<
-    UndirectedScalarMemberIDGraph, Tab>
-{
-    typedef
-    UndirectedTabbedScalarMemberIDGraphBase<
-    UndirectedScalarMemberIDGraph, Tab>
-    Base;
-
-public:
-    typedef typename Base::Node Node;
-    typedef typename Base::Edge Edge;
-    typedef typename Base::Members Members;
-};
-
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //
 // Priority
 //
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-/// \brief A base class for representing a priority.
 class Priority
 {
     double _priority;
+
 public:
+    Priority(double priority) : _priority(priority) {}
 
-    Priority(double priority)
-        : _priority(priority) {}
-
-    double priority() const
-    {
+    double priority() const {
         return _priority;
     }
 };
 
-
-bool operator<(const Priority& lhs, const Priority& rhs)
-{
+bool operator<(const Priority& lhs, const Priority& rhs) {
     return lhs.priority() < rhs.priority();
 }
 
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //
-// SimplificationContext
+// Persistence Simplifier
 //
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-template <typename ContourTree, typename GraphType>
-class SimplificationContext
-{
-    typedef typename GraphType::Node Node;
-    typedef typename GraphType::Edge Edge;
-    typedef typename ContourTree::Edge Tab;
-
-    GraphType& _graph;
-
-    // keep track of reduced nodes
-    ObservingNodeMap<GraphType, bool> _is_reduced;
-    std::vector<Node> _reduced_nodes;
-
-    // keep track of the correspondence between edges in the simplified tree
-    // and the contour tree
-    ObservingEdgeMap<GraphType, Tab> _simplified_edge_to_ct_edge;
-
-public:
-    /// \brief Create and initialize a simplification context.
-    /*!
-     *  This copies the contour tree to the graph.
-     */
-    SimplificationContext(
-        const ContourTree& contour_tree,
-        GraphType& graph)
-        : _graph(graph), _is_reduced(_graph),
-          _simplified_edge_to_ct_edge(_graph)
-    {
-        typedef typename ContourTree::Node ContourTreeNode;
-        typedef typename ContourTree::Edge ContourTreeEdge;
-
-        // make a map from new nodes to old
-        StaticNodeMap<ContourTree, Node> _ct_node_to_simplified_node(contour_tree);
-
-        for (NodeIterator<ContourTree> it(contour_tree); !it.done(); ++it) {
-            // now add each node and edge of the contour tree to the simplified tree
-            Node node = graph.addNode(
-                            contour_tree.getID(it.node()),
-                            contour_tree.getValue(it.node()));
-
-            _ct_node_to_simplified_node[it.node()] = node;
-        }
-
-        for (EdgeIterator<ContourTree> it(contour_tree); !it.done(); ++it) {
-
-            Edge edge = graph.addEdge(
-                            _ct_node_to_simplified_node[contour_tree.u(it.edge())],
-                            _ct_node_to_simplified_node[contour_tree.v(it.edge())]);
-
-            _simplified_edge_to_ct_edge[edge] = it.edge();
-        }
-    }
-
-    /// \brief Checks if the node has been reduced.
-    bool isReduced(Node node)
-    {
-        return _is_reduced[node];
-    }
-
-    /// \brief The number of valid neighbors with higher scalar value.
-    unsigned int validUpDegree(Node node)
-    {
-        unsigned int degree = 0;
-        double node_value = _graph.getValue(node);
-
-        for (UndirectedNeighborIterator<GraphType> it(_graph, node);
-                !it.done(); ++it) {
-
-            double neighbor_value = _graph.getValue(it.neighbor());
-            if (neighbor_value > node_value) degree++;
-        }
-
-        return degree;
-    }
-
-    /// \brief The number of valid neighbors with lesser or equal scalar value.
-    unsigned int validDownDegree(Node node)
-    {
-        unsigned int degree = 0;
-        double node_value = _graph.getValue(node);
-
-        for (UndirectedNeighborIterator<GraphType> it(_graph, node);
-                !it.done(); ++it) {
-
-            double neighbor_value = _graph.getValue(it.neighbor());
-            if (neighbor_value <= node_value) degree++;
-        }
-
-        return degree;
-    }
-
-    /// \brief The number of valid neighbors.
-    unsigned int validDegree(Node node)
-    {
-        return validUpDegree(node) + validDownDegree(node);
-    }
-
-    /// \brief Whether to save the edge for further reduction.
-    /*!
-     *  An edge is saved for reduction if the child node is the last valid
-     *  up or down neighbor.
-     */
-    bool preserveForReduction(Node parent, Node child)
-    {
-        double child_value = _graph.getValue(child);
-        double parent_value = _graph.getValue(parent);
-
-        if (child_value <= parent_value) {
-            return validDownDegree(parent) == 1;
-        } else {
-            return validUpDegree(parent) == 1;
-        }
-    }
-
-    /// \brief Collapse the child into the parent.
-    void collapse(Node parent, Node child)
-    {
-        _graph.insertNodeMembers(parent, _graph.getNodeMembers(child));
-        _graph.removeNode(child);
-    }
-
-    /// \brief Reduces a node in the tree.
-    void reduceNode(Node w, Node& u, Node& v)
-    {
-        // u <---> w <---> v
-
-        _reduced_nodes.push_back(w);
-        _is_reduced[w] = true;
-
-        // we can assume that there are only two neighbors, else the node
-        // should not have been reduced...
-        UndirectedNeighborIterator<GraphType> it(_graph, w);
-
-        // advance to the first valid neighbor
-        while (isReduced(it.neighbor())) ++it;
-        u = it.neighbor();
-        Edge uw = it.edge();
-
-        // advance to the next valid neighbor
-        ++it;
-        while (isReduced(it.neighbor())) ++it;
-        v = it.neighbor();
-        Edge wv = it.edge();
-
-        // add the edge from u to v
-        Edge uv = _graph.addEdge(u,v);
-
-        Tab u_tab;
-        Tab v_tab;
-
-        // update the tabs, if necessary
-        if (_graph.hasTabs(uw)) {
-            u_tab = _graph.getTab(uw, u);
-        } else {
-            u_tab = _simplified_edge_to_ct_edge[uw];
-        }
-
-        if (_graph.hasTabs(wv)) {
-            v_tab = _graph.getTab(wv, v);
-        } else {
-            v_tab = _simplified_edge_to_ct_edge[wv];
-        }
-
-        _graph.setTab(uv, u, u_tab, v, v_tab);
-    }
-
-    /// \brief Remove the reduced nodes in the graph.
-    void removeReduced()
-    {
-        for (typename std::vector<Node>::iterator it = _reduced_nodes.begin();
-                it != _reduced_nodes.end(); ++it) {
-
-            _graph.removeNode(*it);
-
-        }
-        _reduced_nodes.clear();
-    }
-
-};
-
-////////////////////////////////////////////////////////////////////////////
-//
-// PersistenceSimplifier
-//
-////////////////////////////////////////////////////////////////////////////
-
-template <typename Node>
-class ParentChildPriority : public Priority
-{
-    Node _parent;
-    Node _child;
-
-public:
-    ParentChildPriority(Node parent, Node child, double priority)
-        : _parent(parent), _child(child), Priority(priority) {}
-
-    Node parent() const {
-        return _parent;
-    }
-    Node child() const {
-        return _child;
-    }
-};
-
-
-/// \brief A simplification algorithm based on persistence.
 class PersistenceSimplifier
 {
     double _threshold;
 
-    template <typename GraphType>
-    class PersistencePriority : public
-        ParentChildPriority<typename GraphType::Node>
+    template <typename Node>
+    class PersistencePriority : public Priority
     {
-        typedef typename GraphType::Node Node;
-
         double _persistence;
+        Node _leaf;
 
     public:
-        PersistencePriority(Node parent, Node child, double persistence)
-            : ParentChildPriority<Node>(parent, child, 1/(persistence+1)),
-              _persistence(persistence) {}
-
-        static PersistencePriority<GraphType>
-        compute(const GraphType& graph, Node parent, Node child)
-        {
-            double persistence = computePersistence(graph, parent, child);
-            return PersistencePriority(parent, child, persistence);
-        }
+        PersistencePriority(Node leaf, double persistence)
+            : Priority(1/(persistence+1)), _persistence(persistence),
+              _leaf(leaf) {}
 
         double persistence() const {
             return _persistence;
         }
+
+        Node leaf() const {
+            return _leaf;
+        }
     };
 
-
-public:
-    PersistenceSimplifier(double threshold) : _threshold(threshold) {};
-
-    /// \brief Compute the persistence of an edge in the tree.
     template <typename Tree>
     static double computePersistence(
-        const Tree& tree,
-        typename Tree::Node u,
-        typename Tree::Node v)
+            const Tree& tree, 
+            typename Tree::Edge edge)
     {
-        return abs(tree.getValue(u) - tree.getValue(v));
+        typename Tree::Node u = tree.u(edge);
+        typename Tree::Node v = tree.v(edge);
+
+        return std::abs(tree.getValue(u) - tree.getValue(v));
     }
 
-    /// \brief Simplify the contour tree, placing results in `graph`.
-    /*!
-     *  GraphType must support edge tabs. Specifically, the edge tab
-     *  type must be ContourTree::Edge.
-     */
-    template <typename ContourTree, typename GraphType>
-    void simplify(
-        const ContourTree& contour_tree,
-        GraphType& graph)
+    template <typename Tree>
+    static typename Tree::Node getLeaf(const Tree& tree, typename Tree::Edge edge) {
+        return tree.degree(tree.u(edge)) == 1 ? tree.u(edge) : tree.v(edge);
+    }
+
+public:
+    PersistenceSimplifier(double threshold) {
+        setThreshold(threshold);
+    }
+
+    double getThreshold() const {
+        return _threshold;
+    }
+
+    void setThreshold(double threshold) {
+        if (threshold <= 0) {
+            throw std::runtime_error("Threshold must be positive.");
+        }
+        _threshold = threshold;
+    }
+
+    template <typename Tree>
+    static unsigned int upDegree(const Tree& tree, typename Tree::Node node)
     {
-        typedef typename GraphType::Node Node;
-        typedef typename GraphType::Edge Edge;
-        typedef PersistencePriority<GraphType> PersistencePriority;
+        unsigned int n = 0;
+        double node_value = tree.getValue(node);
 
-        // first, we clear the graph
-        graph.clearNodes();
+        for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
+        {
+            if (tree.getValue(it.neighbor()) > node_value) {
+                node_value++;
+            }
+        }
+    }
 
-        // we make a context, which initializes the graph
-        SimplificationContext<ContourTree, GraphType> context(contour_tree, graph);
+    template <typename Tree>
+    static unsigned int downDegree(const Tree& tree, typename Tree::Node node)
+    {
+        unsigned int n = 0;
+        double node_value = tree.getValue(node);
 
-        // make a priority queue and populate it with leaf nodes
-        std::priority_queue<PersistencePriority> simplify_queue;
+        for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
+        {
+            if (tree.getValue(it.neighbor()) <= node_value) {
+                node_value++;
+            }
+        }
+    }
 
-        for (NodeIterator<GraphType> it(graph); !it.done(); ++it) {
-            // if this is a leaf node
-            if (graph.degree(it.node()) == 1) {
-                // get the parent
-                UndirectedNeighborIterator<GraphType> n_it(graph, it.node());
+    template <typename Tree>
+    static bool preserveForReduction(
+            const Tree& tree, 
+            typename Tree::Edge edge)
+    {
+        typename Tree::Node child = getLeaf(tree, edge);
+        typename Tree::Node parent = tree.opposite(child, edge);
 
-                // add to the queue
-                PersistencePriority priority =
-                    PersistencePriority::compute(graph, n_it.neighbor(), it.node());
+        double parent_value = tree.getValue(parent);
+        double child_value = tree.getValue(child);
 
-                simplify_queue.push(priority);
+        if ((child_value <= parent_value) && (downDegree(tree, parent) == 1)) {
+            return true;
+        } else if ((child_value > parent_value) && (upDegree(tree, parent) == 1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /// \brief Simplifies the contour tree in the context.
+    template <typename Context>
+    void simplify(Context& context)
+    {
+        typedef PersistencePriority<typename Context::Node> Priority;
+        typedef typename Context::Node Node;
+        typedef typename Context::Edge Edge;
+
+        // make a priority queue of PersistencePriorities
+        std::priority_queue<Priority> simplify_queue;
+
+        // add every leaf edge to the queue
+        for (EdgeIterator<Context> it(context); !it.done(); ++it)
+        {
+            Node u = context.u(it.edge());
+            Node v = context.v(it.edge());
+
+            if ((context.degree(u) == 1) || (context.degree(v) == 1)) 
+            {
+                // determine which is the leaf
+                Node leaf = getLeaf(context, it.edge());
+
+                // compute the persistence
+                double persistence = computePersistence(context, it.edge());
+
+                // enqueue
+                simplify_queue.push(Priority(leaf, persistence));
             }
         }
 
-        while (simplify_queue.size() > 0) {
-            // get the top of the queue
-            Node parent         = simplify_queue.top().parent();
-            Node child          = simplify_queue.top().child();
+        while (simplify_queue.size() > 0)
+        {
+            // get the leaf off of the queue
+            Node leaf           = simplify_queue.top().leaf();
             double persistence  = simplify_queue.top().persistence();
             simplify_queue.pop();
 
-            if (persistence > _threshold) break;
+            // get the leaf edge and the parent
+            UndirectedNeighborIterator<Context> neighbor_it(context, leaf);
+            Edge edge = neighbor_it.edge();
+            Node parent = context.opposite(leaf, edge);
 
-            if (context.isReduced(parent)) continue;
+            if (preserveForReduction(context, edge)) {
+                continue;
+            }
 
-            if (context.preserveForReduction(parent, child)) continue;
+            if (persistence > _threshold) {
+                break;
+            }
 
-            context.collapse(parent, child);
+            // collapse the edge
+            context.collapse(edge);
 
-            // check to see if we should reduce the node
-            if (context.validDegree(parent) == 2) {
-                // make some nodes to store the neighbors of the parent
-                Node u,v;
-
-                // perform the reduction
-                context.reduceNode(parent, u, v);
-
-                if (context.validDegree(u) == 1) {
-                    double persistence = computePersistence(graph, u, v);
-                    simplify_queue.push(PersistencePriority(v, u, persistence));
-                }
-
-                if (context.validDegree(v) == 1) {
-                    double persistence = computePersistence(graph, u, v);
-                    simplify_queue.push(PersistencePriority(u, v, persistence));
-                }
+            // if the parent is reducible, reduce it now
+            if (context.degree(parent) == 2) {
+                context.reduce(parent);
             }
         }
-
-        // remove the reduced nodes, and we are done
-        context.removeReduced();
     }
 };
 
-
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //
-// SimplifiedContourTree
+// FoldedContourTreeSimplificationContext
 //
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-template <typename GraphType, typename ContourTree>
-class SimplifiedContourTreeBase :
-    public
-    ContourTreeMixin <GraphType,
-    BaseGraphMixin <GraphType > >
+/// \brief A simplification context that results in a folded tree.
+template <typename ContourTree>
+class FoldedContourTreeSimplificationContext :
+        public
+        ReadableUndirectedGraphMixin <FoldTree,
+        BaseGraphMixin <FoldTree> >
 {
+public:
+    typedef FoldTree::Node Node;
+    typedef FoldTree::Edge Edge;
+
+private:
     typedef
-    ContourTreeMixin <GraphType,
-                     BaseGraphMixin <GraphType > >
-                     Mixin;
+    ReadableUndirectedGraphMixin <FoldTree,
+    BaseGraphMixin <FoldTree> >
+    Mixin;
 
     const ContourTree& _contour_tree;
-    boost::shared_ptr<GraphType> _graph;
+    FoldTree _fold_tree;
 
-protected:
-    SimplifiedContourTreeBase(
-        const ContourTree& contour_tree,
-        boost::shared_ptr<GraphType> graph)
-        : _graph(graph), _contour_tree(contour_tree),
-          Mixin(*graph) { }
+
+    // map the contour tree nodes to the fold tree nodes so we can later make
+    // the correct edges.
+    StaticNodeMap<ContourTree, Node> _ct_to_fold_node;
+
+    std::vector<typename ContourTree::Node> _fold_id_to_ct_node;
+    std::vector<typename ContourTree::Edge> _fold_id_to_ct_edge;
+
+    typename ContourTree::Node getContourTreeNode(Node node) const
+    {
+        size_t id = _fold_tree.getNodeFold(node).getIdentifier();
+        return _fold_id_to_ct_node[id];
+    }
+
+    typename ContourTree::Node getContourTreeEdge(Node node) const
+    {
+        size_t id = _fold_tree.getNodeFold(node).getIdentifier();
+        return _fold_id_to_ct_node[id];
+    }
+
 
 public:
-    typedef typename GraphType::Node Node;
-    typedef typename GraphType::Edge Edge;
-    typedef typename GraphType::Members Members;
-    typedef typename GraphType::Tab Tab;
-
-    /// \brief Retrieve a tab.
-    Tab getTab(Edge edge, Node node)
+    FoldedContourTreeSimplificationContext(const ContourTree& contour_tree)
+            : Mixin(_fold_tree), _contour_tree(contour_tree), 
+              _ct_to_fold_node(_contour_tree)
     {
-        return _graph->getTab(edge, node);
+        // we need to initialize the fold tree with the structure of the 
+        // contour tree. We also want to map the folds to their corresponding
+        // contour tree nodes and edges.
+
+        // add each node in turn
+        for (NodeIterator<ContourTree> it(_contour_tree); !it.done(); ++it) {
+            // add the node
+            Node node = _fold_tree.addNode();
+
+            // map the node fold id to the contour tree node
+            _fold_id_to_ct_node.push_back(it.node());
+
+            // map the contour tree node to the fold tree node
+            _ct_to_fold_node[it.node()] = node;
+        }
+
+        for (EdgeIterator<ContourTree> it(_contour_tree); !it.done(); ++it) {
+            // get the nodes in the contour tree
+            typename ContourTree::Node ct_u = _contour_tree.u(it.edge());
+            typename ContourTree::Node ct_v = _contour_tree.v(it.edge());
+
+            // get the corresponding nodes in the fold tree
+            Node u = _ct_to_fold_node[ct_u];
+            Node v = _ct_to_fold_node[ct_v];
+
+            // add the edge
+            Edge edge = _fold_tree.addEdge(u,v);
+
+            // map the contour tree edge to this fold edge
+            _fold_id_to_ct_edge.push_back(it.edge());
+        }
     }
 
-    /// \brief Checks if the edge has tabs.
-    bool hasTabs(Edge edge)
-    {
-        return _graph->hasTabs(edge);
-    }
-};
-
-
-/// \brief The simplified version of a contour tree.
-/// \ingroup simplified_contour_tree
-template <typename ContourTree>
-class SimplifiedContourTree :
-    public
-    SimplifiedContourTreeBase
-    <
-    UndirectedTabbedScalarMemberIDGraph<
-    typename ContourTree::Edge>,
-    ContourTree
-    >
-{
-    typedef UndirectedTabbedScalarMemberIDGraph<typename ContourTree::Edge> GraphType;
-    typedef SimplifiedContourTreeBase<GraphType, ContourTree> Base;
-
-    SimplifiedContourTree(
-        const ContourTree& contour_tree,
-        boost::shared_ptr<GraphType> graph)
-        : Base(contour_tree, graph) {}
-
-public:
-
-    typedef typename Base::Node Node;
-    typedef typename Base::Edge Edge;
-    typedef typename Base::Members Members;
-
-    /// \brief Simplify a contour tree.
-    template <typename SimplificationAlgorithm>
-    static SimplifiedContourTree
-    simplify(
-        const ContourTree& contour_tree,
-        SimplificationAlgorithm simplifier)
-    {
-        // make a graph to store the result in
-        boost::shared_ptr<GraphType> graph =
-            boost::shared_ptr<GraphType>(new GraphType());
-
-        // now compute the simplification
-        simplifier.simplify(contour_tree, *graph);
-
-        // make a new simplified contour tree and return it
-        return SimplifiedContourTree(contour_tree, graph);
+    /// \brief Retrieve the node's scalar value.
+    double getValue(Node node) const {
+        return _contour_tree.getValue(getContourTreeNode(node));
     }
 
+    /// \brief Get the ID of a node.
+    unsigned int getID(Node node) const {
+        return _contour_tree.getID(getContourTreeNode(node));
+    }
+
+    /// \brief Retrieve a node by ID.
+    Node getNode(unsigned int id) const {
+        return _ct_to_fold_node[_contour_tree.getNode(id)];
+    }
+
+    /// \brief Collapse an edge.
+    void collapse(Edge edge) {
+        return _fold_tree.collapse(edge);
+    }
+
+    /// \brief Reduced a node, connecting its neighbors.
+    Edge reduce(Node v) {
+        return _fold_tree.reduce(v);
+    }
+
+    /// \brief Uncollapse a collapsed edge in the node.
+    Edge uncollapse(Node u, int index=-1)
+    {
+        Edge edge = _fold_tree.uncollapse(u, index);
+
+        // we have to be careful: we have a new node in the tree now,
+        // and we have to map the corresponding contour tree node to it
+        Node node = _fold_tree.opposite(u, edge);
+        _ct_to_fold_node[getContourTreeNode(node)] = node;
+
+        return edge;
+    }
+
+    /// \brief Unreduce the edge.
+    Node unreduce(Edge uw)
+    {
+        // unreduce and get the newly created node
+        Node node = _fold_tree.unreduce(uw);
+
+        // map the contour tree node to the new node
+        _ct_to_fold_node[getContourTreeNode(node)] = node;
+
+        return node;
+    }
 };
 
 }

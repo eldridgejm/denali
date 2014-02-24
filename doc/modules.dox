@@ -19,6 +19,8 @@
 
 /// \defgroup simplified_contour_tree Simplified Contour Trees
 
+/// \defgroup fold_tree Folded Trees
+
 /// \defgroup landscape Landscapes
 
 
