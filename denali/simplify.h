@@ -146,7 +146,7 @@ public:
 
     /// \brief Simplifies the contour tree in the context.
     template <typename Context>
-    void simplify(Context& context)
+    void run(Context& context)
     {
         typedef PersistencePriority<typename Context::Node> Priority;
         typedef typename Context::Node Node;
@@ -205,143 +205,9 @@ public:
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// FoldedContourTreeSimplificationContext
-//
-////////////////////////////////////////////////////////////////////////////////
-
-/// \brief A simplification context that results in a folded tree.
-template <typename ContourTree>
-class FoldedContourTreeSimplificationContext :
-        public
-        ReadableUndirectedGraphMixin <FoldTree,
-        BaseGraphMixin <FoldTree> >
-{
-public:
-    typedef FoldTree::Node Node;
-    typedef FoldTree::Edge Edge;
-
-private:
-    typedef
-    ReadableUndirectedGraphMixin <FoldTree,
-    BaseGraphMixin <FoldTree> >
-    Mixin;
-
-    const ContourTree& _contour_tree;
-    FoldTree _fold_tree;
 
 
-    // map the contour tree nodes to the fold tree nodes so we can later make
-    // the correct edges.
-    StaticNodeMap<ContourTree, Node> _ct_to_fold_node;
 
-    std::vector<typename ContourTree::Node> _fold_id_to_ct_node;
-    std::vector<typename ContourTree::Edge> _fold_id_to_ct_edge;
-
-    typename ContourTree::Node getContourTreeNode(Node node) const
-    {
-        size_t id = _fold_tree.getNodeFold(node).getIdentifier();
-        return _fold_id_to_ct_node[id];
-    }
-
-    typename ContourTree::Node getContourTreeEdge(Node node) const
-    {
-        size_t id = _fold_tree.getNodeFold(node).getIdentifier();
-        return _fold_id_to_ct_node[id];
-    }
-
-
-public:
-    FoldedContourTreeSimplificationContext(const ContourTree& contour_tree)
-            : Mixin(_fold_tree), _contour_tree(contour_tree), 
-              _ct_to_fold_node(_contour_tree)
-    {
-        // we need to initialize the fold tree with the structure of the 
-        // contour tree. We also want to map the folds to their corresponding
-        // contour tree nodes and edges.
-
-        // add each node in turn
-        for (NodeIterator<ContourTree> it(_contour_tree); !it.done(); ++it) {
-            // add the node
-            Node node = _fold_tree.addNode();
-
-            // map the node fold id to the contour tree node
-            _fold_id_to_ct_node.push_back(it.node());
-
-            // map the contour tree node to the fold tree node
-            _ct_to_fold_node[it.node()] = node;
-        }
-
-        for (EdgeIterator<ContourTree> it(_contour_tree); !it.done(); ++it) {
-            // get the nodes in the contour tree
-            typename ContourTree::Node ct_u = _contour_tree.u(it.edge());
-            typename ContourTree::Node ct_v = _contour_tree.v(it.edge());
-
-            // get the corresponding nodes in the fold tree
-            Node u = _ct_to_fold_node[ct_u];
-            Node v = _ct_to_fold_node[ct_v];
-
-            // add the edge
-            Edge edge = _fold_tree.addEdge(u,v);
-
-            // map the contour tree edge to this fold edge
-            _fold_id_to_ct_edge.push_back(it.edge());
-        }
-    }
-
-    /// \brief Retrieve the node's scalar value.
-    double getValue(Node node) const {
-        return _contour_tree.getValue(getContourTreeNode(node));
-    }
-
-    /// \brief Get the ID of a node.
-    unsigned int getID(Node node) const {
-        return _contour_tree.getID(getContourTreeNode(node));
-    }
-
-    /// \brief Retrieve a node by ID.
-    Node getNode(unsigned int id) const {
-        return _ct_to_fold_node[_contour_tree.getNode(id)];
-    }
-
-    /// \brief Collapse an edge.
-    void collapse(Edge edge) {
-        return _fold_tree.collapse(edge);
-    }
-
-    /// \brief Reduced a node, connecting its neighbors.
-    Edge reduce(Node v) {
-        return _fold_tree.reduce(v);
-    }
-
-    /// \brief Uncollapse a collapsed edge in the node.
-    Edge uncollapse(Node u, int index=-1)
-    {
-        Edge edge = _fold_tree.uncollapse(u, index);
-
-        // we have to be careful: we have a new node in the tree now,
-        // and we have to map the corresponding contour tree node to it
-        Node node = _fold_tree.opposite(u, edge);
-        _ct_to_fold_node[getContourTreeNode(node)] = node;
-
-        return edge;
-    }
-
-    /// \brief Unreduce the edge.
-    Node unreduce(Edge uw)
-    {
-        // unreduce and get the newly created node
-        Node node = _fold_tree.unreduce(uw);
-
-        // map the contour tree node to the new node
-        _ct_to_fold_node[getContourTreeNode(node)] = node;
-
-        return node;
-    }
-};
-
-}
-
+} // namespace denali
 
 #endif

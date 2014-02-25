@@ -33,6 +33,7 @@ template <typename LandscapeTree> class Triangularizer;
 }
 
 template <typename ContourTree> class RectangularLandscape;
+template <typename ContourTree> class RectangularLandscapeBuilder;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -663,17 +664,23 @@ public:
         unsigned int _i, _j, _k;
 
     public:
-        Triangle(unsigned int i, unsigned int j, unsigned int k)
-            : _i(i), _j(j), _k(k) { }
+        Triangle(unsigned int i, unsigned int j, unsigned int k, size_t id)
+            : _i(i), _j(j), _k(k), _id(id) { }
 
         unsigned int i() const {
             return _i;
         }
+
         unsigned int j() const {
             return _j;
         }
+
         unsigned int k() const {
             return _k;
+        }
+        
+        unsigned int id() const {
+            return _id;
         }
     };
 
@@ -688,11 +695,11 @@ public:
 
     void insertTriangle(unsigned int i, unsigned int j, unsigned int k, Arc arc)
     {
-        _triangles.push_back(Triangle(i,j,k));
+        _triangles.push_back(Triangle(i,j,k,_triangles.size()));
         _arcs.push_back(arc);
     }
 
-    Arc getArc(Triangle tri)
+    Arc getArc(Triangle tri) const
     {
         return _arcs[tri._id];
     }
@@ -834,6 +841,9 @@ class denali::RectangularLandscape :
     Triangularization _triangularization;
 
 public:
+    
+    typedef typename LandscapeTree::Node Node;
+    typedef typename LandscapeTree::Arc Arc;
 
     typedef typename Embedding::Point Point;
     typedef typename Triangularization::Triangle Triangle;
@@ -882,6 +892,37 @@ public:
     {
         return _triangularization.getTriangle(index);
     }
+
+    Arc getComponent(Triangle tri) const
+    {
+        return _triangularization.getArc(tri);
+    }
+
+    typename ContourTree::Node getContourTreeNode(Node node) const {
+        return _tree.getContourTreeNode(node);
+    }
+
+    typename ContourTree::Edge getContourTreeEdge(Arc arc) const {
+        return _tree.getContourTreeEdge(arc);
+    }
+
+};
+
+
+template <typename ContourTree>
+class denali::RectangularLandscapeBuilder
+{
+
+public:
+    typedef RectangularLandscape<ContourTree> LandscapeType;
+
+    static LandscapeType build(
+            const ContourTree& contour_tree,
+            typename ContourTree::Node root)
+    {
+        return LandscapeType(contour_tree, root);
+    }
+
 
 };
 

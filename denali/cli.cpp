@@ -8,6 +8,8 @@
 #include <denali/fileio.h>
 #include <denali/rectangular_landscape.h>
 #include <denali/visualize.h>
+#include <denali/simplify.h>
+#include <denali/folded.h>
 
 // the following two functions are pasted from a stack overflow post
 // see: http://stackoverflow.com/questions/865668/parse-command-line-arguments
@@ -158,13 +160,15 @@ int cli_visualize(int argc, char ** argv)
             }
         }
 
-        // now compute the landscape
-        typedef denali::RectangularLandscape<denali::ContourTree> Landscape;
-        Landscape rlscape(contour_tree, root);
+        typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
 
-        denali::Visualizer visualizer;
-        visualizer.visualize(rlscape);
+        denali::PersistenceSimplifier simplifier(15);
+        FoldedContourTree folded_tree = FoldedContourTree::fold(contour_tree, simplifier);
 
+        denali::RectangularLandscapeBuilder<FoldedContourTree> builder;
+        denali::Visualizer<FoldedContourTree> visualizer;
+
+        visualizer.visualize(folded_tree, builder);
 
 
     }

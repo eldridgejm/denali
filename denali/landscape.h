@@ -67,22 +67,22 @@ public:
         return arc;
     }
 
-    typename ContourTree::Node getContourTreeNode(Node node)
+    typename ContourTree::Node getContourTreeNode(Node node) const
     {
         return _lscape_node_to_ct_node[node];
     }
 
-    typename ContourTree::Edge getContourTreeEdge(Arc arc)
+    typename ContourTree::Edge getContourTreeEdge(Arc arc) const
     {
         return _lscape_arc_to_ct_edge[arc];
     }
 
-    Node getLandscapeTreeNode(typename ContourTree::Node node)
+    Node getLandscapeTreeNode(typename ContourTree::Node node) const
     {
         return _ct_node_to_lscape_node[node];
     }
 
-    Arc getLandscapeTreeArc(typename ContourTree::Edge edge)
+    Arc getLandscapeTreeArc(typename ContourTree::Edge edge) const
     {
         return _ct_edge_to_lscape_arc[edge];
     }
@@ -181,25 +181,25 @@ public:
     }
 
     /// \brief Retrieve the corresponding node in the contour tree.
-    typename ContourTree::Node getContourTreeNode(Node node)
+    typename ContourTree::Node getContourTreeNode(Node node) const
     {
         return _tree.getContourTreeNode(node);
     }
 
     /// \brief Retrieve the corresponding edge in the contour tree.
-    typename ContourTree::Edge getContourTreeEdge(Arc arc)
+    typename ContourTree::Edge getContourTreeEdge(Arc arc) const
     {
         return _tree.getContourTreeEdge(arc);
     }
 
     /// \brief Get the node corresponding to the contour tree node.
-    Node getLandscapeTreeNode(typename ContourTree::Node node)
+    Node getLandscapeTreeNode(typename ContourTree::Node node) const
     {
         return _tree.getLandscapeTreeNode(node);
     }
 
     /// \brief Get the arc corresponding to the contour tree edge.
-    Arc getLandscapeTreeArc(typename ContourTree::Edge edge)
+    Arc getLandscapeTreeArc(typename ContourTree::Edge edge) const
     {
         return _tree.getLandscapeTreeArc(edge);
     }

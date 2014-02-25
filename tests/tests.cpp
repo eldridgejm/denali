@@ -512,7 +512,7 @@ SUITE(Landscape)
 
 SUITE(RectangularLandscape)
 {
-    TEST(Embedding)
+    TEST(RectangularLandscape)
     {
         denali::ScalarSimplicialComplex plex;
 
@@ -532,7 +532,9 @@ SUITE(RectangularLandscape)
 
         typedef denali::RectangularLandscape<denali::ContourTree> RectangularLandscape;
         RectangularLandscape rlscape(tree, tree.getNode(4));
+
     }
+
 }
 
 
@@ -573,24 +575,9 @@ SUITE(Simplify)
 
         ContourTree tree = ContourTree::compute(plex, alg);
 
-
-        denali::FoldedContourTreeSimplificationContext<ContourTree> context(tree);
-
-        printContourTree(context);
-
-        std::cout << "Collapsing..." << std::endl;
-        context.collapse(context.findEdge(context.getNode(5), context.getNode(1)));
-        context.uncollapse(context.getNode(5));
-
-        printContourTree(context);
-
         denali::PersistenceSimplifier simplifier(15);
-        simplifier.simplify(context);
-
-        std::cout << "=====" << std::endl;
-        printContourTree(context);
-
-
+        denali::FoldedContourTree<ContourTree> folded_tree = 
+                denali::FoldedContourTree<ContourTree>::fold(tree, simplifier);
     }
 }
 
