@@ -577,7 +577,7 @@ SUITE(Simplify)
 
         denali::PersistenceSimplifier simplifier(15);
         denali::FoldedContourTree<ContourTree> folded_tree = 
-                denali::FoldedContourTree<ContourTree>::fold(tree, simplifier);
+                denali::FoldedContourTree<ContourTree>::compute(tree, simplifier);
     }
 }
 
@@ -624,6 +624,49 @@ SUITE(Folded)
 
         n4 = fold_tree.unreduce(e26);
         fold_tree.uncollapse(n4);
+    }
+
+
+    TEST(FoldedContourTree)
+    {
+        denali::ScalarSimplicialComplex plex;
+
+        for (int i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);
+        }
+
+        for (int i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
+        }
+
+        typedef denali::ContourTree ContourTree;
+        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree; 
+
+        denali::CarrsAlgorithm alg;
+        ContourTree tree = ContourTree::compute(plex, alg);
+
+        printContourTree(tree);
+        std::cout << "=====" << std::endl;
+
+        denali::PersistenceSimplifier simplifier(15);
+        FoldedContourTree folded_tree = 
+                FoldedContourTree::compute(tree, simplifier);
+
+        printContourTree(folded_tree);
+        std::cout << "=====" << std::endl;
+
+        FoldedContourTree::Edge edge = folded_tree.findEdge(
+                folded_tree.getNode(5), folded_tree.getNode(8));
+
+        CHECK(folded_tree.isEdgeValid(edge)); 
+
+        folded_tree.unfold(edge);
+
+
+        printContourTree(folded_tree);
+
     }
 
 

@@ -163,7 +163,7 @@ int cli_visualize(int argc, char ** argv)
         typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
 
         denali::PersistenceSimplifier simplifier(15);
-        FoldedContourTree folded_tree = FoldedContourTree::fold(contour_tree, simplifier);
+        FoldedContourTree folded_tree = FoldedContourTree::compute(contour_tree, simplifier);
 
         denali::RectangularLandscapeBuilder<FoldedContourTree> builder;
         denali::Visualizer<FoldedContourTree> visualizer;

@@ -452,11 +452,11 @@ public:
         return node;
     }
 
-    Members getNodeMembers(Node node) {
+    const Members& getNodeMembers(Node node) {
         return _members;
     }
 
-    Members getEdgeMembers(Edge edge) {
+    const Members& getEdgeMembers(Edge edge) {
         return _members;
     }
 };
@@ -487,10 +487,13 @@ class FoldedContourTree :
         : Mixin(_context), _context(contour_tree) {}
 
 public:
+    
+    typedef typename Mixin::Node Node;
+    typedef typename Mixin::Edge Edge;
 
     template <typename FoldingAlgorithm>
     static FoldedContourTree<ContourTree> 
-    fold(
+    compute(
             const ContourTree& contour_tree,
             FoldingAlgorithm algorithm)
     {
@@ -502,6 +505,11 @@ public:
 
         // return the result
         return folded_tree;
+    }
+
+    void unfold(Edge edge)
+    {
+        _context.unreduce(edge);
     }
 };
 

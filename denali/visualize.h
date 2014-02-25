@@ -223,6 +223,15 @@ public:
         colorizeMesh();
     }
 
+    void clearMesh()
+    {
+          std::cout << "Clearing mesh!" << std::endl;
+          _mesh_points = vtkSmartPointer<vtkPoints>::New();
+          _mesh_triangles = vtkSmartPointer<vtkCellArray>::New();
+          _mesh->SetPoints(_mesh_points);
+          _mesh->SetPolys(_mesh_triangles);
+    }
+
     void setInfo(std::string s) {
         _info_text->SetInput (s.c_str());
     }
@@ -306,6 +315,49 @@ public:
     }
 };
 
+
+template <typename ContourTree, typename Landscape, typename LandscapeBuilder>
+class Expander : public VisualizationEventObserver
+{
+    VisualizationInterface& _interface;
+    ContourTree& _contour_tree;
+    Landscape& _landscape;
+    LandscapeBuilder& _builder;
+
+public:
+
+    Expander(
+            VisualizationInterface& interface,
+            ContourTree& contour_tree,
+            Landscape& landscape,
+            LandscapeBuilder& builder)
+        : _interface(interface), _contour_tree(contour_tree), _landscape(landscape),
+          _builder(builder)
+    {
+
+    }
+
+    virtual void notifyCellSelected(int id)
+    {
+        std::cout << "Expanding component." << std::endl;
+        typename Landscape::Arc arc = _landscape.getComponent(_landscape.getTriangle(id));
+        typename ContourTree::Edge edge = _landscape.getContourTreeEdge(arc);
+        std::cout << _contour_tree.getID(_contour_tree.u(edge)) << " <----> " << 
+                  _contour_tree.getID(_contour_tree.v(edge)) << std::endl;
+        _contour_tree.unfold(edge);
+
+        // recompute the landscape
+        Landscape new_landscape = 
+                _builder.build(_contour_tree, _contour_tree.getNode(4));
+
+        // rebuild the mesh
+        _interface.clearMesh();
+        _interface.buildMesh(new_landscape);
+
+    }
+};
+
+
 template <typename ContourTree>
 class Visualizer
 {
@@ -329,6 +381,10 @@ public:
 
         TestObserver<ContourTree, Landscape> test_observer(interface, contour_tree, landscape);
         event_manager.registerObserver(&test_observer);
+
+        Expander<ContourTree, Landscape, LandscapeBuilder> 
+                expander(interface, contour_tree, landscape, landscape_builder);
+        event_manager.registerObserver(&expander);
 
         interface.render();
     }
