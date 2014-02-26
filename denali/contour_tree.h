@@ -278,11 +278,6 @@ public:
     /// \brief Retrieve a node by its ID.
     Node getNode(unsigned int id)
     {
-        return _id_to_node[id];
-    }
-
-    Node getNodeChecked(unsigned int id)
-    {
         typename IDToNode::const_iterator it = _id_to_node.find(id);
 
         if (it == _id_to_node.end()) {
@@ -376,13 +371,6 @@ public:
     Node getNode(unsigned int id) const
     {
         return _graph.getNode(id);
-    }
-
-    /// \brief Gets a node by ID, but checks to make sure it exists. If the
-    ///     ID is invalid, the returned node is invalid.
-    Node getNodeChecked(unsigned int id) const
-    {
-        return _graph.getNodeChecked(id);
     }
 
     /// \brief Retrieve the members of the edge.

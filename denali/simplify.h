@@ -100,28 +100,30 @@ public:
     static unsigned int upDegree(const Tree& tree, typename Tree::Node node)
     {
         unsigned int n = 0;
-        double node_value = tree.getValue(node);
+        const double node_value = tree.getValue(node);
 
         for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
         {
             if (tree.getValue(it.neighbor()) > node_value) {
-                node_value++;
+                n++;
             }
         }
+        return n;
     }
 
     template <typename Tree>
     static unsigned int downDegree(const Tree& tree, typename Tree::Node node)
     {
         unsigned int n = 0;
-        double node_value = tree.getValue(node);
+        const double node_value = tree.getValue(node);
 
         for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
         {
             if (tree.getValue(it.neighbor()) <= node_value) {
-                node_value++;
+                n++;
             }
         }
+        return n;
     }
 
     template <typename Tree>

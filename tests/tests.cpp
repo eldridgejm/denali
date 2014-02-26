@@ -662,7 +662,7 @@ SUITE(Folded)
 
         CHECK(folded_tree.isEdgeValid(edge)); 
 
-        folded_tree.unfold(edge);
+        // folded_tree.unfold(edge);
 
 
         printContourTree(folded_tree);

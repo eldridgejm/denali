@@ -344,7 +344,8 @@ public:
         typename ContourTree::Edge edge = _landscape.getContourTreeEdge(arc);
         std::cout << _contour_tree.getID(_contour_tree.u(edge)) << " <----> " << 
                   _contour_tree.getID(_contour_tree.v(edge)) << std::endl;
-        _contour_tree.unfold(edge);
+
+        // _contour_tree.unfold(edge);
 
         // recompute the landscape
         Landscape new_landscape = 
@@ -365,14 +366,17 @@ class Visualizer
 public:
 
     template <typename LandscapeBuilder>
-    void visualize(ContourTree& contour_tree, LandscapeBuilder& landscape_builder)
+    void visualize(
+            ContourTree& contour_tree, 
+            typename ContourTree::Node root, 
+            LandscapeBuilder& landscape_builder)
     {
         std::cout << "Visualizing..." << std::endl;
 
         typedef typename LandscapeBuilder::LandscapeType Landscape;
 
         Landscape landscape = 
-                landscape_builder.build(contour_tree, contour_tree.getNode(4));
+                landscape_builder.build(contour_tree, root);
 
         VisualizationEventManager event_manager;
 

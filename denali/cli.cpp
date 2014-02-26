@@ -127,18 +127,23 @@ int cli_visualize(int argc, char ** argv)
         // read the contour tree
         denali::ContourTree contour_tree = denali::readContourTreeFile(argv[2]);
 
+        // simplify the tree
+        typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
+        denali::PersistenceSimplifier simplifier(15);
+        FoldedContourTree folded_tree = FoldedContourTree::compute(contour_tree, simplifier);
+
         // an error return used in the following parsers
         char * err;
 
         // we use the min leaf by default
-        denali::ContourTree::Node root = denali::findMinLeaf(contour_tree);
+        FoldedContourTree::Node root = denali::findMinLeaf(folded_tree);
 
         if (option_root) {
             if (strcmp(option_root, "min") == 0) {
                 // do nothing, we already have the min
             } else if (strcmp(option_root, "max") == 0) {
                 // get the maximum leaf
-                root = denali::findMaxLeaf(contour_tree);
+                root = denali::findMaxLeaf(folded_tree);
             } else {
                 // we have to check to make sure that the root node is valid.
                 // first, was it converted to an int?
@@ -148,27 +153,22 @@ int cli_visualize(int argc, char ** argv)
                 }
 
                 // try to get the root
-                root = contour_tree.getNodeChecked(root_id);
-                if (!contour_tree.isNodeValid(root)) {
+                root = folded_tree.getNode(root_id);
+                if (!folded_tree.isNodeValid(root)) {
                     throw std::runtime_error("Invalid root specified. Node is not in the tree.");
                 }
 
                 // make sure it is a leaf node
-                if (contour_tree.degree(root) != 1) {
+                if (folded_tree.degree(root) != 1) {
                     throw std::runtime_error("Invalid root specified. It is not a leaf node.");
                 }
             }
         }
 
-        typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
-
-        denali::PersistenceSimplifier simplifier(15);
-        FoldedContourTree folded_tree = FoldedContourTree::compute(contour_tree, simplifier);
-
         denali::RectangularLandscapeBuilder<FoldedContourTree> builder;
         denali::Visualizer<FoldedContourTree> visualizer;
 
-        visualizer.visualize(folded_tree, builder);
+        visualizer.visualize(folded_tree, root, builder);
 
 
     }

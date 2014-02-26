@@ -428,7 +428,7 @@ public:
     }
 
     /// \brief Uncollapse a collapsed edge in the node.
-    Edge uncollapse(Node u, int index=-1)
+    void uncollapse(Node u, int index=-1)
     {
         Edge edge = _fold_tree.uncollapse(u, index);
 
@@ -507,10 +507,6 @@ public:
         return folded_tree;
     }
 
-    void unfold(Edge edge)
-    {
-        _context.unreduce(edge);
-    }
 };
 
 
