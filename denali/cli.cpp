@@ -125,12 +125,15 @@ int cli_visualize(int argc, char ** argv)
 
     try {
         // read the contour tree
-        denali::ContourTree contour_tree = denali::readContourTreeFile(argv[2]);
+        denali::ContourTree folded_tree = denali::readContourTreeFile(argv[2]);
+        typedef denali::ContourTree FoldedContourTree;
 
         // simplify the tree
+        /*
         typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
         denali::PersistenceSimplifier simplifier(15);
         FoldedContourTree folded_tree = FoldedContourTree::compute(contour_tree, simplifier);
+        */
 
         // an error return used in the following parsers
         char * err;

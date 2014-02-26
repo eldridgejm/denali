@@ -169,6 +169,14 @@ public:
     {
         return _values[_graph.getNodeIdentifier(node)];
     }
+
+    void resize() {
+        _values.resize(_graph.getMaxNodeIdentifier());
+    }
+
+    size_t size() const {
+        return _values.size();
+    }
 };
 
 
@@ -198,6 +206,14 @@ public:
     {
         return _values[_graph.getArcIdentifier(arc)];
     }
+
+    void resize() {
+        _values.resize(_graph.getMaxArcIdentifier());
+    }
+
+    size_t size() const {
+        return _values.size();
+    }
 };
 
 
@@ -226,6 +242,14 @@ public:
     operator[](typename EdgeMappable::Edge edge) const
     {
         return _values[_graph.getEdgeIdentifier(edge)];
+    }
+
+    void resize() {
+        _values.resize(_graph.getMaxEdgeIdentifier());
+    }
+
+    size_t size() const {
+        return _values.size();
     }
 };
 

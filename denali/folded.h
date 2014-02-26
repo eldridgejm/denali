@@ -16,11 +16,12 @@ class FoldTree :
         BaseGraphMixin <UndirectedGraph> >
 {
 public:
-
-    class NodeFold;
-    class EdgeFold;
+    typedef UndirectedGraph::Node Node;
+    typedef UndirectedGraph::Edge Edge;
 
 private:
+    class NodeFold;
+    class EdgeFold;
 
     typedef
     ReadableUndirectedGraphMixin <UndirectedGraph,
@@ -37,37 +38,8 @@ private:
     ObservingNodeMap<GraphType, NodeFoldPtr> _node_to_fold;
     ObservingEdgeMap<GraphType, EdgeFoldPtr> _edge_to_fold;
 
-    unsigned int _number_of_node_folds;
+    unsigned int _node_fold_identifier;
     unsigned int _edge_fold_identifier;
-
-    Node restoreNode(NodeFoldPtr v_fold)
-    {
-        Node v = _graph.addNode();
-        v_fold->_node = v;
-        _node_to_fold[v] = v_fold;
-        return v;
-    }
-
-    Edge restoreEdge(EdgeFoldPtr uv_fold)
-    {
-        Node u = uv_fold->_u_fold->_node;
-        Node v = uv_fold->_v_fold->_node;
-
-        Edge uv = _graph.addEdge(u,v);
-        uv_fold->_edge = uv;
-        _edge_to_fold[uv] = uv_fold;
-        return uv;
-    }
-
-    NodeFoldPtr oppositeNodeFold(NodeFoldPtr u_fold, EdgeFoldPtr uv_fold)
-    {
-        return uv_fold->_u_fold->_id == u_fold->_id ? 
-                uv_fold->_v_fold : uv_fold->_u_fold;
-    }
-
-public:
-    typedef GraphType::Node Node;
-    typedef GraphType::Edge Edge;
 
     class NodeFold
     {
@@ -154,9 +126,36 @@ public:
     };
 
 
+    Node restoreNode(NodeFoldPtr v_fold)
+    {
+        Node v = _graph.addNode();
+        v_fold->_node = v;
+        _node_to_fold[v] = v_fold;
+        return v;
+    }
+
+    Edge restoreEdge(EdgeFoldPtr uv_fold)
+    {
+        Node u = uv_fold->_u_fold->_node;
+        Node v = uv_fold->_v_fold->_node;
+
+        Edge uv = _graph.addEdge(u,v);
+        uv_fold->_edge = uv;
+        _edge_to_fold[uv] = uv_fold;
+        return uv;
+    }
+
+    NodeFoldPtr oppositeNodeFold(NodeFoldPtr u_fold, EdgeFoldPtr uv_fold)
+    {
+        return uv_fold->_u_fold->_id == u_fold->_id ? 
+                uv_fold->_v_fold : uv_fold->_u_fold;
+    }
+
+public:
+
     FoldTree() 
         : Mixin(_graph), _node_to_fold(_graph), _edge_to_fold(_graph),
-          _number_of_node_folds(0), _edge_fold_identifier(0) {}
+          _node_fold_identifier(0), _edge_fold_identifier(0) {}
 
     /// \brief Add a node to the tree.
     Node addNode()
@@ -165,8 +164,8 @@ public:
         Node node = _graph.addNode();
 
         // create the node fold
-        NodeFoldPtr node_fold = NodeFoldPtr(new NodeFold(node, _number_of_node_folds));
-        _number_of_node_folds++;
+        NodeFoldPtr node_fold = NodeFoldPtr(new NodeFold(node, _node_fold_identifier));
+        _node_fold_identifier++;
 
         // link the node to the node fold
         _node_to_fold[node] = node_fold;
@@ -193,22 +192,6 @@ public:
         _edge_to_fold[edge] = edge_fold;
 
         return edge;
-    }
-
-    /// \brief Retrieve a node's fold.
-    const NodeFold& getNodeFold(Node node) const {
-        return *_node_to_fold[node];
-    }
-
-    /// \brief Retrieve an edge's fold.
-    const EdgeFold& getEdgeFold(Edge edge) const {
-        return *_edge_to_fold[edge];
-    }
-
-    /// \brief Get the number of nodes that would exist in the fully unfolded tree.
-    size_t numberOfNodeFolds() const
-    {
-        return _number_of_node_folds;
     }
 
     /// \brief Collapse the child node into the parent.
@@ -254,6 +237,14 @@ public:
         _graph.removeNode(v);
 
         return uw;
+    }
+
+    bool hasCollapsed(Node node) const {
+        return _node_to_fold[node]->numberOfCollapsedEdgeFolds() > 0;
+    }
+
+    bool hasReduced(Edge edge) const {
+        return _edge_to_fold[edge]->hasReduced();
     }
 
     /// \brief Uncollapses the collapsed edge at the index in the node's collapse list.
@@ -313,8 +304,152 @@ public:
         return v;
     }
 
+    unsigned int getNodeIdentifier(Node node) const {
+        return _node_to_fold[node]->getIdentifier();
+    }
+
+    unsigned int getMaxNodeIdentifier() const {
+        return _node_fold_identifier;
+    }
+
+    unsigned int getEdgeIdentifier(Edge edge) const {
+        return _edge_to_fold[edge]->getIdentifier();
+    }
+
+    unsigned int getMaxEdgeIdentifier() const {
+        return _edge_fold_identifier;
+    }
+
 };
 
+
+template <typename ContourTree>
+class FoldedContourTree
+{
+public:
+    typedef FoldTree::Node Node;
+    typedef FoldTree::Edge Edge;
+    typedef typename ContourTree::Members Members;
+
+private:
+
+    FoldTree _fold_tree;
+    const ContourTree& _contour_tree;
+
+    Members _members;
+
+    StaticNodeMap<ContourTree, Node> _ct_to_folded_node;
+    StaticEdgeMap<ContourTree, Node> _ct_to_folded_edge;
+
+    StaticNodeMap<FoldTree, typename ContourTree::Node> _folded_to_ct_node;
+    StaticEdgeMap<FoldTree, typename ContourTree::Edge> _folded_to_ct_edge;
+
+public:
+
+    FoldedContourTree(const ContourTree& contour_tree)
+        : _ct_to_folded_node(_contour_tree), _ct_to_folded_edge(_contour_tree)
+    {
+        // copy over all of the nodes
+        for (NodeIterator<ContourTree> it(contour_tree); !it.done(); ++it)
+        {
+            // make the new node
+            Node node = _fold_tree.addNode();
+
+            // map the contour tree node to this node
+            _ct_to_folded_node[it.node()] = node;
+
+            // map the folded node to the contour tree node
+            _folded_to_ct_node.resize();
+            _folded_to_ct_node[node] = it.node();
+        }
+
+        // copy over all of the edges
+        for (EdgeIterator<ContourTree> it(contour_tree); !it.done(); ++it)
+        {
+            // get the nodes in the fold tree corresponding to the nodes in the
+            // contour tree
+            Node u = _ct_to_folded_node[_contour_tree.u(it.edge())];
+            Node v = _ct_to_folded_node[_contour_tree.v(it.edge())];
+
+            // now make the edge
+            Edge edge = _fold_tree.addEdge(u,v);
+
+            // map the contour tree edge to this new edge
+            _ct_to_folded_edge[it.edge()] = edge;
+
+            // map the folded edge to the contour tree edge
+            _folded_to_ct_edge.resize();
+            _folded_to_ct_edge[edge] = it.edge();
+        }
+    }
+
+    double getValue(Node node) const {
+        return _contour_tree.getValue(_folded_to_ct_node[node]);
+    }
+
+    unsigned int getID(Node node) const {
+        return _contour_tree.getID(_folded_to_ct_node[node]);
+    }
+
+    Node getNode(unsigned int id) const {
+        return _ct_to_folded_node[_contour_tree.getNode(id)];
+    }
+
+    const Members& getNodeMembers(Node node) {
+        return _members;
+    }
+
+    const Members& getEdgeMembers(Edge edge) {
+        return _members;
+    }
+    
+    /// \brief Collapse an edge.
+    void collapse(Edge edge) {
+        return _fold_tree.collapse(edge);
+    }
+
+    /// \brief Reduced a node, connecting its neighbors.
+    Edge reduce(Node v) {
+        return _fold_tree.reduce(v);
+    }
+
+    bool hasCollapsed(Node node) const {
+        return _fold_tree.hasCollapsed(node);
+    }
+
+    bool hasReduced(Edge edge) const {
+        return _fold_tree.hasReduced(edge);
+    }
+
+    /// \brief Uncollapse a collapsed edge in the node.
+    void uncollapse(Node u, int index=-1)
+    {
+        Edge edge = _fold_tree.uncollapse(u, index);
+
+        // we have to be careful: we have a new node in the tree now,
+        // and we have to map the corresponding contour tree node to it
+        Node node = _fold_tree.opposite(u, edge);
+        _ct_to_folded_node[_folded_to_ct_node[node]] = node;
+
+        return edge;
+    }
+
+    /// \brief Unreduce the edge.
+    Node unreduce(Edge uw)
+    {
+        // unreduce and get the newly created node
+        Node node = _fold_tree.unreduce(uw);
+
+        // map the contour tree node to the new node
+        _ct_to_folded_node[_folded_to_ct_node[node]] = node;
+
+        return node;
+    }
+
+
+};
+
+/*
 ////////////////////////////////////////////////////////////////////////////////
 //
 // FoldedContourTreeContext
@@ -508,6 +643,7 @@ public:
     }
 
 };
+*/
 
 
 } // namespace denali

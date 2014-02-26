@@ -576,8 +576,10 @@ SUITE(Simplify)
         ContourTree tree = ContourTree::compute(plex, alg);
 
         denali::PersistenceSimplifier simplifier(15);
+        /*
         denali::FoldedContourTree<ContourTree> folded_tree = 
                 denali::FoldedContourTree<ContourTree>::compute(tree, simplifier);
+        */
     }
 }
 
@@ -613,7 +615,6 @@ SUITE(Folded)
         fold_tree.collapse(e45);
 
         CHECK_EQUAL(5, fold_tree.numberOfNodes());
-        CHECK_EQUAL(6, fold_tree.numberOfNodeFolds());
         CHECK_EQUAL(2, fold_tree.degree(n4));
 
         FoldTree::Edge e26 = fold_tree.reduce(n4);
@@ -641,6 +642,7 @@ SUITE(Folded)
                 plex.getNode(wenger_edges[i][1]));
         }
 
+        /*
         typedef denali::ContourTree ContourTree;
         typedef denali::FoldedContourTree<ContourTree> FoldedContourTree; 
 
@@ -666,6 +668,7 @@ SUITE(Folded)
 
 
         printContourTree(folded_tree);
+        */
 
     }
 
