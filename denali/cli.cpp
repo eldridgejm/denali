@@ -129,7 +129,7 @@ int cli_visualize(int argc, char ** argv)
 
         // simplify the tree
         typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
-        denali::PersistenceSimplifier simplifier(15);
+        denali::PersistenceSimplifier simplifier(.5);
         FoldedContourTree folded_tree(contour_tree);
         simplifier.simplify(folded_tree);
 
