@@ -25,6 +25,7 @@
 #include <vtkDataSetMapper.h>
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
+#include <vtkProgrammableSource.h>
 
 #include <sstream>
 
@@ -64,17 +65,15 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Visualization Interface
+// Interface
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 class LandscapeInteractorStyle : public vtkInteractorStyleTrackballCamera
 {
-    /* A class for interacting with the landscape in a trackball style. */
-    private:
-    VisualizationEventManager* _event_manager;
+    VisualizationEventManager* _event_manager; 
 
-    public:
+public:
     static LandscapeInteractorStyle * New();
 
     void SetEventManager(VisualizationEventManager* manager) {
@@ -94,192 +93,239 @@ class LandscapeInteractorStyle : public vtkInteractorStyleTrackballCamera
         picker->SetTolerance(0.0005);
 
         // Pick from this location.
-        picker->Pick(pos[0], pos[1], 0, this->GetDefaultRenderer());
+        picker->Pick(pos[0], pos[1], 0, this->GetCurrentRenderer());
 
         double* worldPosition = picker->GetPickPosition();
 
-        std::cout << picker->GetCellId() << std::endl;
-        _event_manager->sendCellSelected(picker->GetCellId());
+        // send the event to the interface's event manager
+        _event_manager->sendCellSelected(picker->GetCellId()); 
     }
 
+    virtual void OnLeftButtonDown()
+    {
+        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+    }
 };
 vtkStandardNewMacro(LandscapeInteractorStyle);
 
 
-class VisualizationInterface
+struct MeshBuilderArgs
 {
-    vtkSmartPointer<vtkPoints> _mesh_points;
-    vtkSmartPointer<vtkCellArray> _mesh_triangles;
-    vtkSmartPointer<vtkPolyData> _mesh;
-    vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
+    vtkProgrammableSource* source;
+};
+
+
+void buildMesh(void* args)
+{
+    std::cout << "Computing source..." << std::endl;
+
+    MeshBuilderArgs* input = static_cast<MeshBuilderArgs*>(args);
+
+    vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+    vtkSmartPointer<vtkCellArray> triangles = vtkSmartPointer<vtkCellArray>::New();
+
+    points->InsertNextPoint(0,0,0);
+    points->InsertNextPoint(1,0,0);
+    points->InsertNextPoint(1,1,0);
+    points->InsertNextPoint(0,1,0);
+
+    vtkSmartPointer<vtkTriangle> tri1 = vtkSmartPointer<vtkTriangle>::New();
+    tri1->GetPointIds()->SetId(1, 0);
+    tri1->GetPointIds()->SetId(2, 1);
+    tri1->GetPointIds()->SetId(0, 2);
+    triangles->InsertNextCell(tri1);
+
+    vtkSmartPointer<vtkTriangle> tri2 = vtkSmartPointer<vtkTriangle>::New();
+    tri2->GetPointIds()->SetId(1, 3);
+    tri2->GetPointIds()->SetId(2, 0);
+    tri2->GetPointIds()->SetId(0, 2);
+    triangles->InsertNextCell(tri2);
+
+    std::cout << "Setting points..." << std::endl;
+    input->source->GetPolyDataOutput()->SetPoints(points);
+
+    std::cout << "Setting polys..." << std::endl;
+    input->source->GetPolyDataOutput()->SetPolys(triangles);
+
+}
+
+
+template <typename LandscapeContext>
+class LandscapeInterface
+{
+    LandscapeContext& _context;
 
     VisualizationEventManager& _event_manager;
 
-    vtkSmartPointer<vtkTextActor> _info_text; 
+    vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
+    vtkSmartPointer<vtkRenderWindow> _render_window;
+    vtkSmartPointer<vtkPolyDataMapper> _mapper;
+    vtkSmartPointer<vtkActor> _mesh_actor;
+    vtkSmartPointer<vtkRenderer> _renderer;
+    vtkSmartPointer<vtkRenderWindowInteractor> _interactor;
+
+    vtkProgrammableSource* _source;
+    MeshBuilderArgs _args; 
 
 public:
 
-    VisualizationInterface(VisualizationEventManager& manager)
-        : _event_manager(manager), 
-          _mesh_points(vtkSmartPointer<vtkPoints>::New()),
-          _mesh_triangles(vtkSmartPointer<vtkCellArray>::New()),
-          _mesh(vtkSmartPointer<vtkPolyData>::New()),
-          _interactor_style(vtkSmartPointer<LandscapeInteractorStyle>::New()),
-          _info_text(vtkSmartPointer<vtkTextActor>::New())
+    LandscapeInterface(
+            LandscapeContext& context, 
+            VisualizationEventManager& event_manager) :
+            _context(context),
+            _event_manager(event_manager),
+            _source(vtkProgrammableSource::New()),
+            _interactor_style(vtkSmartPointer<LandscapeInteractorStyle>::New()),
+            _render_window(vtkSmartPointer<vtkRenderWindow>::New()),
+            _mapper(vtkSmartPointer<vtkPolyDataMapper>::New()),
+            _mesh_actor(vtkSmartPointer<vtkActor>::New()),
+            _renderer(vtkSmartPointer<vtkRenderer>::New()),
+            _interactor(vtkSmartPointer<vtkRenderWindowInteractor>::New())
     {
-        // Add the geometry and topology to the mesh
-        _mesh->SetPoints(_mesh_points);
-        _mesh->SetPolys(_mesh_triangles);
+        _args.source = _source;
+        _source->SetExecuteMethod(buildMesh, &_args);
 
-        // attach the interactor to the event manager
         _interactor_style->SetEventManager(&_event_manager);
+
+        _mapper->SetInputConnection(_source->GetOutputPort());
+
+        _mesh_actor->SetMapper(_mapper);
+
+        //Create a renderer, render window, and interactor
+        _render_window->AddRenderer(_renderer);
+
+        _interactor->SetRenderWindow(_render_window);
+
+        _interactor->SetInteractorStyle(_interactor_style);
+        _interactor_style->SetDefaultRenderer(_renderer);
+
+        //Add the actor to the scene
+        _renderer->AddActor(_mesh_actor);
+        _renderer->SetBackground(.4, .5, .6); // Background color white
     }
 
-    void 
-    colorizeMesh()
+    void buildLandscapeMesh()
     {
-        double bounds[6];
-        _mesh->GetBounds(bounds);
-
-        // Find min and max z
-        double minz = bounds[4];
-        double maxz = bounds[5];
-
-        // Create the color map
-        vtkSmartPointer<vtkLookupTable> colorLookupTable = 
-            vtkSmartPointer<vtkLookupTable>::New();
-        colorLookupTable->SetTableRange(minz, maxz);
-        colorLookupTable->Build();
-
-        // Generate the colors for each point based on the color map
-        vtkSmartPointer<vtkUnsignedCharArray> colors = 
-            vtkSmartPointer<vtkUnsignedCharArray>::New();
-        colors->SetNumberOfComponents(3);
-        colors->SetName("Colors");
-
-        for(int i = 0; i < _mesh->GetNumberOfPoints(); i++)
-        {
-            // put the point's coordinates into p
-            double p[3];
-            _mesh->GetPoint(i,p);
-
-            // lookup the color
-            double dcolor[3];
-            colorLookupTable->GetColor(p[2], dcolor);
-
-            unsigned char color[3];
-            for(unsigned int j = 0; j < 3; j++)
-            {
-                color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
-            }
-
-            // Notice this hack! The colors were backwards: blue was high,
-            // red was low. This flips the two.
-            unsigned char better_colors[3];
-            better_colors[0] = color[2];
-            better_colors[1] = color[1];
-            better_colors[2] = color[0];
-
-            colors->InsertNextTupleValue(better_colors);
-        }
-
-        _mesh->GetPointData()->SetScalars(colors);
-    }
-
-
-    template <typename Landscape>
-    void buildMesh(Landscape& landscape)
-    {
+        _source->Modified();
+        _source->Update();
+        /*
+        typedef typename LandscapeContext::Landscape Landscape;
         typedef typename Landscape::Point Point;
         typedef typename Landscape::Triangle Triangle;
 
-        // store some points
-        vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New(); 
+        Landscape& landscape = _context.getLandscape();
 
-        // first, we determine the range of heights we will encounter
+        // make point and triangle data
+        vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+        vtkSmartPointer<vtkCellArray> triangles = vtkSmartPointer<vtkCellArray>::New();
+
+        // record the max and min heights for normalization purposes
         double max_z = landscape.getMaxPoint().z();
         double min_z = landscape.getMinPoint().z();
+        double range = max_z - min_z;
 
-        // insert the vertices from the landscape into the mesh
+        // build the point set
         for (size_t i=0; i<landscape.numberOfPoints(); ++i)
         {
+            // get the point from the landscape
             Point point = landscape.getPoint(i);
-            double normalized_z = (point.z() - min_z) / (max_z - min_z);
-            _mesh_points->InsertNextPoint(point.x(), point.y(), normalized_z);
+
+            // normalize the height of the point
+            double normalized_z = (point.z() - min_z) / range;
+
+            // and insert it into the polydata
+            points->InsertNextPoint(point.x(), point.y(), normalized_z);
         }
 
-        // insert the triangles
+        // now build the topology
         for (size_t i=0; i<landscape.numberOfTriangles(); ++i)
         {
+            // get the triangle from the landscape
             Triangle tri = landscape.getTriangle(i);
 
-            vtkSmartPointer<vtkTriangle> triangle = vtkSmartPointer<vtkTriangle>::New();
-            triangle->GetPointIds()->SetId(1, tri.i());
-            triangle->GetPointIds()->SetId(2, tri.j());
-            triangle->GetPointIds()->SetId(0, tri.k());
-            _mesh_triangles->InsertNextCell(triangle);
+            // make a new vtk triangle
+            vtkSmartPointer<vtkTriangle> vtk_tri = vtkSmartPointer<vtkTriangle>::New();
+            vtk_tri->GetPointIds()->SetId(1, tri.i());
+            vtk_tri->GetPointIds()->SetId(2, tri.j());
+            vtk_tri->GetPointIds()->SetId(0, tri.k());
+            triangles->InsertNextCell(vtk_tri);
         }
 
-        colorizeMesh();
-    }
+        // now update the mesh
+        _landscape_mesh->SetPoints(points);
+        _landscape_mesh->SetPolys(triangles);
 
-    void clearMesh()
-    {
-          std::cout << "Clearing mesh!" << std::endl;
-          _mesh_points = vtkSmartPointer<vtkPoints>::New();
-          _mesh_triangles = vtkSmartPointer<vtkCellArray>::New();
-          _mesh->SetPoints(_mesh_points);
-          _mesh->SetPolys(_mesh_triangles);
-    }
+        _landscape_mesh->Modified();
+        _mapper->SetInput(_landscape_mesh);
+        _landscape_mesh->Modified();
+        _mapper->Update();
+        _mapper->Modified();
 
-    void setInfo(std::string s) {
-        _info_text->SetInput (s.c_str());
+        _mesh_actor->Modified();
+        _interactor_style->Modified();
+        _interactor->Modified();
+        */
+        
     }
-
+    
     void render()
     {
-        // Create mapper and actor
-        vtkSmartPointer<vtkPolyDataMapper> mapper =
-                vtkSmartPointer<vtkPolyDataMapper>::New();
-
-        #if VTK_MAJOR_VERSION <= 5
-            mapper->SetInput(_mesh);
-        #else
-            mapper->SetInputData(_mesh);
-        #endif
-
-        vtkSmartPointer<vtkActor> actor =
-                vtkSmartPointer<vtkActor>::New();
-        actor->SetMapper(mapper);
-
-        // Create a renderer, render window, and an interactor
-        vtkSmartPointer<vtkRenderer> renderer =
-                vtkSmartPointer<vtkRenderer>::New();
-        vtkSmartPointer<vtkRenderWindow> renderWindow =
-                vtkSmartPointer<vtkRenderWindow>::New();
-        renderWindow->AddRenderer(renderer);
-        vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
-                vtkSmartPointer<vtkRenderWindowInteractor>::New();
-        renderWindowInteractor->SetRenderWindow(renderWindow);
-
-        // Mouse interactor style
-        renderWindowInteractor->SetInteractorStyle(_interactor_style);
-        _interactor_style->SetDefaultRenderer(renderer);
-
-        // Add the actors to the scene
-        renderer->AddActor(actor);
-        renderer->SetBackground(.7,.7,.7); 
-
-        // Setup the text and add it to the window
-        _info_text->GetTextProperty()->SetFontSize ( 14 );
-        renderer->AddActor2D ( _info_text );
-        _info_text->GetTextProperty()->SetColor (0.0,0.0,0.0);
-
-        // Render and interact
-        renderWindow->Render();
-        renderWindowInteractor->Start();
+        _render_window->Render();
     }
 
+    void start()
+    {
+        //Render and interact
+        render();
+        _interactor->Start();
+    }
+
+};
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// LandscapeContext
+//
+////////////////////////////////////////////////////////////////////////////////
+
+template <typename _ContourTree, typename _LandscapeBuilder>
+class LandscapeContext
+{
+public:
+    typedef _ContourTree        ContourTree;
+    typedef _LandscapeBuilder   LandscapeBuilder;
+    typedef typename _LandscapeBuilder::LandscapeType   Landscape;
+
+    LandscapeContext(
+            ContourTree& contour_tree, 
+            typename ContourTree::Node root,
+            LandscapeBuilder& landscape_builder) :
+            _contour_tree(contour_tree),
+            _root(root),
+            _landscape_builder(landscape_builder),
+            _landscape(new Landscape(landscape_builder.build(contour_tree, root)))
+    {}
+
+    ~LandscapeContext()
+    {
+        delete _landscape;
+    }
+
+    ContourTree& getContourTree() { return _contour_tree; }
+    Landscape& getLandscape() { return *_landscape; }
+
+    void updateLandscape()
+    {
+        delete _landscape;
+        _landscape = new Landscape(_landscape_builder.build(_contour_tree, _root));
+    }
+
+private:
+
+    ContourTree& _contour_tree;
+    typename ContourTree::Node _root;
+    LandscapeBuilder& _landscape_builder;
+    Landscape* _landscape;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -288,76 +334,46 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-template <typename ContourTree, typename Landscape>
+template <typename LandscapeContext>
 class TestObserver : public VisualizationEventObserver
 {
-    VisualizationInterface& _interface;
-    ContourTree& _contour_tree;
-    Landscape& _landscape;
 
-public:
-    TestObserver(VisualizationInterface& interface, ContourTree& contour_tree, Landscape& landscape)
-        : _interface(interface), _contour_tree(contour_tree), _landscape(landscape) {}
-
-    virtual void notifyCellSelected(int id) {
-        std::cout << "The cell " << id << " has been selected!." << std::endl;
-        typename Landscape::Arc arc = _landscape.getComponent(_landscape.getTriangle(id));
-        typename Landscape::Node landscape_parent = _landscape.source(arc);
-        typename Landscape::Node landscape_child = _landscape.target(arc);
-        typename ContourTree::Node ct_parent = _landscape.getContourTreeNode(landscape_parent);
-        typename ContourTree::Node ct_child = _landscape.getContourTreeNode(landscape_child);
-
-        std::stringstream message;
-        message << _contour_tree.getID(ct_parent) << " ---> " <<
-                _contour_tree.getID(ct_child) << std::endl;
-
-        _interface.setInfo(message.str());
-    }
-};
-
-
-template <typename ContourTree, typename Landscape, typename LandscapeBuilder>
-class Expander : public VisualizationEventObserver
-{
-    VisualizationInterface& _interface;
-    ContourTree& _contour_tree;
-    Landscape& _landscape;
-    LandscapeBuilder& _builder;
+    LandscapeContext& _landscape_context;
+    LandscapeInterface<LandscapeContext>& _interface;
 
 public:
 
-    Expander(
-            VisualizationInterface& interface,
-            ContourTree& contour_tree,
-            Landscape& landscape,
-            LandscapeBuilder& builder)
-        : _interface(interface), _contour_tree(contour_tree), _landscape(landscape),
-          _builder(builder)
-    {
+    TestObserver(
+            LandscapeContext& context,
+            LandscapeInterface<LandscapeContext>& interface) :
+            _landscape_context(context),
+            _interface(interface)
+    {}
 
+    void notifyCellSelected(int id)
+    {
+        std::cout << "Cell " << id << " has been selected." << std::endl;
+
+        // get the component from the landscape
+        typedef typename LandscapeContext::Landscape Landscape;
+        Landscape& landscape = _landscape_context.getLandscape();
+        typename Landscape::Triangle triangle = landscape.getTriangle(id);
+        typename Landscape::Arc arc = landscape.getComponent(triangle);
+
+        // get the parent and child nodes from the contour tree
+        typedef typename LandscapeContext::ContourTree ContourTree;
+        ContourTree& contour_tree = _landscape_context.getContourTree();
+        typename ContourTree::Node parent = landscape.getContourTreeNode(landscape.source(arc));
+        typename ContourTree::Node child = landscape.getContourTreeNode(landscape.target(arc));
+
+        std::cout << contour_tree.getID(parent) << " ----> " << contour_tree.getID(child) << std::endl;
+
+        expandSubtree(contour_tree, parent, child);
+        _landscape_context.updateLandscape();
+        _interface.buildLandscapeMesh();
     }
 
-    virtual void notifyCellSelected(int id)
-    {
-        std::cout << "Expanding component." << std::endl;
-        typename Landscape::Arc arc = _landscape.getComponent(_landscape.getTriangle(id));
-        typename ContourTree::Edge edge = _landscape.getContourTreeEdge(arc);
-        std::cout << _contour_tree.getID(_contour_tree.u(edge)) << " <----> " << 
-                  _contour_tree.getID(_contour_tree.v(edge)) << std::endl;
-
-        // _contour_tree.unfold(edge);
-
-        // recompute the landscape
-        Landscape new_landscape = 
-                _builder.build(_contour_tree, _contour_tree.getNode(4));
-
-        // rebuild the mesh
-        _interface.clearMesh();
-        _interface.buildMesh(new_landscape);
-
-    }
 };
-
 
 template <typename ContourTree>
 class Visualizer
@@ -371,26 +387,24 @@ public:
             typename ContourTree::Node root, 
             LandscapeBuilder& landscape_builder)
     {
-        std::cout << "Visualizing..." << std::endl;
-
         typedef typename LandscapeBuilder::LandscapeType Landscape;
 
-        Landscape landscape = 
-                landscape_builder.build(contour_tree, root);
+        // make a visualization context
+        typedef LandscapeContext<ContourTree, LandscapeBuilder> Context;
+        Context context(contour_tree, root, landscape_builder);
 
+        // make a event manager
         VisualizationEventManager event_manager;
 
-        VisualizationInterface interface(event_manager);
-        interface.buildMesh(landscape);
+        // make an interface
+        LandscapeInterface<Context> interface(context, event_manager);
+        
+        TestObserver<Context> observer(context, interface);
+        event_manager.registerObserver(&observer);
 
-        TestObserver<ContourTree, Landscape> test_observer(interface, contour_tree, landscape);
-        event_manager.registerObserver(&test_observer);
-
-        Expander<ContourTree, Landscape, LandscapeBuilder> 
-                expander(interface, contour_tree, landscape, landscape_builder);
-        event_manager.registerObserver(&expander);
-
-        interface.render();
+        // start the visualization
+        interface.buildLandscapeMesh();
+        interface.start();
     }
 
 };

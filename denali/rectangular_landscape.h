@@ -909,6 +909,10 @@ public:
         return _tree.getContourTreeEdge(arc);
     }
 
+    Node getRoot() const {
+        return _tree.getRoot();
+    }
+
 };
 
 

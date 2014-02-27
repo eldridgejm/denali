@@ -148,7 +148,7 @@ public:
 
     /// \brief Simplifies the contour tree in the context.
     template <typename Context>
-    void run(Context& context)
+    void simplify(Context& context)
     {
         typedef PersistencePriority<typename Context::Node> Priority;
         typedef typename Context::Node Node;

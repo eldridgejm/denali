@@ -197,11 +197,18 @@ public:
 
     /// \brief Retrieve a node's fold.
     const NodeFold& getNodeFold(Node node) const {
+        if (!isNodeValid(node)) {
+            throw std::runtime_error("Invalid node has no fold.");
+        }
         return *_node_to_fold[node];
     }
 
     /// \brief Retrieve an edge's fold.
     const EdgeFold& getEdgeFold(Edge edge) const {
+        if (!isEdgeValid(edge)) {
+            throw std::runtime_error("Invalid edge has no fold.");
+        }
+
         return *_edge_to_fold[edge];
     }
 
@@ -317,13 +324,12 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// FoldedContourTreeContext
+// FoldedContourTree
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-/// \brief A simplification context that results in a folded tree.
 template <typename ContourTree>
-class FoldedContourTreeContext :
+class FoldedContourTree :
         public
         ReadableUndirectedGraphMixin <FoldTree,
         BaseGraphMixin <FoldTree> >
@@ -365,7 +371,7 @@ private:
 
 
 public:
-    FoldedContourTreeContext(const ContourTree& contour_tree)
+    FoldedContourTree(const ContourTree& contour_tree)
             : Mixin(_fold_tree), _contour_tree(contour_tree), 
               _ct_to_fold_node(_contour_tree)
     {
@@ -427,8 +433,18 @@ public:
         return _fold_tree.reduce(v);
     }
 
+    /// \brief Checks if the node has collapsed edges inside.
+    bool hasCollapsed(Node node) const {
+        return _fold_tree.getNodeFold(node).numberOfCollapsedEdgeFolds() > 0;
+    }
+
+    /// \brief Checks if the edge contains a reduced node.
+    bool hasReduced(Edge edge) const {
+        return _fold_tree.getEdgeFold(edge).hasReduced();
+    }
+
     /// \brief Uncollapse a collapsed edge in the node.
-    void uncollapse(Node u, int index=-1)
+    Edge uncollapse(Node u, int index=-1)
     {
         Edge edge = _fold_tree.uncollapse(u, index);
 
@@ -452,62 +468,70 @@ public:
         return node;
     }
 
-    const Members& getNodeMembers(Node node) {
+    const Members& getNodeMembers(Node node) const {
         return _members;
     }
 
-    const Members& getEdgeMembers(Edge edge) {
+    const Members& getEdgeMembers(Edge edge) const {
         return _members;
     }
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //
-// FoldedContourTree
+// Helpers
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-/// \brief A folded contour tree.
-/// \ingroup contour_tree
-template <typename ContourTree>
-class FoldedContourTree :
-        public
-        ContourTreeMixin <FoldedContourTreeContext<ContourTree>,
-        BaseGraphMixin <FoldedContourTreeContext<ContourTree> > >
+
+/// \brief Expands the subtree
+template <typename FoldedTree>
+void expandSubtree(
+        FoldedTree& tree,
+        typename FoldedTree::Node parent,
+        typename FoldedTree::Node child)
 {
-    typedef
-    ContourTreeMixin <FoldedContourTreeContext<ContourTree>,
-    BaseGraphMixin <FoldedContourTreeContext<ContourTree> > >
-    Mixin;
+    typedef typename FoldedTree::Node Node;
+    typedef typename FoldedTree::Edge Edge;
 
-    FoldedContourTreeContext<ContourTree> _context;
+    std::queue<Edge> expand_queue;
 
-    FoldedContourTree(const ContourTree& contour_tree)
-        : Mixin(_context), _context(contour_tree) {}
+    // add all of the edges in the subtree to the queue
+    expand_queue.push(tree.findEdge(parent,child));
 
-public:
-    
-    typedef typename Mixin::Node Node;
-    typedef typename Mixin::Edge Edge;
-
-    template <typename FoldingAlgorithm>
-    static FoldedContourTree<ContourTree> 
-    compute(
-            const ContourTree& contour_tree,
-            FoldingAlgorithm algorithm)
+    for (UndirectedBFSIterator<FoldedTree> it(tree, parent, child);
+            !it.done(); ++it) 
     {
-        // Make a new folded contour tree
-        FoldedContourTree folded_tree(contour_tree);
-
-        // pass its context to the folder
-        algorithm.run(folded_tree._context);
-
-        // return the result
-        return folded_tree;
+        expand_queue.push(it.edge());
     }
 
-};
+    // now we expand each edge
+    while (expand_queue.size() > 0)
+    {
+        Edge edge = expand_queue.front();
+        expand_queue.pop();
+
+        // if the edge has a reduced node, unreduce it
+        if (tree.hasReduced(edge))
+        {
+            Node node = tree.unreduce(edge);
+
+            // add each of the node's neighbor edges to the expand list
+            for (UndirectedNeighborIterator<FoldedTree> it(tree, node); 
+                    !it.done(); ++it)
+            {
+                expand_queue.push(it.edge());
+            }
+
+            // uncollapse the node
+            while (tree.hasCollapsed(node))
+            {
+                Edge collapsed_edge = tree.uncollapse(node);
+                expand_queue.push(collapsed_edge);
+            }
+        }
+    }
+}
 
 
 } // namespace denali

@@ -130,7 +130,8 @@ int cli_visualize(int argc, char ** argv)
         // simplify the tree
         typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
         denali::PersistenceSimplifier simplifier(15);
-        FoldedContourTree folded_tree = FoldedContourTree::compute(contour_tree, simplifier);
+        FoldedContourTree folded_tree(contour_tree);
+        simplifier.simplify(folded_tree);
 
         // an error return used in the following parsers
         char * err;

@@ -570,14 +570,15 @@ SUITE(Simplify)
         }
 
         typedef denali::ContourTree ContourTree;
+        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
 
         denali::CarrsAlgorithm alg;
 
         ContourTree tree = ContourTree::compute(plex, alg);
 
         denali::PersistenceSimplifier simplifier(15);
-        denali::FoldedContourTree<ContourTree> folded_tree = 
-                denali::FoldedContourTree<ContourTree>::compute(tree, simplifier);
+        FoldedContourTree folded_tree(tree);
+        simplifier.simplify(folded_tree);
     }
 }
 
@@ -624,11 +625,14 @@ SUITE(Folded)
 
         n4 = fold_tree.unreduce(e26);
         fold_tree.uncollapse(n4);
+
     }
 
 
     TEST(FoldedContourTree)
     {
+        std::cout << "Folded Contour Tree" << std::endl;
+
         denali::ScalarSimplicialComplex plex;
 
         for (int i=0; i<n_wenger_vertices; ++i) {
@@ -651,8 +655,8 @@ SUITE(Folded)
         std::cout << "=====" << std::endl;
 
         denali::PersistenceSimplifier simplifier(15);
-        FoldedContourTree folded_tree = 
-                FoldedContourTree::compute(tree, simplifier);
+        FoldedContourTree folded_tree(tree);
+        simplifier.simplify(folded_tree);
 
         printContourTree(folded_tree);
         std::cout << "=====" << std::endl;
@@ -662,7 +666,11 @@ SUITE(Folded)
 
         CHECK(folded_tree.isEdgeValid(edge)); 
 
-        // folded_tree.unfold(edge);
+        printContourTree(folded_tree);
+        std::cout << "=====" << std::endl;
+
+        // expand the 5 --> 8 subtree
+        expandSubtree(folded_tree, folded_tree.getNode(5), folded_tree.getNode(8));
 
 
         printContourTree(folded_tree);
