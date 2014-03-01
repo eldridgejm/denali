@@ -586,9 +586,6 @@ public:
         if (_tree.outDegree(_tree.getRoot()) > 1)
             throw std::runtime_error("The root node has more than one child.");
 
-        if (_tree.outDegree(_tree.getRoot()) < 0)
-            throw std::runtime_error("The root node has no children.");
-
         // embed the child's contour
         Node child = _tree.target(_tree.getFirstOutArc(_tree.getRoot()));
         embedBranch(child, _tree.getRoot(), root_rectangle, true);
@@ -907,10 +904,6 @@ public:
 
     typename ContourTree::Edge getContourTreeEdge(Arc arc) const {
         return _tree.getContourTreeEdge(arc);
-    }
-
-    Node getRoot() const {
-        return _tree.getRoot();
     }
 
 };

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 
 #include <denali/contour_tree.h>
 #include <denali/graph_iterators.h>
@@ -343,7 +344,7 @@ public:
 };
 
 
-ContourTree readContourTreeFile(
+inline ContourTree readContourTreeFile(
     const char * filename)
 {
     // make a new graph object

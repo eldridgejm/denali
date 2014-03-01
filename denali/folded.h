@@ -6,6 +6,8 @@
 #include <denali/graph_maps.h>
 #include <denali/contour_tree.h>
 
+#include <stdexcept>
+
 namespace denali {
 
 /// \brief A folded tree.

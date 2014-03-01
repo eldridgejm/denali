@@ -5,9 +5,10 @@
 #include <denali/graph_iterators.h>
 #include <denali/folded.h>
 
+#include <cmath>
 #include <boost/shared_ptr.hpp>
-#include <stdexcept>
 #include <queue>
+#include <stdexcept>
 #include <vector>
 
 namespace denali {
@@ -72,7 +73,7 @@ class PersistenceSimplifier
         typename Tree::Node u = tree.u(edge);
         typename Tree::Node v = tree.v(edge);
 
-        return std::abs(tree.getValue(u) - tree.getValue(v));
+        return abs(tree.getValue(u) - tree.getValue(v));
     }
 
     template <typename Tree>

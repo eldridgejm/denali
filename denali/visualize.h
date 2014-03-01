@@ -165,7 +165,7 @@ public:
         vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
     }
 };
-vtkStandardNewMacro(LandscapeInteractorStyle);
+// vtkStandardNewMacro(LandscapeInteractorStyle);
 
 
 
