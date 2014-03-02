@@ -840,6 +840,10 @@ class denali::RectangularLandscape :
     Embedding _embedding;
     Triangularization _triangularization;
 
+    // prevent copying
+    RectangularLandscape(const RectangularLandscape&);
+    RectangularLandscape& operator=(const RectangularLandscape&);
+
 public:
     
     typedef typename LandscapeTree::Node Node;
@@ -906,6 +910,10 @@ public:
         return _tree.getContourTreeEdge(arc);
     }
 
+    Node getRoot() const {
+        return _tree.getRoot();
+    }
+
 };
 
 
@@ -916,11 +924,11 @@ class denali::RectangularLandscapeBuilder
 public:
     typedef RectangularLandscape<ContourTree> LandscapeType;
 
-    static LandscapeType build(
+    static LandscapeType* build(
             const ContourTree& contour_tree,
             typename ContourTree::Node root)
     {
-        return LandscapeType(contour_tree, root);
+        return new LandscapeType(contour_tree, root);
     }
 
 

@@ -31,7 +31,7 @@ public:
     }
 };
 
-bool operator<(const Priority& lhs, const Priority& rhs) {
+inline bool operator<(const Priority& lhs, const Priority& rhs) {
     return lhs.priority() < rhs.priority();
 }
 

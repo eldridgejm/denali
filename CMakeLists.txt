@@ -8,6 +8,5 @@ include_directories(./extern/UnitTest++/src/)
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
-add_subdirectory(denali)
 add_subdirectory(tests)
 add_subdirectory(qtgui)
