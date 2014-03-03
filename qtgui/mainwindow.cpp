@@ -6,7 +6,8 @@
 
 #include <sstream>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow() :
+    _max_persistence_slider_value(100)
 {
     // set up the user inteface
     _mainwindow.setupUi(this);
@@ -18,22 +19,30 @@ MainWindow::MainWindow()
     // register this as an observer of the landscape
     _landscape_interface->registerEventObserver(this);
 
+
     connect(_mainwindow.actionOpen_Tree, SIGNAL(triggered()), 
             this, SLOT(openContourTreeFile()));
 
     connect(_mainwindow.radioButtonRootMin, SIGNAL(clicked(bool)),
             this, SLOT(changeLandscapeRoot()));
+
     connect(_mainwindow.radioButtonRootMax, SIGNAL(clicked(bool)),
             this, SLOT(changeLandscapeRoot()));
 
-    connect(this, SIGNAL(landscapeChanged()), this, SLOT(renderLandscape()));
+    connect(this, SIGNAL(landscapeChanged()), 
+            this, SLOT(renderLandscape()));
 
     connect(this, SIGNAL(cellSelected(unsigned int)), 
             this, SLOT(updateCellSelection(unsigned int)));
 
-    connect(_mainwindow.pushButtonExpand, SIGNAL(clicked()),
-            this, SLOT(expandTree()));
+    connect(_mainwindow.horizontalSliderPersistence, SIGNAL(valueChanged(int)),
+            this, SLOT(updatePersistence(int)));
 
+    connect(this, SIGNAL(cellSelected(unsigned int)), 
+            this, SLOT(enableRefineSubtree()));
+
+    connect(_mainwindow.pushButtonRefineSubtree, SIGNAL(clicked()),
+            this, SLOT(refineSubtree()));
 }
 
 
@@ -66,6 +75,9 @@ void MainWindow::openContourTreeFile()
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
+
+    // update the persistence slider
+    this->enablePersistenceSlider();
 
     // notify the user that all is well
     std::stringstream message;
@@ -129,6 +141,7 @@ void MainWindow::changeLandscapeRoot()
 
 void MainWindow::receiveCellSelection(unsigned int cell)
 {
+    _cell_selection = cell;
     emit cellSelected(cell);
 }
 
@@ -154,11 +167,52 @@ void MainWindow::updateCellSelection(unsigned int cell)
 }
 
 
-void MainWindow::expandTree()
+void MainWindow::enablePersistenceSlider()
 {
-    if (!_landscape_context) return;
+    _mainwindow.horizontalSliderPersistence->setEnabled(true);
+    _mainwindow.horizontalSliderPersistence->setMinimum(0);
+    _mainwindow.horizontalSliderPersistence->setMaximum(_max_persistence_slider_value);
+    _mainwindow.horizontalSliderPersistence->setSliderPosition(0);
+    this->updatePersistence(0);
+}
 
-    std::cout << "Expanding tree..." << std::endl;
-    _landscape_context->expand();
+
+void MainWindow::updatePersistence(int value)
+{
+    // compute the persistence level
+    double persistence = ((double) value)/_max_persistence_slider_value * 
+            _landscape_context->getMaxPersistence();
+    
+    // set the label to this persistence
+    std::stringstream label;
+    label << persistence;
+    _mainwindow.labelPersistence->setText(label.str().c_str());
+}
+
+
+void MainWindow::enableRefineSubtree()
+{
+    _mainwindow.pushButtonRefineSubtree->setEnabled(true);
+}
+
+
+void MainWindow::refineSubtree()
+{
+    std::cout << "Refining subtree..." << std::endl;
+    // get the parent and child nodes of the selection
+    size_t parent, child;
+    _landscape_context->getComponent(_cell_selection, parent, child);
+
+    // get the current persistence value
+    int value = _mainwindow.horizontalSliderPersistence->value();
+    double persistence = ((double) value)/_max_persistence_slider_value * 
+            _landscape_context->getMaxPersistence();
+
+    _landscape_context->simplifySubtreeByPersistence(parent, child, persistence);
+
+    // we need to rebuild the landscape
+    size_t root = _landscape_context->getRootID();
+    _landscape_context->buildLandscape(root);
+    
     emit landscapeChanged();
 }

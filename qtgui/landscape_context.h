@@ -61,8 +61,21 @@ public:
     virtual void getComponent(size_t, size_t&, size_t&) const = 0;
     virtual double getValue(size_t) const = 0;
 
-    virtual void expand() = 0;
+    virtual double getMaxPersistence() const = 0;
+
+    virtual void simplifySubtreeByPersistence(size_t, size_t, double) = 0;
+
 };
+
+template <typename ContourTree>
+void printContourTree(const ContourTree& tree)
+{
+    for (denali::EdgeIterator<ContourTree> it(tree); !it.done(); ++it) {
+        typename ContourTree::Node u = tree.u(it.edge());
+        typename ContourTree::Node v = tree.v(it.edge());
+        std::cout << tree.getID(u) << " <----> " << tree.getID(v) << std::endl;
+    }
+}
 
 
 template <typename ContourTree, template <class T> class LandscapeBuilderTemplate>
@@ -78,6 +91,8 @@ class ConcreteLandscapeContext : public LandscapeContext
 
     FoldedContourTree _folded_tree;
 
+    double _max_persistence;
+
 public:
 
     ConcreteLandscapeContext(
@@ -86,6 +101,8 @@ public:
             _landscape_builder(boost::shared_ptr<LandscapeBuilder>(new LandscapeBuilder)),
             _folded_tree(*_contour_tree)
     {
+        _max_persistence = computeMaxPersistence(*_contour_tree);
+        
         denali::PersistenceSimplifier simplifier(15); 
         simplifier.simplify(_folded_tree);
     }
@@ -96,6 +113,7 @@ public:
 
     void buildLandscape(size_t root_id)
     {
+        printContourTree(_folded_tree);
         typename ContourTree::Node root = _folded_tree.getNode(root_id);
         Landscape* lscape = _landscape_builder->build(_folded_tree, root);
         _landscape = boost::shared_ptr<Landscape>(lscape);
@@ -176,24 +194,28 @@ public:
         return _folded_tree.getValue(_folded_tree.getNode(i));
     }
 
-    virtual void expand()
-    {
-        // get the root of the folded tree
-        typename FoldedContourTree::Node parent = 
-                _landscape->getContourTreeNode(_landscape->getRoot());
-
-        size_t root_id = _folded_tree.getID(parent);
-
-        // get the child of the root
-        denali::UndirectedNeighborIterator<FoldedContourTree> it(_folded_tree, parent);
-        typename FoldedContourTree::Node child = it.neighbor();
-
-        // now expand the tree
-        expandSubtree(_folded_tree, parent, child);
-
-        // and rebuild the landscape
-        buildLandscape(root_id);
+    virtual double getMaxPersistence() const {
+        return _max_persistence;
     }
+
+    virtual void simplifySubtreeByPersistence(
+            size_t parent_id,
+            size_t child_id,
+            double persistence)
+    {
+        std::cout << "simplifying " << parent_id << " " << child_id << " " << persistence << std::endl;
+        typename FoldedContourTree::Node parent_node, child_node;
+        parent_node = _folded_tree.getNode(parent_id);
+        child_node  = _folded_tree.getNode(child_id);
+
+        std::cout << "The tree had " << _folded_tree.numberOfNodes() << std::endl;
+        expandSubtree(_folded_tree, parent_node, child_node);
+        denali::PersistenceSimplifier simplifier(persistence); 
+        simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
+        std::cout << "Now it has " << _folded_tree.numberOfNodes() << std::endl;
+    }
+
+
 };
 
 #endif

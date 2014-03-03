@@ -29,7 +29,10 @@ public slots:
     void renderLandscape();
     void changeLandscapeRoot();
     void updateCellSelection(unsigned int);
-    void expandTree();
+    void enablePersistenceSlider();
+    void updatePersistence(int);
+    void enableRefineSubtree();
+    void refineSubtree();
 
 signals:
     void landscapeChanged();
@@ -40,6 +43,9 @@ private:
     Ui::MainWindow _mainwindow;
     boost::shared_ptr<LandscapeContext> _landscape_context;
     boost::shared_ptr<LandscapeInterface> _landscape_interface;
+
+    int _max_persistence_slider_value;
+    unsigned int _cell_selection;
 
 };
 

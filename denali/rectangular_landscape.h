@@ -588,7 +588,14 @@ public:
 
         // embed the child's contour
         Node child = _tree.target(_tree.getFirstOutArc(_tree.getRoot()));
-        embedBranch(child, _tree.getRoot(), root_rectangle, true);
+
+        if (_tree.outDegree(child) == 0) {
+            // the child is a leaf
+            embedLeaf(child, root_rectangle);
+        } else {
+            // the child is a branch
+            embedBranch(child, _tree.getRoot(), root_rectangle, true);
+        }
     }
 
 private:
@@ -739,12 +746,9 @@ public:
 
     void triangularize()
     {
-        // first, we triangulate the region between the root and its child
-        Arc arc = _tree.getFirstOutArc(_tree.getRoot());
-        triangulateNestedRectangle(arc);
 
         // now recurse
-        for (ChildIterator<LandscapeTree> it(_tree, _tree.target(arc));
+        for (ChildIterator<LandscapeTree> it(_tree, _tree.getRoot());
                 !it.done(); ++it) {
             if (_tree.outDegree(it.child()) == 0) {
                 triangularizeLeafArc(it.arc());

@@ -41,6 +41,13 @@ inline bool operator<(const Priority& lhs, const Priority& rhs) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+template <typename Context>
+struct NullProtector
+{
+    bool operator[](const typename Context::Node&) const { return false; }
+};
+
+
 class PersistenceSimplifier
 {
     double _threshold;
@@ -66,20 +73,74 @@ class PersistenceSimplifier
     };
 
     template <typename Tree>
-    static double computePersistence(
-            const Tree& tree, 
-            typename Tree::Edge edge)
-    {
-        typename Tree::Node u = tree.u(edge);
-        typename Tree::Node v = tree.v(edge);
-
-        return abs(tree.getValue(u) - tree.getValue(v));
-    }
-
-    template <typename Tree>
     static typename Tree::Node getLeaf(const Tree& tree, typename Tree::Edge edge) {
         return tree.degree(tree.u(edge)) == 1 ? tree.u(edge) : tree.v(edge);
     }
+
+    /// \brief Simplifies the contour tree in the context.
+    template <typename Context, typename ProtectedNodes>
+    void simplifyCore(Context& context, const ProtectedNodes& protected_nodes)
+    {
+        typedef PersistencePriority<typename Context::Node> Priority;
+        typedef typename Context::Node Node;
+        typedef typename Context::Edge Edge;
+
+        // make a priority queue of PersistencePriorities
+        std::priority_queue<Priority> simplify_queue;
+
+        // add every leaf edge to the queue
+        for (EdgeIterator<Context> it(context); !it.done(); ++it)
+        {
+            Node u = context.u(it.edge());
+            Node v = context.v(it.edge());
+
+            if (protected_nodes[u] || protected_nodes[v]) continue;
+
+            if ((context.degree(u) == 1) || (context.degree(v) == 1)) 
+            {
+                // determine which is the leaf
+                Node leaf = getLeaf(context, it.edge());
+
+                // compute the persistence
+                double persistence = computePersistence(context, it.edge());
+
+                // enqueue
+                simplify_queue.push(Priority(leaf, persistence));
+            }
+        }
+
+        while (simplify_queue.size() > 0)
+        {
+            // get the leaf off of the queue
+            Node leaf           = simplify_queue.top().leaf();
+            double persistence  = simplify_queue.top().persistence();
+            simplify_queue.pop();
+
+            // get the leaf edge and the parent
+            UndirectedNeighborIterator<Context> neighbor_it(context, leaf);
+            Edge edge = neighbor_it.edge();
+            Node parent = context.opposite(leaf, edge);
+
+            std::cout << persistence << "   " << _threshold << std::endl;
+
+            if (preserveForReduction(context, edge)) {
+                continue;
+            }
+
+            if (persistence > _threshold) {
+                break;
+            }
+
+            // collapse the edge
+            context.collapse(edge);
+
+            // if the parent is reducible, reduce it now
+            if (context.degree(parent) == 2) {
+                context.reduce(parent);
+            }
+        }
+    }
+
 
 public:
     PersistenceSimplifier(double threshold) {
@@ -91,10 +152,21 @@ public:
     }
 
     void setThreshold(double threshold) {
-        if (threshold <= 0) {
-            throw std::runtime_error("Threshold must be positive.");
+        if (threshold < 0) {
+            throw std::runtime_error("Threshold must be nonnegative.");
         }
         _threshold = threshold;
+    }
+
+    template <typename Tree>
+    static double computePersistence(
+            const Tree& tree, 
+            typename Tree::Edge edge)
+    {
+        typename Tree::Node u = tree.u(edge);
+        typename Tree::Node v = tree.v(edge);
+
+        return abs(tree.getValue(u) - tree.getValue(v));
     }
 
     template <typename Tree>
@@ -151,64 +223,58 @@ public:
     template <typename Context>
     void simplify(Context& context)
     {
-        typedef PersistencePriority<typename Context::Node> Priority;
-        typedef typename Context::Node Node;
-        typedef typename Context::Edge Edge;
-
-        // make a priority queue of PersistencePriorities
-        std::priority_queue<Priority> simplify_queue;
-
-        // add every leaf edge to the queue
-        for (EdgeIterator<Context> it(context); !it.done(); ++it)
-        {
-            Node u = context.u(it.edge());
-            Node v = context.v(it.edge());
-
-            if ((context.degree(u) == 1) || (context.degree(v) == 1)) 
-            {
-                // determine which is the leaf
-                Node leaf = getLeaf(context, it.edge());
-
-                // compute the persistence
-                double persistence = computePersistence(context, it.edge());
-
-                // enqueue
-                simplify_queue.push(Priority(leaf, persistence));
-            }
-        }
-
-        while (simplify_queue.size() > 0)
-        {
-            // get the leaf off of the queue
-            Node leaf           = simplify_queue.top().leaf();
-            double persistence  = simplify_queue.top().persistence();
-            simplify_queue.pop();
-
-            // get the leaf edge and the parent
-            UndirectedNeighborIterator<Context> neighbor_it(context, leaf);
-            Edge edge = neighbor_it.edge();
-            Node parent = context.opposite(leaf, edge);
-
-            if (preserveForReduction(context, edge)) {
-                continue;
-            }
-
-            if (persistence > _threshold) {
-                break;
-            }
-
-            // collapse the edge
-            context.collapse(edge);
-
-            // if the parent is reducible, reduce it now
-            if (context.degree(parent) == 2) {
-                context.reduce(parent);
-            }
-        }
+        // no nodes are going to be protected
+        NullProtector<Context> null_protected;
+        simplifyCore(context, null_protected);
     }
+
+    template <typename Context>
+    void simplifySubtree(Context& context, 
+                         typename Context::Node parent,
+                         typename Context::Node child)
+    {
+        // we create a new node map that defaults to false
+        StaticNodeMap<Context, bool> protected_nodes(context);
+
+        // we set each node to protected
+        for (NodeIterator<Context> it(context); !it.done(); ++it) {
+            protected_nodes[it.node()] = true;
+        }
+
+        // now set each of the nodes in the subtree so that they arent
+        // protected
+        protected_nodes[parent] = false;
+        protected_nodes[child] = false;
+        for (UndirectedBFSIterator<Context> it(context, parent, child);
+                !it.done(); ++it)
+        {
+            protected_nodes[it.child()] = false; 
+        }
+
+        // perform the simplification
+        simplifyCore(context, protected_nodes);
+
+    }
+
 };
 
 
+template <typename Tree>
+double computeMaxPersistence(const Tree& tree)
+{
+    double max_persistence = 0;
+    for (EdgeIterator<Tree> it(tree); !it.done(); ++it)
+    {
+        double p = PersistenceSimplifier::computePersistence(tree, it.edge()); 
+
+        if (p > max_persistence)
+        {
+            max_persistence = p;
+        }
+    }
+
+    return max_persistence;
+}
 
 
 } // namespace denali
