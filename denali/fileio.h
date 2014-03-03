@@ -13,6 +13,22 @@
 
 namespace denali {
 
+
+/// \brief Open a file, throwing exceptions if it can't be opened.
+inline void safeOpenFile(const char* filename, std::ifstream& fh)
+{
+    fh.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try {
+        fh.open(filename);
+    }
+    catch (std::exception& e) {
+        std::stringstream message;
+        message << "Couldn't open file '" << filename << "'";
+        throw std::runtime_error(message.str());
+    }
+}
+
+
 /// \brief Parses a tabular file, calling FormatParser to handle each line.
 class TabularFileParser
 {
