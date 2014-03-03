@@ -33,6 +33,7 @@ public slots:
     void updatePersistence(int);
     void enableRefineSubtree();
     void refineSubtree();
+    void cellSelectionCallback(unsigned int);
 
 signals:
     void landscapeChanged();

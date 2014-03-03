@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 
+#include <QProcess>
+
 #include <denali/contour_tree.h>
 #include <denali/fileio.h>
 #include <denali/rectangular_landscape.h>
 
+#include <cmath>
 #include <sstream>
 
 MainWindow::MainWindow() :
@@ -43,6 +46,9 @@ MainWindow::MainWindow() :
 
     connect(_mainwindow.pushButtonRefineSubtree, SIGNAL(clicked()),
             this, SLOT(refineSubtree()));
+
+    connect(this, SIGNAL(cellSelected(unsigned int)),
+            this, SLOT(cellSelectionCallback(unsigned int)));
 }
 
 
@@ -162,6 +168,7 @@ void MainWindow::updateCellSelection(unsigned int cell)
 
     message << "<b>Parent value: </b>" << parent_value << "<br>";
     message << "<b>Child value:  </b>" << child_value << "<br>";
+    message << "<b>Persistence: </b>" << abs(parent_value - child_value) << "<br>";
 
     setStatus(message.str());
 }
@@ -216,3 +223,18 @@ void MainWindow::refineSubtree()
     
     emit landscapeChanged();
 }
+
+
+void MainWindow::cellSelectionCallback(unsigned int cell)
+{
+    std::stringstream procname;
+    size_t parent, child;
+    _landscape_context->getComponent(_cell_selection, parent, child);
+    procname << "./testproc.py " << parent << " " << child << std::endl;
+    QProcess process;
+    process.start(procname.str().c_str());
+    process.waitForFinished(-1);
+
+    QString p_stdout = process.readAllStandardOutput();
+    this->appendStatus(p_stdout.toUtf8().constData());
+};
