@@ -1,10 +1,11 @@
 #ifndef DENALI_FOLDED_H
 #define DENALI_FOLDED_H
 
-#include <denali/graph_structures.h>
-#include <denali/graph_mixins.h>
-#include <denali/graph_maps.h>
 #include <denali/contour_tree.h>
+#include <denali/graph_maps.h>
+#include <denali/graph_mixins.h>
+#include <denali/graph_structures.h>
+#include <denali/mappable_list.h>
 
 #include <stdexcept>
 
@@ -14,8 +15,10 @@ namespace denali {
 /// \ingroup fold_tree
 class FoldTree :
         public
+        EdgeObservableMixin <UndirectedGraph,
+        NodeObservableMixin <UndirectedGraph,
         ReadableUndirectedGraphMixin <UndirectedGraph,
-        BaseGraphMixin <UndirectedGraph> >
+        BaseGraphMixin <UndirectedGraph> > > >
 {
 public:
 
@@ -25,8 +28,10 @@ public:
 private:
 
     typedef
+    EdgeObservableMixin <UndirectedGraph,
+    NodeObservableMixin <UndirectedGraph,
     ReadableUndirectedGraphMixin <UndirectedGraph,
-    BaseGraphMixin <UndirectedGraph> >
+    BaseGraphMixin <UndirectedGraph> > > >
     Mixin;
 
     typedef boost::shared_ptr<NodeFold> NodeFoldPtr;
@@ -330,6 +335,29 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+class FoldedMembers
+{
+public:
+    virtual ~FoldedMembers() { }
+    virtual size_t size() const = 0;
+};
+
+class FoldedNodeMembers : public FoldedMembers
+{
+public:
+    virtual size_t size() const { return 0; }
+
+};
+
+class FoldedEdgeMembers : public FoldedMembers
+{
+public:
+    virtual size_t size() const
+    {
+        return 0;
+    }
+};
+
 template <typename ContourTree>
 class FoldedContourTree :
         public
@@ -339,7 +367,6 @@ class FoldedContourTree :
 public:
     typedef FoldTree::Node Node;
     typedef FoldTree::Edge Edge;
-    typedef typename ContourTree::Members Members;
 
 private:
     typedef
@@ -350,7 +377,7 @@ private:
     const ContourTree& _contour_tree;
     FoldTree _fold_tree;
 
-    Members _members;
+    FoldedEdgeMembers _members;
 
     // map the contour tree nodes to the fold tree nodes so we can later make
     // the correct edges.
@@ -365,14 +392,17 @@ private:
         return _fold_id_to_ct_node[id];
     }
 
-    typename ContourTree::Node getContourTreeEdge(Node node) const
+    typename ContourTree::Edge getContourTreeEdge(Edge edge) const
     {
-        size_t id = _fold_tree.getNodeFold(node).getIdentifier();
-        return _fold_id_to_ct_node[id];
+        size_t id = _fold_tree.getEdgeFold(edge).getIdentifier();
+        return _fold_id_to_ct_edge[id];
     }
 
 
 public:
+
+    typedef FoldedMembers Members;
+
     FoldedContourTree(const ContourTree& contour_tree)
             : Mixin(_fold_tree), _contour_tree(contour_tree), 
               _ct_to_fold_node(_contour_tree)
@@ -474,7 +504,34 @@ public:
         return _members;
     }
 
-    const Members& getEdgeMembers(Edge edge) const {
+    const Members& getEdgeMembers(Edge edge) const 
+    {
+        typename ContourTree::Node ct_u = getContourTreeNode(_fold_tree.u(edge));
+        typename ContourTree::Node ct_v = getContourTreeNode(_fold_tree.v(edge));
+
+        std::cout << "Computing members for " << _contour_tree.getID(ct_u) << " <---> " <<
+                                                 _contour_tree.getID(ct_v) << std::endl;
+
+        FoldTree::EdgeFold edge_fold = _fold_tree.getEdgeFold(edge);
+
+        if (edge_fold.hasReduced())
+        {
+            std::cout << "\tThe edge was reduced." << std::endl;
+
+            // get the reduced node
+            FoldTree::NodeFold reduced_node = edge_fold.reducedFold();
+
+            typename ContourTree::Node reduced_ct_node = _fold_id_to_ct_node[reduced_node.getIdentifier()];
+
+            std::cout << "\tThe reduced node had id: " << _contour_tree.getID(reduced_ct_node) << std::endl;
+
+            // now, get the reduced edges
+            FoldTree::EdgeFold uvfold = reduced_node.uvFold();
+            FoldTree::EdgeFold vwfold = reduced_node.vwFold();
+
+        }
+
+
         return _members;
     }
 };

@@ -49,6 +49,9 @@ MainWindow::MainWindow() :
 
     connect(this, SIGNAL(cellSelected(unsigned int)),
             this, SLOT(cellSelectionCallback(unsigned int)));
+
+    connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
+            this, SLOT(treeBuilderCallback()));
 }
 
 
@@ -156,10 +159,14 @@ void MainWindow::updateCellSelection(unsigned int cell)
 {
     // get the parent and child nodes of the selected component
     size_t parent, child;
-    _landscape_context->getComponent(cell, parent, child);
+    _landscape_context->getComponentParentChild(cell, parent, child);
 
     double parent_value = _landscape_context->getValue(parent);
     double child_value  = _landscape_context->getValue(child);
+
+    double component_weight = _landscape_context->getComponentWeight(cell);
+    double parent_tot_weight = _landscape_context->getTotalNodeWeight(parent);
+    double child_tot_weight = _landscape_context->getTotalNodeWeight(child);
 
     std::stringstream message;
     message << "<b>Component Selected</b>: " 
@@ -169,6 +176,9 @@ void MainWindow::updateCellSelection(unsigned int cell)
     message << "<b>Parent value: </b>" << parent_value << "<br>";
     message << "<b>Child value:  </b>" << child_value << "<br>";
     message << "<b>Persistence: </b>" << abs(parent_value - child_value) << "<br>";
+    message << "<b>Component weight: </b>" << component_weight << "<br>";
+    message << "<b>Parent total weight: </b>" << parent_tot_weight << "<br>";
+    message << "<b>Child total weight: </b>" << child_tot_weight << "<br>";
 
     setStatus(message.str());
 }
@@ -208,7 +218,7 @@ void MainWindow::refineSubtree()
     std::cout << "Refining subtree..." << std::endl;
     // get the parent and child nodes of the selection
     size_t parent, child;
-    _landscape_context->getComponent(_cell_selection, parent, child);
+    _landscape_context->getComponentParentChild(_cell_selection, parent, child);
 
     // get the current persistence value
     int value = _mainwindow.horizontalSliderPersistence->value();
@@ -229,7 +239,7 @@ void MainWindow::cellSelectionCallback(unsigned int cell)
 {
     std::stringstream procname;
     size_t parent, child;
-    _landscape_context->getComponent(_cell_selection, parent, child);
+    _landscape_context->getComponentParentChild(_cell_selection, parent, child);
     procname << "./testproc.py " << parent << " " << child << std::endl;
     QProcess process;
     process.start(procname.str().c_str());
@@ -238,3 +248,39 @@ void MainWindow::cellSelectionCallback(unsigned int cell)
     QString p_stdout = process.readAllStandardOutput();
     this->appendStatus(p_stdout.toUtf8().constData());
 };
+
+
+void MainWindow::treeBuilderCallback()
+{
+    typedef denali::ContourTree ContourTree;
+    typedef ConcreteLandscapeContext
+            <ContourTree, denali::RectangularLandscapeBuilder> Context;
+
+    std::cout << "Running treebuilder..." << std::endl;
+    
+    QProcess process;
+    process.start("./buildtree.sh");
+    process.waitForFinished(-1);
+
+    QString p_stdout = process.readAllStandardOutput();
+    std::istringstream readtree(p_stdout.toUtf8().constData());
+
+    // now read in the contour tree
+    ContourTree* contour_tree;
+    contour_tree = new ContourTree(denali::readContourTreeFromStream(readtree));
+
+    // wrap them in a context
+    Context* context = new Context(contour_tree);
+    this->setContext(context);
+
+    // choose the root of the landscape
+    this->changeLandscapeRoot();
+
+    // update the persistence slider
+    this->enablePersistenceSlider();
+
+    // notify the user that all is well
+    std::stringstream message;
+    message << "Contour tree callback was run." << std::endl;
+    this->appendStatus(message.str());
+}

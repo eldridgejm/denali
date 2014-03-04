@@ -34,25 +34,13 @@ class TabularFileParser
 {
 public:
     template <typename FormatParser>
-    void parse(const char * filename, FormatParser& parser)
+    void parse(std::istream& tabstream, FormatParser& parser)
     {
-        // create and open a file handle
-        std::ifstream fh;
-        fh.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        try {
-            fh.open(filename);
-        }
-        catch (std::exception& e) {
-            std::stringstream message;
-            message << "Couldn't open file '" << filename << "'";
-            throw std::runtime_error(message.str());
-        }
-
         std::string line;
-        fh.exceptions(std::ifstream::goodbit);
-        while (std::getline(fh, line)) {
+        tabstream.exceptions(std::ifstream::goodbit);
+        while (std::getline(tabstream, line)) {
 
-            fh.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+            tabstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
             std::vector<std::string> tokenized_line;
 
             // add one to the size to account for null
@@ -71,7 +59,7 @@ public:
             delete [] cline;
             parser.insert(tokenized_line);
 
-            fh.exceptions(std::ifstream::goodbit);
+            tabstream.exceptions(std::ifstream::goodbit);
         }
     }
 };
@@ -132,7 +120,10 @@ void readSimplicialVertexFile(
 {
     VertexValueFormatParser<ScalarSimplicialComplex> format_parser(plex);
     TabularFileParser parser;
-    parser.parse(filename, format_parser);
+
+    std::ifstream fh;
+    safeOpenFile(filename, fh);
+    parser.parse(fh, format_parser);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -186,7 +177,10 @@ void readSimplicialEdgeFile(
 {
     EdgeFormatParser<ScalarSimplicialComplex> format_parser(plex);
     TabularFileParser parser;
-    parser.parse(filename, format_parser);
+
+    std::ifstream fh;
+    safeOpenFile(filename, fh);
+    parser.parse(fh, format_parser);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -360,8 +354,8 @@ public:
 };
 
 
-inline ContourTree readContourTreeFile(
-    const char * filename)
+inline ContourTree readContourTreeFromStream(
+    std::istream& ctstream)
 {
     // make a new graph object
     boost::shared_ptr<ContourTree::Graph> graph(new ContourTree::Graph);
@@ -373,13 +367,25 @@ inline ContourTree readContourTreeFile(
     TabularFileParser parser;
 
     // now parse
-    parser.parse(filename, format_parser);
+    parser.parse(ctstream, format_parser);
 
     // return the contour tree
     return denali::ContourTree::fromPrecomputed(graph);
 }
 
 
+inline ContourTree readContourTreeFile(
+    const char * filename)
+{
+    // create a file stream
+    std::ifstream fh;
+    safeOpenFile(filename, fh);
+
+    // read the contour tree from the stream
+    return readContourTreeFromStream(fh);
 }
+
+
+} // namespace denali
 
 #endif

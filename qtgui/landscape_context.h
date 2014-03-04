@@ -58,7 +58,9 @@ public:
 
     virtual void buildLandscape(size_t) = 0;
 
-    virtual void getComponent(size_t, size_t&, size_t&) const = 0;
+    virtual void getComponentParentChild(size_t, size_t&, size_t&) const = 0;
+    virtual double getComponentWeight(size_t) const = 0;
+    virtual double getTotalNodeWeight(size_t) const = 0;
     virtual double getValue(size_t) const = 0;
 
     virtual double getMaxPersistence() const = 0;
@@ -167,7 +169,7 @@ public:
         return Triangle(tri.i(), tri.j(), tri.k(), i);
     }
 
-    virtual void getComponent(size_t i, size_t& parent, size_t& child) const
+    virtual void getComponentParentChild(size_t i, size_t& parent, size_t& child) const
     {
         // get the triangle of this cell
         typename Landscape::Triangle tri = _landscape->getTriangle(i);
@@ -188,6 +190,24 @@ public:
 
         parent = _folded_tree.getID(parent_ct_node);
         child  = _folded_tree.getID(child_ct_node);
+    }
+
+    virtual double getComponentWeight(size_t i) const
+    {
+        // get the triangle of this cell
+        typename Landscape::Triangle tri = _landscape->getTriangle(i);
+
+        // now map the triangle back to an arc of the landscape
+        typename Landscape::Arc arc = _landscape->getComponent(tri);
+
+        return _landscape->getComponentWeight(arc);
+    }
+
+    virtual double getTotalNodeWeight(size_t i) const 
+    {
+        return _landscape->getTotalNodeWeight(
+                            _landscape->getLandscapeTreeNode(
+                            _folded_tree.getNode(i)));
     }
 
     virtual double getValue(size_t i) const {

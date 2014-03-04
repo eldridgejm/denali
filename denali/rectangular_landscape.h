@@ -871,39 +871,40 @@ public:
         triangularizer.triangularize();
     }
 
-    size_t numberOfPoints() const
-    {
+    size_t numberOfPoints() const {
         return _embedding.numberOfPoints();
     }
 
-    Point getPoint(size_t index) const
-    {
+    Point getPoint(size_t index) const {
         return _embedding.getPoint(index);
     }
 
-    Point getMaxPoint() const
-    {
+    Point getMaxPoint() const {
         return _embedding.getMaxPoint();
     }
 
-    Point getMinPoint() const
-    {
+    Point getMinPoint() const {
         return _embedding.getMinPoint();
     }
 
-    size_t numberOfTriangles() const
-    {
+    size_t numberOfTriangles() const {
         return _triangularization.numberOfTriangles();
     }
 
-    Triangle getTriangle(size_t index) const
-    {
+    Triangle getTriangle(size_t index) const {
         return _triangularization.getTriangle(index);
     }
 
-    Arc getComponent(Triangle tri) const
-    {
+    Arc getComponent(Triangle tri) const {
         return _triangularization.getArc(tri);
+    }
+
+    double getComponentWeight(Arc arc) const {
+        return _weights.getArcWeight(arc);
+    }
+
+    double getTotalNodeWeight(Node node) const {
+        return _weights.getTotalNodeWeight(node);
     }
 
     typename ContourTree::Node getContourTreeNode(Node node) const {
@@ -912,6 +913,14 @@ public:
 
     typename ContourTree::Edge getContourTreeEdge(Arc arc) const {
         return _tree.getContourTreeEdge(arc);
+    }
+
+    Node getLandscapeTreeNode(typename ContourTree::Node node) const {
+        return _tree.getLandscapeTreeNode(node);
+    }
+
+    Node getLandscapeTreeArc(typename ContourTree::Edge edge) const {
+        return _tree.getLandscapeTreeArc(edge);
     }
 
     Node getRoot() const {

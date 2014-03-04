@@ -34,6 +34,7 @@ public slots:
     void enableRefineSubtree();
     void refineSubtree();
     void cellSelectionCallback(unsigned int);
+    void treeBuilderCallback();
 
 signals:
     void landscapeChanged();

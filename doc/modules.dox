@@ -23,8 +23,9 @@
 
 /// \defgroup landscape Landscapes
 
-
 /// \defgroup fileio File IO Utilities
+
+/// \defgroup mappable_list Mappable List
 
 /*!
  *  Concepts
