@@ -628,6 +628,12 @@ SUITE(Folded)
 
     }
 
+    TEST(MappableFoldTree)
+    {
+        denali::MappableFoldTree fold_tree;
+        std::cout << fold_tree.numberOfNodes() << std::endl;
+    }
+
 
     TEST(FoldedContourTree)
     {

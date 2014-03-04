@@ -593,6 +593,267 @@ void expandSubtree(
 }
 
 
+class MappableFoldTree : public
+        EdgeObservableMixin <UndirectedGraph,
+        NodeObservableMixin <UndirectedGraph,
+        ReadableUndirectedGraphMixin <UndirectedGraph,
+        BaseGraphMixin <UndirectedGraph> > > >
+{
+    typedef
+    EdgeObservableMixin <UndirectedGraph,
+    NodeObservableMixin <UndirectedGraph,
+    ReadableUndirectedGraphMixin <UndirectedGraph,
+    BaseGraphMixin <UndirectedGraph> > > >
+    Mixin;
+
+    typedef UndirectedGraph GraphType;
+
+public:
+
+    typedef GraphType::Node Node;
+    typedef GraphType::Edge Edge;
+
+    class NodeFold
+    {
+        friend class MappableFoldTree;
+        int _index;
+        NodeFold(int i) : _index(i) {}
+    public:
+        NodeFold() : _index(-1) {}
+
+        bool operator==(const NodeFold& node_fold) const {
+            return _index == node_fold._index;
+        }
+
+        bool operator!=(const NodeFold& node_fold) const {
+            return _index != node_fold._index;
+        }
+
+        bool operator<(const NodeFold& node_fold) const {
+            return _index < node_fold._index;
+        }
+    };
+
+    class EdgeFold
+    {
+        friend class MappableFoldTree;
+        int _index;
+        EdgeFold(int i) : _index(i) {}
+
+    public:
+    
+        EdgeFold() : _index(-1) {}
+
+        bool operator==(const EdgeFold& edge_fold) const {
+            return _index == edge_fold._index;
+        }
+
+        bool operator!=(const EdgeFold& edge_fold) const {
+            return _index != edge_fold._index;
+        }
+
+        bool operator<(const EdgeFold& edge_fold) const {
+            return _index < edge_fold._index;
+        }
+    };
+
+    MappableFoldTree() :
+            Mixin(_graph), _node_to_fold(_graph), _edge_to_fold(_graph) 
+    {}
+
+    /// \brief Add a node to the tree.
+    Node addNode()
+    {
+        // create the node
+        Node node = _graph.addNode();
+
+        // create the node fold representation
+        int n = _node_folds.insert(NodeFoldRep());
+        _node_folds[n].node = node;
+
+        // link the node to the fold
+        _node_to_fold[node] = NodeFold(n);
+
+        return node;
+    }
+
+    Edge addEdge(Node u, Node v)
+    {
+        // create the edge
+        Edge edge = _graph.addEdge(u,v);
+
+        // get the node folds of u and v
+        NodeFold u_fold = _node_to_fold[u];
+        NodeFold v_fold = _node_to_fold[v];
+
+        // make an edge fold
+        int n = _edge_folds.insert(EdgeFoldRep());
+        _edge_folds[n].edge = edge;
+        _edge_folds[n].u_fold = u_fold;
+        _edge_folds[n].v_fold = v_fold;
+
+        // link it to the edge
+        _edge_to_fold[edge] = EdgeFold(n);
+    }
+
+    NodeFold getNodeFold(Node node) const {
+        return _node_to_fold[node];
+    }
+
+    EdgeFold getEdgeFold(Edge edge) const {
+        return _edge_to_fold[edge];
+    }
+
+    size_t numberOfNodeFolds() const {
+        return _node_folds.size();
+    }
+
+    size_t numberOfEdgeFolds() const {
+        return _edge_folds.size();
+    }
+
+    void collapse(Edge edge)
+    {
+        Node parent = _graph.degree(_graph.u(edge)) == 1 ?
+                _graph.v(edge) : _graph.u(edge);
+
+        Node child = _graph.opposite(parent, edge);
+
+        assert(_graph.degree(child) == 1);
+
+        // add the fold edge to the parent node folds collapse list
+        NodeFold parent_node_fold = _node_to_fold[parent];
+        int n = parent_node_fold._index;
+        _node_folds[n].collapsed.push_back(_edge_to_fold[edge]);
+
+        // remove the child from the tree
+        _graph.removeNode(child);
+    }
+
+    Edge reduce(Node v)
+    {
+        // u <---> **v** <---> w
+        assert(_graph.degree(v) == 2);
+
+        // get the two neighbors
+        UndirectedNeighborIterator<GraphType> it(_graph, v);
+        Node u = it.neighbor(); Edge uv = it.edge(); ++it;
+        Node w = it.neighbor(); Edge vw = it.edge();
+
+        // make an edge between them
+        Edge uw = this->addEdge(u,w);
+
+        // update v's reduced edge folds
+        NodeFold v_fold = _node_to_fold[v];
+        NodeFoldRep& v_fold_rep = _node_folds[v_fold._index];
+        v_fold_rep.uv_fold = _edge_to_fold[uv];
+        v_fold_rep.vw_fold = _edge_to_fold[vw];
+
+        // update the new edge's reduced node
+        EdgeFold uw_fold = _edge_to_fold[uw];
+        EdgeFoldRep uw_fold_rep = _edge_folds[uw_fold._index];
+        uw_fold_rep.reduced_fold = v_fold;
+
+        // remove the node
+        _graph.removeNode(v);
+
+        return uw;
+    }
+
+    Edge uncollapse(Node u, int index=-1)
+    {
+        // get the folded node
+        NodeFold u_fold = _node_to_fold[u];
+        NodeFoldRep u_fold_rep = _node_folds[u_fold._index];
+
+        // if the index is less than one, uncollapse the last collapsed edge
+        if (index < 0) {
+            index = u_fold_rep.collapsed.size()-1;
+        }
+
+        // pop the collapsed edge fold
+        EdgeFold uv_fold = u_fold_rep.collapsed[index];
+        EdgeFoldRep _edge_folds[uv_fold._index];
+        u_fold_rep.collapsed.erase(u_fold_rep.collapsed.begin() + index);
+
+        // get the collapsed node fold at the other end of the edge
+        NodeFold v_fold = oppositeNodeFold(u_fold, uv_fold);
+
+        // restore the node
+        Node v = restoreNode(v_fold);
+
+        // restore the edge
+        Edge uv = restoreEdge(uv_fold);
+
+        return uv;
+    }
+
+private:
+
+    struct NodeFoldRep
+    {
+        std::vector<EdgeFold> collapsed;
+        EdgeFold uv_fold;
+        EdgeFold vw_fold;
+        Node node;
+    };
+
+    struct EdgeFoldRep
+    {
+        NodeFold u_fold;
+        NodeFold v_fold;
+        NodeFold reduced_fold;
+        Edge edge;
+    };
+
+    GraphType _graph;
+
+    ObservingNodeMap<GraphType, NodeFold> _node_to_fold;
+    ObservingEdgeMap<GraphType, EdgeFold> _edge_to_fold;
+
+    MappableList<NodeFoldRep> _node_folds;
+    MappableList<EdgeFoldRep> _edge_folds;
+
+    NodeFold oppositeNodeFold(NodeFold u_fold, EdgeFold uv_fold)
+    {
+        NodeFoldRep u_fold_rep  = _node_folds[u_fold._index];
+        EdgeFoldRep uv_fold_rep = _edge_folds[uv_fold._index];
+
+        return uv_fold_rep.u_fold == u_fold ?
+                uv_fold_rep.v_fold : uv_fold_rep.u_fold;
+    }
+
+    Node restoreNode(NodeFold v_fold)
+    {
+        Node v = _graph.addNode();
+
+        NodeFoldRep v_fold_rep = _node_folds[v_fold._index];
+
+        v_fold_rep.node = v;
+        _node_to_fold[v] = v_fold;
+        return v;
+    }
+
+    Edge restoreEdge(EdgeFold uv_fold)
+    {
+        EdgeFoldRep uv_fold_rep = _edge_folds[uv_fold._index];
+        NodeFoldRep u_fold_rep = _node_folds[uv_fold_rep.u_fold._index];
+        NodeFoldRep v_fold_rep = _node_folds[uv_fold_rep.v_fold._index];
+        
+        Node u = u_fold_rep.node;
+        Node v = v_fold_rep.node;
+
+        Edge uv = _graph.addEdge(u,v);
+        uv_fold_rep.edge = uv;
+        _edge_to_fold[uv] = uv_fold;
+        return uv;
+    }
+
+
+};
+
+
+
 } // namespace denali
 
 
