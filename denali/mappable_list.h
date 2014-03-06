@@ -162,24 +162,28 @@ public:
 
     class Observer
     {
+    public:
         virtual void notify() const = 0;
         ~Observer() {}
     };
 
     int insert(const ValueType& value) {
-        Super::insert(value);
+        int n = Super::insert(value);
+        notify();
+        return n;
     }
 
     void remove(int id) {
         Super::remove(id);
+        notify();
     }
 
-    void attachObserver(Observer* observer) {
-        _observers.push_back(observer);
+    void attachObserver(Observer& observer) {
+        _observers.push_back(&observer);
     }
 
-    void detachObserver(Observer* observer) {
-        _observers.remove(observer);
+    void detachObserver(Observer& observer) {
+        _observers.remove(&observer);
     }
 
 private:
@@ -191,7 +195,7 @@ private:
         for (typename Observers::const_iterator it = _observers.begin();
                 it != _observers.end(); ++it)
         {
-            it->notify();
+            (*it)->notify();
         }
     }
 

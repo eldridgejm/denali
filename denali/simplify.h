@@ -121,8 +121,6 @@ class PersistenceSimplifier
             Edge edge = neighbor_it.edge();
             Node parent = context.opposite(leaf, edge);
 
-            std::cout << persistence << "   " << _threshold << std::endl;
-
             if (preserveForReduction(context, edge)) {
                 continue;
             }
