@@ -10,3 +10,4 @@ include(${VTK_USE_FILE})
 
 add_subdirectory(tests)
 add_subdirectory(qtgui)
+add_subdirectory(ctree)
