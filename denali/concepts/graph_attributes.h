@@ -389,6 +389,8 @@ public:
 
             unsigned int n = graph.getMaxNodeIdentifier();
             n = graph.getNodeIdentifier(_Node());
+
+            ignore_unused_variable_warning(n);
         }
         _NodeMappable& graph;
         typedef typename _NodeMappable::Node _Node;
@@ -427,6 +429,7 @@ public:
             unsigned int n = graph.getMaxArcIdentifier();
             n = graph.getArcIdentifier(_Arc());
 
+            ignore_unused_variable_warning(n);
         }
         _ArcMappable& graph;
         typedef typename _ArcMappable::Arc _Arc;
@@ -464,6 +467,8 @@ public:
 
             unsigned int n = graph.getMaxEdgeIdentifier();
             n = graph.getEdgeIdentifier(_Edge());
+
+            ignore_unused_variable_warning(n);
         }
         _EdgeMappable& graph;
         typedef typename _EdgeMappable::Edge _Edge;
@@ -754,6 +759,8 @@ public:
             _Arc arc = _graph.findArc(_Node(), _Node());
             _Node node = _graph.getInvalidNode();
             arc = _graph.getInvalidArc();
+            
+            ignore_unused_variable_warning(n);
 
         }
 
@@ -875,6 +882,8 @@ public:
             node = _graph.getInvalidNode();
             edge = _graph.getInvalidEdge();
 
+            ignore_unused_variable_warning(n);
+            ignore_unused_variable_warning(edge);
         }
 
         _ReadableUndirectedGraph& _graph;

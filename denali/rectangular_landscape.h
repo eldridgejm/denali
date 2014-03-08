@@ -346,7 +346,7 @@ private:
         double cursor_x = rectangle.sw().x();
         double cursor_y = rectangle.sw().y();
         double width = rectangle.width();
-        for (int i=0; i<weights.size(); ++i) {
+        for (size_t i=0; i<weights.size(); ++i) {
             double share = weights[i] / sum_of_weights;
             double height = share * rectangle.height();
             Rectangle new_rectangle(
@@ -370,7 +370,7 @@ private:
         double cursor_x = rectangle.sw().x();
         double cursor_y = rectangle.sw().y();
         double height = rectangle.height();
-        for (int i=0; i<weights.size(); ++i) {
+        for (size_t i=0; i<weights.size(); ++i) {
             double share = weights[i] / sum_of_weights;
             double width = share * rectangle.width();
             Rectangle new_rectangle(
@@ -569,8 +569,8 @@ template <typename LandscapeTree>
 class denali::rectangular::Embedder
 {
     const LandscapeTree& _tree;
-    const LandscapeWeights<LandscapeTree>& _weights;
     Embedding<LandscapeTree>& _embedding;
+    const LandscapeWeights<LandscapeTree>& _weights;
 
     typedef typename LandscapeTree::Node Node;
     typedef typename LandscapeTree::Arc Arc;
@@ -678,8 +678,8 @@ public:
     class Triangle
     {
         friend class Triangularization;
-        unsigned int _id;
         unsigned int _i, _j, _k;
+        unsigned int _id;
 
     public:
         Triangle(unsigned int i, unsigned int j, unsigned int k, size_t id)
@@ -870,7 +870,7 @@ public:
     RectangularLandscape(
         const ContourTree& tree,
         typename ContourTree::Node root)
-        : _tree(tree, root), _weights(_tree), _embedding(_tree), Mixin(_tree)
+        : Mixin(_tree), _tree(tree, root), _weights(_tree), _embedding(_tree)
     {
         // create an embedder
         rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);

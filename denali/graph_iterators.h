@@ -259,8 +259,8 @@ class UndirectedNeighborIterator
     typedef typename GraphType::Node Node;
     typedef typename GraphType::Edge Edge;
     const GraphType& _graph;
-    Edge _edge;
     Node _node;
+    Edge _edge;
 
 public:
     /// \brief

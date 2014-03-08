@@ -51,7 +51,7 @@ private:
 
 public:
     ScalarSimplicialComplexBase()
-        : _node_to_value(_graph), _node_to_id(_graph), Mixin(_graph) {};
+        : Mixin(_graph), _node_to_value(_graph), _node_to_id(_graph)  {};
 
     /// \brief Add a node to the complex, with associated scalar value.
     Node addNode(double value)
@@ -186,8 +186,8 @@ public:
     typedef typename GraphType::Edge Edge;
 
     UndirectedScalarMemberIDGraphBase()
-        : _node_to_id(_graph), _node_to_value(_graph), _node_to_members(_graph),
-          _edge_to_members(_graph), Mixin(_graph)
+        : Mixin(_graph), _node_to_id(_graph), _node_to_value(_graph), _node_to_members(_graph),
+          _edge_to_members(_graph)
     {
     }
 
@@ -398,7 +398,7 @@ class ContourTreeBase :
 
 protected:
     ContourTreeBase(boost::shared_ptr<Graph> graph)
-        : _graph(graph), Mixin(*graph) { }
+        : Mixin(*graph), _graph(graph) { }
 
 public:
 

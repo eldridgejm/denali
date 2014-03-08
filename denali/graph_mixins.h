@@ -27,7 +27,7 @@ class ReadableDirectedGraphMixin : public Super
 public:
     /// \brief Constructor taking a graph conforming to concepts::ReadableDirectedGraph.
     ReadableDirectedGraphMixin(const ReadableDirectedGraph& graph)
-        : _graph(graph), Super(graph) {}
+        : Super(graph), _graph(graph) {}
 
 public:
     /// A node in the graph
@@ -205,7 +205,7 @@ class ReadableUndirectedGraphMixin : public Super
 public:
 
     ReadableUndirectedGraphMixin(const ReadableUndirectedGraph& graph)
-        : _graph(graph), Super(graph) {}
+        : Super(graph), _graph(graph) {}
 
     /// A node in the graph
     typedef typename ReadableUndirectedGraph::Node Node;
@@ -352,7 +352,7 @@ class WritableReadableDirectedGraphMixin :
 
 public:
     WritableReadableDirectedGraphMixin(WritableReadableDirectedGraph& graph)
-        : _graph(graph), RDGM(graph) {}
+        : RDGM(graph), _graph(graph) {}
 
     typedef typename RDGM::Node Node;
     typedef typename RDGM::Arc Arc;
@@ -403,7 +403,7 @@ class WritableReadableUndirectedGraphMixin :
 
 public:
     WritableReadableUndirectedGraphMixin(WritableReadableUndirectedGraph& graph)
-        : _graph(graph), RUGM(graph) {}
+        : RUGM(graph), _graph(graph) {}
 
     typedef typename RUGM::Node Node;
     typedef typename RUGM::Edge Edge;
@@ -456,7 +456,7 @@ class NodeObservableMixin : public Super
 
 public:
     NodeObservableMixin(NodeObservable& graph)
-        : _graph(graph), Super(graph) {}
+        : Super(graph), _graph(graph) {}
 
     typedef typename NodeObservable::Observer Observer;
 
@@ -493,7 +493,7 @@ class ArcObservableMixin : public Super
 
 public:
     ArcObservableMixin(ArcObservable& graph)
-        : _graph(graph), Super(graph) {}
+        : Super(graph), _graph(graph) {}
 
     typedef typename ArcObservable::Observer Observer;
 
@@ -530,7 +530,7 @@ class EdgeObservableMixin : public Super
 
 public:
     EdgeObservableMixin(EdgeObservable& graph)
-        : _graph(graph), Super(graph) {}
+        : Super(graph), _graph(graph) {}
 
     typedef typename EdgeObservable::Observer Observer;
 

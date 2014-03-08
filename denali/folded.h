@@ -80,11 +80,11 @@ public:
     {
         friend class FoldTree;
 
+        Node _node;
         size_t _id;
         std::vector<EdgeFoldPtr> _collapsed;
         EdgeFoldPtr _uv_fold;
         EdgeFoldPtr _vw_fold;
-        Node _node;
 
         NodeFold(Node node, unsigned int id) : _node(node), _id(id) {}
 
@@ -124,11 +124,11 @@ public:
     {
         friend class FoldTree;
 
+        size_t _id;
+        Edge _edge;
         NodeFoldPtr _u_fold;
         NodeFoldPtr _v_fold;
         NodeFoldPtr _reduced_fold;
-        Edge _edge;
-        size_t _id;
 
         EdgeFold(size_t id, Edge edge, NodeFoldPtr u_fold, NodeFoldPtr v_fold)
             : _id(id), _edge(edge), _u_fold(u_fold), _v_fold(v_fold) {}
@@ -293,7 +293,7 @@ public:
         NodeFoldPtr v_fold = oppositeNodeFold(u_fold, uv_fold);
 
         // restore the node
-        Node v = restoreNode(v_fold);
+        restoreNode(v_fold);
 
         // restore the edge
         Edge uv = restoreEdge(uv_fold);
@@ -318,8 +318,8 @@ public:
         EdgeFoldPtr vw_fold = v_fold->_vw_fold;
 
         // restore the edges
-        Edge uv = restoreEdge(uv_fold);
-        Edge vw = restoreEdge(vw_fold);
+        restoreEdge(uv_fold);
+        restoreEdge(vw_fold);
 
         // remove the old edge
         _graph.removeEdge(uw);
@@ -811,14 +811,13 @@ public:
 
         // pop the collapsed edge fold
         EdgeFold uv_fold = u_fold_rep.collapsed[index];
-        EdgeFoldRep& uv_fold_rep = _edge_folds[uv_fold._index];
         u_fold_rep.collapsed.erase(u_fold_rep.collapsed.begin() + index);
 
         // get the collapsed node fold at the other end of the edge
         NodeFold v_fold = oppositeNodeFold(u_fold, uv_fold);
 
         // restore the node
-        Node v = restoreNode(v_fold);
+        restoreNode(v_fold);
 
         // restore the edge
         Edge uv = restoreEdge(uv_fold);
@@ -842,8 +841,8 @@ public:
         EdgeFold vw_fold = v_fold_rep.vw_fold;
 
         // restore the edges
-        Edge uv = restoreEdge(uv_fold);
-        Edge vw = restoreEdge(vw_fold);
+        restoreEdge(uv_fold);
+        restoreEdge(vw_fold);
 
         // delete the edge fold
         _edge_folds.remove(uw_fold._index);
@@ -983,7 +982,6 @@ private:
 
     NodeFold oppositeNodeFold(NodeFold u_fold, EdgeFold uv_fold)
     {
-        NodeFoldRep& u_fold_rep  = _node_folds[u_fold._index];
         EdgeFoldRep& uv_fold_rep = _edge_folds[uv_fold._index];
 
         return uv_fold_rep.u_fold == u_fold ?

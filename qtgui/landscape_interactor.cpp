@@ -12,8 +12,6 @@ void LandscapeInteractorStyle::OnRightButtonDown()
     // Pick from this location.
     picker->Pick(pos[0], pos[1], 0, _renderer);
 
-    double* worldPosition = picker->GetPickPosition();
-
     int cell = picker->GetCellId();
 
     // send the event to the interface's event manager

@@ -408,13 +408,13 @@ public:
 
     bool isNodeValid(const Node node) const
     {
-        return node.index >= 0 && node.index < nodes.size() &&
+        return node.index >= 0 && (unsigned int) node.index < nodes.size() &&
                nodes[node.index].valid;
     }
 
     bool isArcValid(const Arc arc) const
     {
-        return (arc.index >= 0 && arc.index < arcs.size() &&
+        return (arc.index >= 0 && (unsigned int) arc.index < arcs.size() &&
                arcs[arc.index].valid);
     }
 
@@ -593,7 +593,7 @@ public:
 
     void clearNodes()
     {
-        for (int i=0; i<nodes.size(); ++i) {
+        for (size_t i=0; i<nodes.size(); ++i) {
             if (isNodeValid(Node(i))) {
                 removeNode(Node(i));
             }
@@ -602,7 +602,7 @@ public:
 
     void clearArcs()
     {
-        for (int i=0; i<arcs.size(); ++i) {
+        for (size_t i=0; i<arcs.size(); ++i) {
             if (isArcValid(Arc(i))) {
                 removeArc(Arc(i));
             }

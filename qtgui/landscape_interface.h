@@ -155,8 +155,8 @@ class LandscapeInterface
     vtkSmartPointer<vtkPolyDataMapper> _mapper;
     vtkSmartPointer<vtkActor> _landscape_actor;
     vtkSmartPointer<vtkRenderer> _renderer;
-    vtkRenderWindow* _render_window;
     vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
+    vtkRenderWindow* _render_window;
 
 public:
     LandscapeInterface(vtkRenderWindow* render_window) :

@@ -192,7 +192,7 @@ SUITE(GraphStructures)
         CHECK(graph.isNodeValid(n5));
 
         Graph::Arc a12 = graph.addArc(n1, n2);
-        Graph::Arc a13 = graph.addArc(n1, n3);
+        graph.addArc(n1, n3);
 
         CHECK(graph.isArcValid(a12));
 
@@ -243,8 +243,8 @@ SUITE(GraphStructures)
 
         Graph::Node n6 = graph.addNode();
         Graph::Arc a23 = graph.addArc(n2,n3);
-        Graph::Arc a34 = graph.addArc(n3,n4);
-        Graph::Arc a45 = graph.addArc(n4,n5);
+        graph.addArc(n3,n4);
+        graph.addArc(n4,n5);
 
         denali::ObservingArcMap<Graph, int> arcmap(graph);
 
@@ -253,7 +253,7 @@ SUITE(GraphStructures)
 
         CHECK(graph.isArcValid(a23));
 
-        Graph::Arc a = graph.findArc(n2,n3);
+        graph.findArc(n2,n3);
 
         CHECK(graph.isArcValid(graph.findArc(n2,n3)));
         CHECK(!graph.isArcValid(graph.findArc(n3,n2)));
@@ -267,7 +267,7 @@ SUITE(GraphStructures)
 
         CHECK_EQUAL(0, graph.numberOfNodes());
 
-        Graph::Node n7 = graph.addNode();
+        graph.addNode();
         CHECK(!graph.isNodeValid(n6));
 
         CHECK_EQUAL(1, graph.numberOfNodes());
@@ -327,13 +327,13 @@ SUITE(GraphStructures)
         Graph::Node n1 = graph.addNode();
         Graph::Node n2 = graph.addNode();
         Graph::Node n3 = graph.addNode();
-        Graph::Node n4 = graph.addNode();
+        graph.addNode();
         Graph::Node n5 = graph.addNode();
 
         CHECK(graph.isNodeValid(n1));
         CHECK(graph.isNodeValid(n5));
 
-        Graph::Edge e12 = graph.addEdge(n1,n2);
+        graph.addEdge(n1,n2);
 
         CHECK(graph.isEdgeValid(graph.findEdge(n1,n2)));
         CHECK(graph.isEdgeValid(graph.findEdge(n2,n1)));
@@ -362,7 +362,7 @@ SUITE(GraphStructures)
 
         size_t n_edges = 12;
 
-        for (int i=0; i<n_edges; ++i) {
+        for (size_t i=0; i<n_edges; ++i) {
             graph.addEdge(nodes[edges[i][0]], nodes[edges[i][1]]);
         }
 
@@ -391,11 +391,11 @@ SUITE(ContourTree)
 
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -436,11 +436,11 @@ SUITE(ContourTree)
 
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -464,11 +464,11 @@ SUITE(ContourTree)
 
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -490,11 +490,11 @@ SUITE(Landscape)
     {
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -519,11 +519,11 @@ SUITE(RectangularLandscape)
     {
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -562,11 +562,11 @@ SUITE(Simplify)
 
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
@@ -608,11 +608,11 @@ SUITE(Folded)
         FoldTree::Node n6 = fold_tree.addNode();
         idmap[n6] = 6;
 
-        FoldTree::Edge e12 = fold_tree.addEdge(n1,n2);
-        FoldTree::Edge e23 = fold_tree.addEdge(n2,n3);
-        FoldTree::Edge e24 = fold_tree.addEdge(n2,n4);
+        fold_tree.addEdge(n1,n2);
+        fold_tree.addEdge(n2,n3);
+        fold_tree.addEdge(n2,n4);
         FoldTree::Edge e45 = fold_tree.addEdge(n5,n4);
-        FoldTree::Edge e46 = fold_tree.addEdge(n6,n4);
+        fold_tree.addEdge(n6,n4);
 
         fold_tree.collapse(e45);
 
@@ -634,10 +634,6 @@ SUITE(Folded)
     TEST(MappableFoldTree)
     {
         denali::MappableFoldTree fold_tree;
-        typedef denali::MappableFoldTree::Node Node;
-        typedef denali::MappableFoldTree::Edge Edge;
-        typedef denali::MappableFoldTree::NodeFold NodeFold;
-        typedef denali::MappableFoldTree::EdgeFold EdgeFold;
 
         typedef denali::UndirectedScalarMemberIDGraph Graph;
 
@@ -670,12 +666,12 @@ SUITE(Folded)
 
         std::cout << "MappableFoldTree: " << std::endl;
 
-        for (int i=0; i<sizeof(nodes)/sizeof(int); ++i)
+        for (size_t i=0; i<sizeof(nodes)/sizeof(int); ++i)
         {
             tree->addNode(nodes[i], nodes[i]); 
         }
 
-        for (int i=0; i<sizeof(edges)/sizeof(int[2]); ++i)
+        for (size_t i=0; i<sizeof(edges)/sizeof(int[2]); ++i)
         {
             tree->addEdge(tree->getNode(edges[i][0]), tree->getNode(edges[i][1]));
         }
@@ -776,18 +772,17 @@ SUITE(Folded)
     {
         denali::ScalarSimplicialComplex plex;
 
-        for (int i=0; i<n_wenger_vertices; ++i) {
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
             plex.addNode(wenger_vertex_values[i]);
         }
 
-        for (int i=0; i<n_wenger_edges; ++i) {
+        for (size_t i=0; i<n_wenger_edges; ++i) {
             plex.addEdge(
                 plex.getNode(wenger_edges[i][0]),
                 plex.getNode(wenger_edges[i][1]));
         }
 
         typedef denali::ContourTree ContourTree;
-        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree; 
 
         denali::CarrsAlgorithm alg;
         ContourTree tree = ContourTree::compute(plex, alg);

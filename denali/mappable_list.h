@@ -17,7 +17,7 @@ class MappableListBase
         int prev_element, next_element;
         Value value;
 
-        ElementRep(const Value& value) : value(value), valid(true) {}
+        ElementRep(const Value& value) : valid(true), value(value) {}
     };
 
     size_t _size;

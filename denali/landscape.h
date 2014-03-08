@@ -42,9 +42,9 @@ public:
     LandscapeTreeBase(
         const ContourTree& contour_tree,
         typename ContourTree::Node root)
-        : _contour_tree(contour_tree), _ct_node_to_lscape_node(contour_tree),
+        : Mixin(_graph), _contour_tree(contour_tree), _ct_node_to_lscape_node(contour_tree),
           _ct_edge_to_lscape_arc(contour_tree), _lscape_node_to_ct_node(_graph),
-          _lscape_arc_to_ct_edge(_graph), Mixin(_graph)
+          _lscape_arc_to_ct_edge(_graph)
     {
         _root = addNode(root);
     }
@@ -158,7 +158,7 @@ public:
     LandscapeTree(
         const ContourTree& contour_tree,
         typename ContourTree::Node root)
-        : _tree(contour_tree, root), Mixin(_tree)
+        : Mixin(_tree), _tree(contour_tree, root)
     {
         // the root has already been added to the tree
         // do a search from the root

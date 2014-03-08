@@ -72,6 +72,9 @@ public:
             double value = _plex.getValue(_Node());
             node = _plex.getNode(0);
             unsigned int id = _plex.getID(_Node());
+
+            ignore_unused_variable_warning(id);
+            ignore_unused_variable_warning(value);
         }
 
         _ScalarSimplicialComplex& _plex;
@@ -186,6 +189,9 @@ public:
             _Node node = _tree.getNode(id);
             const _Members& edge_members = _tree.getEdgeMembers(_Edge());
 
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(node_members);
+            ignore_unused_variable_warning(edge_members);
         }
 
         _ContourTree& _tree;
@@ -314,6 +320,10 @@ public:
             _graph.clearEdges();
             _graph.removeNode(_Node());
             _graph.removeEdge(_Edge());
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(node_members);
+            ignore_unused_variable_warning(edge_members);
         }
 
         _UndirectedScalarMemberIDGraph& _graph;
@@ -437,6 +447,9 @@ public:
             x = _total_order.elementToPosition(0);
             _TotalOrder tot = _TotalOrder::compute(_values, _functor);
             size_t sz = _total_order.size();
+
+            ignore_unused_variable_warning(x);
+            ignore_unused_variable_warning(sz);
         }
 
         _TotalOrder& _total_order;
