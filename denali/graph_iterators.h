@@ -237,7 +237,7 @@ public:
 
     /// Returns the child Node at which the iterator is currently at.
     Node neighbor() const {
-        _graph.opposite(_node, _arc);
+        return _graph.opposite(_node, _arc);
     }
 
     /// Returns the arc at which the iterator is currently at.
@@ -281,7 +281,7 @@ public:
 
     /// Returns the child Node at which the iterator is currently at.
     Node neighbor() const {
-        _graph.opposite(_node, _edge);
+        return _graph.opposite(_node, _edge);
     }
 
     /// Returns the edge at which the iterator is currently at.
