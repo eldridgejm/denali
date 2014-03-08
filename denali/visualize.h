@@ -338,7 +338,6 @@ public:
 };
 
 
-
 template <typename ContourTree>
 class Visualizer
 {

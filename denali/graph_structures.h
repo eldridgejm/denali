@@ -124,7 +124,7 @@ public:
 
     void notifyNodeObservers() const
     {
-        for (typename Observers::const_iterator it = _node_observers.begin();
+        for (Observers::const_iterator it = _node_observers.begin();
                 it != _node_observers.end();
                 ++it) {
             (*it)->notify();
@@ -133,7 +133,7 @@ public:
 
     void notifyArcObservers() const
     {
-        for (typename Observers::const_iterator it = _arc_observers.begin();
+        for (Observers::const_iterator it = _arc_observers.begin();
                 it != _arc_observers.end();
                 ++it) {
             (*it)->notify();

@@ -106,8 +106,8 @@ class ScalarSimplicialComplex :
     typedef ScalarSimplicialComplexBase<UndirectedGraph> Base;
 
 public:
-    typedef typename Base::Node Node;
-    typedef typename Base::Edge Edge;
+    typedef Base::Node Node;
+    typedef Base::Edge Edge;
 };
 
 
@@ -318,9 +318,9 @@ class UndirectedScalarMemberIDGraph :
     typedef UndirectedScalarMemberIDGraphBase <UndirectedGraph> Base;
 
 public:
-    typedef typename Base::Node Node;
-    typedef typename Base::Edge Edge;
-    typedef typename Base::Members Members;
+    typedef Base::Node Node;
+    typedef Base::Edge Edge;
+    typedef Base::Members Members;
 
 };
 
@@ -415,7 +415,7 @@ class ContourTree : public ContourTreeBase<UndirectedScalarMemberIDGraph>
 {
 
     ContourTree(boost::shared_ptr<UndirectedScalarMemberIDGraph> graph)
-        : ContourTreeBase(graph) {}
+        : ContourTreeBase<UndirectedScalarMemberIDGraph>(graph) {}
 
 public:
 
