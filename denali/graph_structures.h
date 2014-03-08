@@ -414,8 +414,8 @@ public:
 
     bool isArcValid(const Arc arc) const
     {
-        return arc.index >= 0 && arc.index < arcs.size() &&
-               arcs[arc.index].valid;
+        return (arc.index >= 0 && arc.index < arcs.size() &&
+               arcs[arc.index].valid);
     }
 
     Node getFirstNode() const
@@ -567,8 +567,13 @@ public:
         // the target. If we make it all the way through, we return
         // the invalid arc.
         Arc arc = getFirstOutArc(source_node);
-        while (isArcValid(arc)) {
-            if (target(arc) == target_node) return arc;
+        while (isArcValid(arc)) 
+        {
+            if (target(arc) == target_node) 
+            {
+                return arc;
+            }
+
             arc = getNextOutArc(arc);
         }
 
@@ -850,7 +855,6 @@ public:
     {
         // We can gain some performance by searching the node with
         // the smaller out degree first.
-
         typename Impl::Node smaller;
         typename Impl::Node bigger;
 

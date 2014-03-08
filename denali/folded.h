@@ -555,13 +555,6 @@ void expandSubtree(
 
     std::queue<Edge> expand_queue;
 
-    for (EdgeIterator<FoldedTree> it(tree); !it.done(); ++it) 
-    {
-        typename FoldedTree::Node u = tree.u(it.edge());
-        typename FoldedTree::Node v = tree.v(it.edge());
-        std::cout << tree.getID(u) << " <----> " << tree.getID(v) << std::endl;
-    }
-
     // add all of the edges in the subtree to the queue
     expand_queue.push(tree.findEdge(parent,child));
 

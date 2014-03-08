@@ -75,7 +75,7 @@ void printContourTree(const ContourTree& tree)
     for (denali::EdgeIterator<ContourTree> it(tree); !it.done(); ++it) {
         typename ContourTree::Node u = tree.u(it.edge());
         typename ContourTree::Node v = tree.v(it.edge());
-        std::cout << tree.getID(u) << " <----> " << tree.getID(v) << std::endl;
+        std::cout << tree.getID(u) << " <-----> " << tree.getID(v) << std::endl;
     }
 }
 

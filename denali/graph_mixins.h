@@ -175,7 +175,7 @@ public:
      *  If no such arc exists, an invalid arc is returned.
      */
     Arc findArc(Node source, Node target) const {
-        _graph.findArc(source, target);
+        return _graph.findArc(source, target);
     }
 
     /// \brief Get an invalid node

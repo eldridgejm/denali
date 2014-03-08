@@ -783,7 +783,7 @@ public:
 
     Arc addArc(Node u, Node v)
     {
-        _graph.addArc(u,v);
+        return _graph.addArc(u,v);
     }
 
     void removeNode(Node node)

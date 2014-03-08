@@ -252,6 +252,9 @@ SUITE(GraphStructures)
         // n2 through n6
 
         CHECK(graph.isArcValid(a23));
+
+        Graph::Arc a = graph.findArc(n2,n3);
+
         CHECK(graph.isArcValid(graph.findArc(n2,n3)));
         CHECK(!graph.isArcValid(graph.findArc(n3,n2)));
 
