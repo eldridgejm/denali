@@ -72,7 +72,7 @@ public:
     /// \pre The nodes must be in the complex.
     Edge addEdge(Node u, Node v)
     {
-        _graph.addEdge(u,v);
+        return _graph.addEdge(u,v);
     }
 
     /// \brief Retrieve the scalar value of a node.

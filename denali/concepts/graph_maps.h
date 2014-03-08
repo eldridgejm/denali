@@ -13,13 +13,15 @@ namespace concepts {
 template <typename GraphType, typename ValueType>
 class ObservingNodeMap : public GraphType::Observer
 {
+    ValueType _value;
+
 public:
     ObservingNodeMap(GraphType& graph) { }
 
     void notify() { }
 
-    ValueType& operator[](typename GraphType::Node node) { }
-    const ValueType& operator[](typename GraphType::Node node) const { }
+    ValueType& operator[](typename GraphType::Node node) { return _value; }
+    const ValueType& operator[](typename GraphType::Node node) const { return _value; }
 
     template <typename _ObservingNodeMap>
     struct Constraints
@@ -47,13 +49,15 @@ public:
 template <typename GraphType, typename ValueType>
 class ObservingArcMap : public GraphType::Observer
 {
+    ValueType _value;
+
 public:
     ObservingArcMap(GraphType& graph) { }
 
     void notify() { }
 
-    ValueType& operator[](typename GraphType::Arc arc) { }
-    const ValueType& operator[](typename GraphType::Arc arc) const { }
+    ValueType& operator[](typename GraphType::Arc arc) { return _value; }
+    const ValueType& operator[](typename GraphType::Arc arc) const { return _value; }
 
     template <typename _ObservingArcMap>
     struct Constraints
@@ -81,13 +85,15 @@ public:
 template <typename GraphType, typename ValueType>
 class ObservingEdgeMap : public GraphType::Observer
 {
+    ValueType _value;
+
 public:
     ObservingEdgeMap(GraphType& graph) { }
 
     void notify() { }
 
-    ValueType& operator[](typename GraphType::Edge edge) { }
-    const ValueType& operator[](typename GraphType::Edge edge) const { }
+    ValueType& operator[](typename GraphType::Edge edge) { return _value; }
+    const ValueType& operator[](typename GraphType::Edge edge) const { return _value; }
 
     template <typename _ObservingEdgeMap>
     struct Constraints
@@ -111,11 +117,13 @@ public:
 template <typename GraphType, typename ValueType>
 class StaticNodeMap
 {
+    ValueType _value;
+
 public:
     StaticNodeMap(const GraphType& graph) { }
 
-    ValueType& operator[](typename GraphType::Node node) { }
-    const ValueType& operator[](typename GraphType::Node node) const { }
+    ValueType& operator[](typename GraphType::Node node) { return _value; }
+    const ValueType& operator[](typename GraphType::Node node) const { return _value; }
 
     template <typename _StaticNodeMap>
     struct Constraints
@@ -138,11 +146,13 @@ public:
 template <typename GraphType, typename ValueType>
 class StaticArcMap
 {
+    ValueType _value;
+
 public:
     StaticArcMap(const GraphType& graph) { }
 
-    ValueType& operator[](typename GraphType::Arc arc) { }
-    const ValueType& operator[](typename GraphType::Arc arc) const { }
+    ValueType& operator[](typename GraphType::Arc arc) { return _value; }
+    const ValueType& operator[](typename GraphType::Arc arc) const { return _value; }
 
     template <typename _StaticArcMap>
     struct Constraints
@@ -165,11 +175,13 @@ public:
 template <typename GraphType, typename ValueType>
 class StaticEdgeMap
 {
+    ValueType _value;
+
 public:
     StaticEdgeMap(const GraphType& graph) { }
 
-    ValueType& operator[](typename GraphType::Edge edge) { }
-    const ValueType& operator[](typename GraphType::Edge edge) const { }
+    ValueType& operator[](typename GraphType::Edge edge) { return _value; }
+    const ValueType& operator[](typename GraphType::Edge edge) const { _value; }
 
     template <typename _StaticEdgeMap>
     struct Constraints

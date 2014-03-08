@@ -896,13 +896,13 @@ class WritableReadableDirectedGraph : public ReadableDirectedGraph
 public:
     /// \brief Add a node to the graph.
     Node addNode() {
-        Node();
+        return Node();
     }
 
     /// \brief Add an arc to the graph.
     /// \pre Requires that both nodes are in the graph.
     Arc addArc(Node, Node) {
-        Arc();
+        return Arc();
     }
 
     /// \brief Remove a node from the graph.

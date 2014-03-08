@@ -27,12 +27,15 @@ class ScalarSimplicialComplex : public concepts::ReadableUndirectedGraph
 {
 public:
 
+    typedef concepts::Node Node;
+    typedef concepts::Edge Edge;
+
     /// \brief Add a node to the complex, with associated scalar value.
-    Node addNode(double value) { }
+    Node addNode(double value) { return Node(); }
 
     /// \brief Add an edge to the complex.
     /// \pre The nodes must be in the complex.
-    Edge addEdge(Node u, Node v) { }
+    Edge addEdge(Node u, Node v) { return Edge(); }
 
     /// \brief Retrieve the scalar value of a node.
     double getValue(Node node) const {
@@ -227,12 +230,12 @@ public:
      *  \param  value   The scalar value of the node.
      */
     Node addNode(unsigned int id, double value) {
-        Node();
+        return Node();
     }
 
     /// \brief Add an edge to the graph.
     Edge addEdge(Node u, Node v) {
-        Edge();
+        return Edge();
     }
 
     /// \brief Remove the node.

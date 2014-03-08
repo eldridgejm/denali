@@ -180,9 +180,10 @@ public:
 
         if (i == 0) return rectangles[0].sw();
         if (i == n + 1) return rectangles[n-1].ne();
-
         if (i < n + 1) return rectangles[i-1].se();
-        if (i > n + 1) return rectangles[(2*n+1) - i].nw();
+
+        // i > n+1
+        return rectangles[(2*n+1) - i].nw();
     }
 
     virtual size_t getIndexOfCorner(size_t i) const
@@ -192,7 +193,9 @@ public:
         if (i == 0) return 0;
         if (i == 1) return 1;
         if (i == 2) return n+1;
-        if (i == 3) return n+2;
+
+        // i == 3
+        return n+2;
     }
 
     size_t getIndexOfRectangleCorner(size_t rectangle, size_t corner) const
@@ -202,7 +205,9 @@ public:
         if (corner == 0) return (2*n+2 - rectangle) % (2*n+2);
         if (corner == 1) return rectangle + 1;
         if (corner == 2) return rectangle + 2;
-        if (corner == 3) return (2*n+1 - rectangle);
+
+        // corner 3 
+        return (2*n+1 - rectangle);
     }
 };
 
@@ -217,7 +222,9 @@ public:
         if (i == n) return rectangles[n-1].se();
         if (i == 2*n+1) return rectangles[0].nw();
         if (i < n) return rectangles[i].sw();
-        if (i > n) return rectangles[2*n-i].ne();
+
+        // i > n
+        return rectangles[2*n-i].ne();
     }
 
     virtual size_t getIndexOfCorner(size_t i) const
@@ -227,7 +234,9 @@ public:
         if (i == 0) return 0;
         if (i == 1) return n;
         if (i == 2) return n+1;
-        if (i == 3) return 2*n + 1;
+
+        // i == 3
+        return 2*n + 1;
     }
 
     size_t getIndexOfRectangleCorner(size_t rectangle, size_t corner) const
@@ -237,7 +246,9 @@ public:
         if (corner == 0) return rectangle;
         if (corner == 1) return rectangle + 1;
         if (corner == 2) return (2*n - rectangle);
-        if (corner == 3) return (2*n - rectangle + 1);
+
+        // corner == 3
+        return (2*n - rectangle + 1);
     }
 };
 
