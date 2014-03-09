@@ -588,185 +588,6 @@ SUITE(Simplify)
 
 SUITE(Folded)
 {
-    TEST(FoldTree)
-    {
-        typedef denali::FoldTree FoldTree;
-
-        FoldTree fold_tree;
-        std::map<FoldTree::Node, int> idmap;
-
-        FoldTree::Node n1 = fold_tree.addNode();
-        idmap[n1] = 1;
-        FoldTree::Node n2 = fold_tree.addNode();
-        idmap[n2] = 2;
-        FoldTree::Node n3 = fold_tree.addNode();
-        idmap[n3] = 3;
-        FoldTree::Node n4 = fold_tree.addNode();
-        idmap[n4] = 4;
-        FoldTree::Node n5 = fold_tree.addNode();
-        idmap[n5] = 5;
-        FoldTree::Node n6 = fold_tree.addNode();
-        idmap[n6] = 6;
-
-        fold_tree.addEdge(n1,n2);
-        fold_tree.addEdge(n2,n3);
-        fold_tree.addEdge(n2,n4);
-        FoldTree::Edge e45 = fold_tree.addEdge(n5,n4);
-        fold_tree.addEdge(n6,n4);
-
-        fold_tree.collapse(e45);
-
-        CHECK_EQUAL(5, fold_tree.numberOfNodes());
-        CHECK_EQUAL(6, fold_tree.numberOfNodeFolds());
-        CHECK_EQUAL(2, fold_tree.degree(n4));
-
-        FoldTree::Edge e26 = fold_tree.reduce(n4);
-
-        CHECK(!fold_tree.isNodeValid(n4));
-        CHECK_EQUAL(4, fold_tree.numberOfNodes());
-        CHECK_EQUAL(1, fold_tree.degree(n6));
-
-        n4 = fold_tree.unreduce(e26);
-        fold_tree.uncollapse(n4);
-
-    }
-
-    TEST(MappableFoldTree)
-    {
-        denali::MappableFoldTree fold_tree;
-
-        typedef denali::UndirectedScalarMemberIDGraph Graph;
-
-        boost::shared_ptr<Graph> tree = boost::shared_ptr<Graph>(new Graph);
-
-        int nodes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 17, 
-            18, 19, 32, 23, 33, 28, 30, 31};
-
-        int edges[][2] = 
-                {{0, 2},
-                 {1, 2},
-                 {2, 5},
-                 {2, 8},
-                 {3, 5},
-                 {4, 6},
-                 {5, 6},
-                 {6, 17},
-                 {6, 10},
-                 {7, 32},
-                 {7, 33},
-                 {7, 23},
-                 {8, 18},
-                 {8, 13},
-                 {12, 23},
-                 {18, 19},
-                 {18, 28},
-                 {18, 23},
-                 {23, 31},
-                 {23, 30}};
-
-        std::cout << "MappableFoldTree: " << std::endl;
-
-        for (size_t i=0; i<sizeof(nodes)/sizeof(int); ++i)
-        {
-            tree->addNode(nodes[i], nodes[i]); 
-        }
-
-        for (size_t i=0; i<sizeof(edges)/sizeof(int[2]); ++i)
-        {
-            tree->addEdge(tree->getNode(edges[i][0]), tree->getNode(edges[i][1]));
-        }
-
-        printContourTree(*tree);
-        std::cout << "=======" << std::endl;
-
-        // put the tree in a contour tree
-        denali::ContourTree contour_tree = denali::ContourTree::fromPrecomputed(tree);
-
-        // make it foldable
-        denali::MappableFoldedContourTree<denali::ContourTree> folded_tree(contour_tree);
-
-        // let's simplify it
-        /*
-        denali::PersistenceSimplifier simplifier(4);
-        simplifier.simplify(folded_tree);
-
-        printContourTree(folded_tree);
-        std::cout << "=======" << std::endl;
-
-        denali::expandSubtree(folded_tree, folded_tree.getNode(32), folded_tree.getNode(7));
-
-        std::cout << folded_tree.numberOfEdges() << std::endl;
-        printContourTree(folded_tree);
-        */
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(1), folded_tree.getNode(2)));
-
-        // folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(18), folded_tree.getNode(19)));
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(5)));
-        folded_tree.reduce(folded_tree.getNode(5));
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(6)));
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(10), folded_tree.getNode(6)));
-        folded_tree.reduce(folded_tree.getNode(6));
-
-        denali::expandSubtree(folded_tree, folded_tree.getNode(32), folded_tree.getNode(7));
-
-        std::cout << folded_tree.numberOfEdges() << std::endl;
-
-        printContourTree(folded_tree);
-        
-    }
-
-    TEST(AlternateTest)
-    {
-        std::cout << "Alternate test" << std::endl;
-        std::cout << "==============" << std::endl;
-
-        typedef denali::UndirectedScalarMemberIDGraph Graph;
-        boost::shared_ptr<Graph> graph = boost::shared_ptr<Graph>(new Graph);
-
-        for (int i=0; i<9; ++i) graph->addNode(i,i);
-
-        graph->addEdge(graph->getNode(0), graph->getNode(2));
-        graph->addEdge(graph->getNode(1), graph->getNode(2));
-        graph->addEdge(graph->getNode(3), graph->getNode(2));
-        graph->addEdge(graph->getNode(5), graph->getNode(2));
-        graph->addEdge(graph->getNode(5), graph->getNode(4));
-        graph->addEdge(graph->getNode(5), graph->getNode(6));
-        graph->addEdge(graph->getNode(7), graph->getNode(6));
-        graph->addEdge(graph->getNode(8), graph->getNode(6));
-
-        denali::ContourTree contour_tree = denali::ContourTree::fromPrecomputed(graph);
-
-        // make it foldable
-        denali::MappableFoldedContourTree<denali::ContourTree> folded_tree(contour_tree);
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(2)));
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(5)));
-        folded_tree.reduce(folded_tree.getNode(5));
-
-        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(8), folded_tree.getNode(6)));
-        folded_tree.reduce(folded_tree.getNode(6));
-
-        printContourTree(folded_tree);
-
-        folded_tree.unreduce(folded_tree.findEdge(folded_tree.getNode(2), folded_tree.getNode(7)));
-        printContourTree(folded_tree);
-
-        folded_tree.uncollapse(folded_tree.getNode(6));
-        printContourTree(folded_tree);
-
-        folded_tree.uncollapse(folded_tree.getNode(2));
-        printContourTree(folded_tree);
-
-        folded_tree.unreduce(folded_tree.findEdge(folded_tree.getNode(2), folded_tree.getNode(6)));
-        printContourTree(folded_tree);
-        
-    }
-
 
     TEST(FoldedContourTree)
     {
@@ -786,6 +607,29 @@ SUITE(Folded)
 
         denali::CarrsAlgorithm alg;
         ContourTree tree = ContourTree::compute(plex, alg);
+
+        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
+
+        FoldedContourTree folded_tree(tree);
+
+        typedef FoldedContourTree::Node Node;
+        typedef FoldedContourTree::Edge Edge;
+
+        Node n4 = folded_tree.getNode(4);
+        Node n5 = folded_tree.getNode(5);
+
+        Edge e45 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(5));
+        Edge e15 = folded_tree.findEdge(folded_tree.getNode(1), folded_tree.getNode(5));
+        Edge e57 = folded_tree.findEdge(folded_tree.getNode(5), folded_tree.getNode(7));
+
+        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e45).size());
+        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e15).size());
+        CHECK_EQUAL(0, folded_tree.getEdgeMembers(e57).size());
+
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n4).size());
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n5).size());
+
+        // now we'll collapse an edge: e15
 
 
     }

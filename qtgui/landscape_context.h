@@ -83,7 +83,7 @@ void printContourTree(const ContourTree& tree)
 template <typename ContourTree, template <class T> class LandscapeBuilderTemplate>
 class ConcreteLandscapeContext : public LandscapeContext
 {
-    typedef denali::MappableFoldedContourTree<ContourTree> FoldedContourTree;
+    typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
     typedef LandscapeBuilderTemplate<FoldedContourTree> LandscapeBuilder;
     typedef typename LandscapeBuilder::LandscapeType Landscape;
 

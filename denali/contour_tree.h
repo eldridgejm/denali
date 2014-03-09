@@ -202,6 +202,9 @@ public:
         _node_to_id[node] = id;
         _node_to_value[node] = value;
         _id_to_node[id] = node;
+
+        // the convention: a node is in its own member set
+        _node_to_members[node].insert(id);
         return node;
     }
 

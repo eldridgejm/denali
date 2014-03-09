@@ -260,7 +260,7 @@ class LandscapeWeights
 private:
     double computeNodeWeight(Node node)
     {
-        return _tree.getNodeMembers(node).size() + 1;
+        return _tree.getNodeMembers(node).size();
     }
 
     double computeArcWeight(Arc arc)
