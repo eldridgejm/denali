@@ -228,7 +228,8 @@ void MainWindow::refineSubtree()
     _landscape_context->simplifySubtreeByPersistence(parent, child, persistence);
 
     // we need to rebuild the landscape
-    size_t root = _landscape_context->getRootID();
+    size_t root = _landscape_context->getMinLeafID();
+    // size_t root = _landscape_context->getRootID();
     _landscape_context->buildLandscape(root);
     
     emit landscapeChanged();

@@ -952,6 +952,10 @@ public:
             const ContourTree& contour_tree,
             typename ContourTree::Node root)
     {
+        if (!contour_tree.isNodeValid(root)) {
+            throw std::runtime_error("Invalid root given for landscape generation.");
+        }
+
         return new LandscapeType(contour_tree, root);
     }
 

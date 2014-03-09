@@ -85,6 +85,22 @@ class PersistenceSimplifier
         typedef typename Context::Node Node;
         typedef typename Context::Edge Edge;
 
+        // first, we reduce all degree-2 nodes
+        std::vector<Node> reduce_vector;
+        for (NodeIterator<Context> it(context); !it.done(); ++it)
+        {
+            if (context.degree(it.node()) == 2)
+            {
+                reduce_vector.push_back(it.node());
+            }
+        }
+
+        for (typename std::vector<Node>::iterator it = reduce_vector.begin(); 
+                it != reduce_vector.end(); ++it)
+        {
+            context.reduce(*it);
+        }
+
         // make a priority queue of PersistencePriorities
         std::priority_queue<Priority> simplify_queue;
 
@@ -116,6 +132,11 @@ class PersistenceSimplifier
             double persistence  = simplify_queue.top().persistence();
             simplify_queue.pop();
 
+            // make sure the leaf is valid
+            if (!context.isNodeValid(leaf)) {
+                continue;
+            }
+
             // get the leaf edge and the parent
             UndirectedNeighborIterator<Context> neighbor_it(context, leaf);
             Edge edge = neighbor_it.edge();
@@ -133,8 +154,48 @@ class PersistenceSimplifier
             context.collapse(edge);
 
             // if the parent is reducible, reduce it now
-            if (context.degree(parent) == 2) {
-                context.reduce(parent);
+            if (context.degree(parent) == 2) 
+            {
+                Edge edge = context.reduce(parent);
+
+                // add the leaf nodes of the parent to the queue, as they
+                // may no longer need to be preserved
+                Node u = context.u(edge);
+                Node v = context.v(edge);
+
+
+                if (context.degree(u) == 1) {
+                    double persistence = computePersistence(context, edge);
+                    simplify_queue.push(Priority(u, persistence));
+                } else {
+                    // add u's leaf neighbors
+                    for (UndirectedNeighborIterator<Context> neighbor_it(context, u);
+                            !neighbor_it.done(); ++neighbor_it)
+                    {
+                        if (context.degree(neighbor_it.neighbor()) == 1)
+                        {
+                            double persistence = computePersistence(context, neighbor_it.edge());
+                            simplify_queue.push(Priority(neighbor_it.neighbor(), persistence));
+                        }
+                    }
+                }
+
+                if (context.degree(v) == 1) {
+                    double persistence = computePersistence(context, edge);
+                    simplify_queue.push(Priority(v, persistence));
+                } else {
+                    // add v's leaf neighbors
+                    for (UndirectedNeighborIterator<Context> neighbor_it(context, v);
+                            !neighbor_it.done(); ++neighbor_it)
+                    {
+                        if (context.degree(neighbor_it.neighbor()) == 1)
+                        {
+                            double persistence = computePersistence(context, neighbor_it.edge());
+                            simplify_queue.push(Priority(neighbor_it.neighbor(), persistence));
+                        }
+                    }
+                }
+                
             }
         }
     }
@@ -241,8 +302,8 @@ public:
 
         // now set each of the nodes in the subtree so that they arent
         // protected
-        protected_nodes[parent] = false;
-        protected_nodes[child] = false;
+        // protected_nodes[parent] = false;
+        // protected_nodes[child] = false;
         for (UndirectedBFSIterator<Context> it(context, parent, child);
                 !it.done(); ++it)
         {

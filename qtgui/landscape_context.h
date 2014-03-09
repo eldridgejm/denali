@@ -215,7 +215,7 @@ public:
     }
 
     virtual double getMaxPersistence() const {
-        return _max_persistence;
+        return _max_persistence+1;
     }
 
     virtual void simplifySubtreeByPersistence(
