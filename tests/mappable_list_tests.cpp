@@ -11,9 +11,6 @@ TEST(MappableList)
 
     MappableList ml;
 
-    ml.insert("This is a test.");
-    ml.insert("This is also a test.");
-    ml.insert("And so is this.");
 
 }
 

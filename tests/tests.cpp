@@ -581,6 +581,7 @@ SUITE(Simplify)
 
         denali::PersistenceSimplifier simplifier(15);
         FoldedContourTree folded_tree(tree);
+        std::cout << "Running simplify..." << std::endl;
         simplifier.simplify(folded_tree);
     }
 }
@@ -630,6 +631,19 @@ SUITE(Folded)
         CHECK_EQUAL(1, folded_tree.getNodeMembers(n5).size());
 
         // now we'll collapse an edge: e15
+        folded_tree.collapse(e15);
+
+        // now node five has the edge e15 (which has a member: node 2) and node 1 inside.
+        // The size should be 3: node 5, 1, and 2.
+        CHECK_EQUAL(3, folded_tree.getNodeMembers(n5).size());
+
+        // now if we reduce node 5
+        folded_tree.reduce(n5);
+
+        // we should have an edge from 4 to 7 with node 0 and all of the nodes
+        // contained within node 5, meaning, a total of 4 nodes in the edge
+        Edge e47 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(7));
+        CHECK_EQUAL(4, folded_tree.getEdgeMembers(e47).size());
 
 
     }

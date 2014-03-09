@@ -306,7 +306,7 @@ private:
 
 public:
     RectangleSplitter(Rectangle rectangle) :
-        rectangle(rectangle), sum_of_weights(0)
+        rectangle(rectangle), sum_of_weights(0), horizontal_(true)
     {}
 
     RectangleSplitter& horizontally() {

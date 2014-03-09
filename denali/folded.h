@@ -388,7 +388,7 @@ public:
     }
 
     size_t getMaxEdgeFoldIdentifier() const {
-        return _node_folds.getMaxIdentifier();
+        return _edge_folds.getMaxIdentifier();
     }
 
     void attachNodeFoldObserver(FoldObserver& observer) {
@@ -592,26 +592,23 @@ public:
     typedef FoldTree::NodeFold NodeFold;
     typedef FoldTree::EdgeFold EdgeFold;
 
-    class Members
+    struct Members
     {
-        template <typename T> friend class FoldedContourTree;
-
-        const typename ContourTree::Members* _concrete_members;
-        std::list<Members*> _nested_members;
         size_t _size;
+        const typename ContourTree::Members* _ct_members;
+        std::list<const Members*> _nested_members;
 
-        Members(const typename ContourTree::Members* concrete_members) :
-                _concrete_members(concrete_members),
-                _size(concrete_members->size()) {}
+        Members() : 
+                _size(0), _ct_members(0) {}
 
-    public:
-
-        Members() : _concrete_members(0), _size(0) {}
+        Members(const typename ContourTree::Members* ctm) :
+                _size(ctm->size()), _ct_members(ctm) {}
 
         size_t size() const {
             return _size;
         }
     };
+
 
 private:
     typedef
@@ -751,9 +748,33 @@ public:
     }
 
     /// \brief Reduced a node, connecting its neighbors.
-    Edge reduce(Node v) {
-        return _fold_tree.reduce(v);
+    Edge reduce(Node v) 
+    {
+        // get the edges incident on this node
+        UndirectedNeighborIterator<FoldTree> it(_fold_tree, v);
+        Edge uv = it.edge(); ++it;
+        Edge vw = it.edge();
+
+        const Members& v_members  = getNodeMembers(v);
+        const Members& uv_members = getEdgeMembers(uv);
+        const Members& vw_members = getEdgeMembers(vw);
+
+        // make the new edge
+        Edge uw = _fold_tree.reduce(v);
+
+        // update the members
+        Members& uw_members = _edge_members[_fold_tree.getEdgeFold(uw)];
+
+        uw_members._nested_members.push_back(&v_members);
+        uw_members._nested_members.push_back(&uv_members);
+        uw_members._nested_members.push_back(&vw_members);
+
+        // now we need to update the size
+        uw_members._size += v_members._size + uv_members._size + vw_members._size;
+
+        return uw;
     }
+
 
     int numberOfCollapsedEdgeFolds(NodeFold node_fold) const {
         return _fold_tree.numberOfCollapsedEdgeFolds(node_fold);
@@ -804,13 +825,11 @@ public:
         return _fold_tree.unreduce(uw); 
     }
 
-    const Members& getNodeMembers(Node node) const 
-    {
+    const Members& getNodeMembers(Node node) const {
         return _node_members[_fold_tree.getNodeFold(node)];
     }
 
-    const Members& getEdgeMembers(Edge edge) const 
-    {
+    const Members& getEdgeMembers(Edge edge) const {
         return _edge_members[_fold_tree.getEdgeFold(edge)];
     }
 

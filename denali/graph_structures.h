@@ -533,7 +533,7 @@ public:
 
     unsigned int getMaxNodeIdentifier() const
     {
-        return nodes.size() ;
+        return nodes.size();
     }
 
     unsigned int getMaxArcIdentifier() const
