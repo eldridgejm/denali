@@ -535,6 +535,11 @@ public:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// ObservingEdgeFoldMap
+//
+////////////////////////////////////////////////////////////////////////////////
 
 template <typename EdgeFoldObservable, typename ValueType>
 class ObservingEdgeFoldMap : public EdgeFoldObservable::FoldObserver
@@ -592,17 +597,20 @@ public:
     typedef FoldTree::NodeFold NodeFold;
     typedef FoldTree::EdgeFold EdgeFold;
 
-    struct Members
+    class Members
     {
+        template <typename T> friend class FoldedContourTree;
+
         size_t _size;
         const typename ContourTree::Members* _ct_members;
         std::list<const Members*> _nested_members;
 
-        Members() : 
-                _size(0), _ct_members(0) {}
-
         Members(const typename ContourTree::Members* ctm) :
                 _size(ctm->size()), _ct_members(ctm) {}
+
+    public:
+        Members() : 
+                _size(0), _ct_members(0) {}
 
         size_t size() const {
             return _size;
@@ -762,8 +770,9 @@ public:
         // make the new edge
         Edge uw = _fold_tree.reduce(v);
 
-        // update the members
+        // we have a new set of members for the new edge
         Members& uw_members = _edge_members[_fold_tree.getEdgeFold(uw)];
+        uw_members = Members();
 
         uw_members._nested_members.push_back(&v_members);
         uw_members._nested_members.push_back(&uv_members);
@@ -817,11 +826,31 @@ public:
          return _fold_tree.getEdgeFromFold(ef);
     }
 
-    Edge uncollapse(Node u, int index=-1) {
-        return _fold_tree.uncollapse(u, index);
+    Edge uncollapse(Node u, int index=-1) 
+    {
+        // recover the edge
+        Edge edge = _fold_tree.uncollapse(u, index);
+
+        // recover the node at the other end of the edge
+        Node v = _fold_tree.opposite(u, edge);
+
+        // get their member sets
+        const Members& edge_members = getEdgeMembers(edge);
+        const Members& v_members = getNodeMembers(v);
+
+        // now remove these from u's nested members
+        Members& u_members = _node_members[_fold_tree.getNodeFold(u)];
+        u_members._nested_members.remove(&v_members);
+        u_members._nested_members.remove(&edge_members);
+
+        // and decrease the size by the appropriate amount
+        u_members._size -= v_members._size + edge_members._size;
+
+        return edge;
     }
 
-    Node unreduce(Edge uw) {
+    Node unreduce(Edge uw)
+    {
         return _fold_tree.unreduce(uw); 
     }
 

@@ -225,7 +225,7 @@ public:
         typename Tree::Node u = tree.u(edge);
         typename Tree::Node v = tree.v(edge);
 
-        return abs(tree.getValue(u) - tree.getValue(v));
+        return std::abs(tree.getValue(u) - tree.getValue(v));
     }
 
     template <typename Tree>

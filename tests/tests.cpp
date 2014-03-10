@@ -581,7 +581,6 @@ SUITE(Simplify)
 
         denali::PersistenceSimplifier simplifier(15);
         FoldedContourTree folded_tree(tree);
-        std::cout << "Running simplify..." << std::endl;
         simplifier.simplify(folded_tree);
     }
 }
@@ -616,12 +615,14 @@ SUITE(Folded)
         typedef FoldedContourTree::Node Node;
         typedef FoldedContourTree::Edge Edge;
 
+        Node n1 = folded_tree.getNode(1);
         Node n4 = folded_tree.getNode(4);
         Node n5 = folded_tree.getNode(5);
+        Node n7 = folded_tree.getNode(7);
 
-        Edge e45 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(5));
-        Edge e15 = folded_tree.findEdge(folded_tree.getNode(1), folded_tree.getNode(5));
-        Edge e57 = folded_tree.findEdge(folded_tree.getNode(5), folded_tree.getNode(7));
+        Edge e45 = folded_tree.findEdge(n4, n5);
+        Edge e15 = folded_tree.findEdge(n1, n5);
+        Edge e57 = folded_tree.findEdge(n5, n7);
 
         CHECK_EQUAL(1, folded_tree.getEdgeMembers(e45).size());
         CHECK_EQUAL(1, folded_tree.getEdgeMembers(e15).size());
@@ -645,7 +646,40 @@ SUITE(Folded)
         Edge e47 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(7));
         CHECK_EQUAL(4, folded_tree.getEdgeMembers(e47).size());
 
+        // if we unreduce this edge, we should be back where we were
+        n5 = folded_tree.unreduce(e47);
+        e45 = folded_tree.findEdge(n4, n5);
+        e57 = folded_tree.findEdge(n5, n7);
 
+        CHECK_EQUAL(3, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e45).size());
+        CHECK_EQUAL(0, folded_tree.getEdgeMembers(e57).size());
+
+        // and uncollapsing should get us back to the start
+        e15 = folded_tree.uncollapse(n5);
+        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e15).size());
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n1).size());
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n4).size());
+        CHECK_EQUAL(1, folded_tree.getNodeMembers(n7).size());
+
+        
+        // now let's do a massive simplification
+        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(3)).size());
+        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
+        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(9)).size());
+        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(7)).size());
+        CHECK_EQUAL(0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(9), folded_tree.getNode(10))).size());
+
+        folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(9), folded_tree.getNode(10)));
+        CHECK_EQUAL(2, folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
+        CHECK_EQUAL(1, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(10))).size());
+        CHECK_EQUAL(0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(7), folded_tree.getNode(10))).size());
+
+        folded_tree.reduce(folded_tree.getNode(10));
+
+        Edge e37 = folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(7));
+        CHECK_EQUAL(3, folded_tree.getEdgeMembers(e37).size());
     }
 
 

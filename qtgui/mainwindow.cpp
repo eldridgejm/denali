@@ -175,7 +175,7 @@ void MainWindow::updateCellSelection(unsigned int cell)
 
     message << "<b>Parent value: </b>" << parent_value << "<br>";
     message << "<b>Child value:  </b>" << child_value << "<br>";
-    message << "<b>Persistence: </b>" << abs(parent_value - child_value) << "<br>";
+    message << "<b>Persistence: </b>" << fabs(parent_value - child_value) << "<br>";
     message << "<b>Component weight: </b>" << component_weight << "<br>";
     message << "<b>Parent total weight: </b>" << parent_tot_weight << "<br>";
     message << "<b>Child total weight: </b>" << child_tot_weight << "<br>";
