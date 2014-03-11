@@ -560,7 +560,7 @@ public:
           max_element(order.size()),
           min_element(order.size())
     {
-        for (int i=0; i<order.size(); ++i) {
+        for (size_t i=0; i<order.size(); ++i) {
             parent[i] = i;
             max_element[i] = i;
             min_element[i] = i;
@@ -771,7 +771,7 @@ public:
     DirectedIDGraph() : Mixin(_graph), _node_to_id(_graph) { }
     DirectedIDGraph(size_t n) : Mixin(_graph), _node_to_id(_graph)
     {
-        for (int i=0; i<n; ++i) {
+        for (size_t i=0; i<n; ++i) {
             addNode();
         }
     }
@@ -870,7 +870,7 @@ public:
         DisjointSetForest<TotalOrder> forest(total_order);
 
         // take the nodes in order
-        for (int i=0; i<total_order.size(); ++i) {
+        for (size_t i=0; i<total_order.size(); ++i) {
             // get the id of this node in the order
             unsigned int vi = total_order.positionToElement(i);
 
@@ -913,7 +913,7 @@ public:
         DisjointSetForest<TotalOrder> forest(total_order);
 
         // take the nodes in reverse order
-        for (int i=total_order.size()-1; i>=0; --i) {
+        for (size_t i=total_order.size()-1; i>=0; --i) {
             // get the id of this node in the order
             unsigned int vi = total_order.positionToElement(i);
 
@@ -983,7 +983,7 @@ public:
         std::vector<typename MergeTree::Node> merge_tree_nodes;
         std::queue<unsigned int> merge_queue;
 
-        for (int i=0; i<plex.numberOfNodes(); ++i) {
+        for (size_t i=0; i<plex.numberOfNodes(); ++i) {
             // add to the merge tree
             typename MergeTree::Node node =
                 merge_tree.addNode(i, plex.getValue(plex.getNode(i)));

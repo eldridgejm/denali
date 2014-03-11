@@ -42,6 +42,8 @@ public:
             ++it;
             Node node = it.node();
             it.done();
+
+            ignore_unused_variable_warning(node);
         }
 
         NodeIterable& graph;
@@ -87,6 +89,8 @@ public:
             ++it;
             Arc arc = it.arc();
             it.done();
+
+            ignore_unused_variable_warning(arc);
         }
 
         ArcIterable& graph;
@@ -132,6 +136,8 @@ public:
             ++it;
             Edge edge = it.edge();
             it.done();
+
+            ignore_unused_variable_warning(edge);
         }
 
         EdgeIterable & graph;
@@ -186,6 +192,9 @@ public:
             Node parent = it.parent();
             Arc arc = it.arc();
             it.done();
+
+            ignore_unused_variable_warning(parent);
+            ignore_unused_variable_warning(arc);
         }
 
         ParentIterable& graph;
@@ -238,6 +247,9 @@ public:
             Node child = it.child();
             Arc arc = it.arc();
             it.done();
+
+            ignore_unused_variable_warning(arc);
+            ignore_unused_variable_warning(child);
         }
 
         ChildIterable& graph;
@@ -290,6 +302,11 @@ public:
             Node neighbor = it.neighbor();
             Arc arc = it.arc();
             it.done();
+
+            ignore_unused_variable_warning(arc);
+            ignore_unused_variable_warning(neighbor);
+
+
         }
 
         DirectedNeighborIterable& graph;
@@ -342,6 +359,9 @@ public:
             Node neighbor = it.neighbor();
             Edge edge = it.edge();
             it.done();
+
+            ignore_unused_variable_warning(neighbor);
+            ignore_unused_variable_warning(edge);
         }
 
         UndirectedNeighborIterable& graph;
@@ -406,6 +426,10 @@ public:
             Node node = it1.parent();
             node = it1.child();
             Edge edge = it1.edge();
+
+            ignore_unused_variable_warning(node);
+            ignore_unused_variable_warning(edge);
+            ignore_unused_variable_warning(x);
         }
 
         const GraphType& _graph;

@@ -73,6 +73,7 @@ public:
             node = _plex.getNode(0);
             unsigned int id = _plex.getID(_Node());
 
+            ignore_unused_variable_warning(edge);
             ignore_unused_variable_warning(id);
             ignore_unused_variable_warning(value);
         }
@@ -115,6 +116,9 @@ public:
             unsigned int id = *it;
             _members.insert(42);
             size_t sz = _members.size();
+
+            ignore_unused_variable_warning(sz);
+            ignore_unused_variable_warning(id);
         }
 
         _Members& _members;
@@ -190,6 +194,7 @@ public:
             const _Members& edge_members = _tree.getEdgeMembers(_Edge());
 
             ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(node);
             ignore_unused_variable_warning(node_members);
             ignore_unused_variable_warning(edge_members);
         }
@@ -324,6 +329,7 @@ public:
             ignore_unused_variable_warning(value);
             ignore_unused_variable_warning(node_members);
             ignore_unused_variable_warning(edge_members);
+            ignore_unused_variable_warning(edge);
         }
 
         _UndirectedScalarMemberIDGraph& _graph;
@@ -400,6 +406,8 @@ public:
         {
             _RandomAccessComparisonFunctor ftor(_values);
             bool decision = ftor(1,2);
+
+            ignore_unused_variable_warning(decision);
         }
 
         std::vector<double> _values;
@@ -450,6 +458,7 @@ public:
 
             ignore_unused_variable_warning(x);
             ignore_unused_variable_warning(sz);
+            ignore_unused_variable_warning(tot);
         }
 
         _TotalOrder& _total_order;
