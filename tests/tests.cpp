@@ -644,6 +644,7 @@ SUITE(Folded)
         // we should have an edge from 4 to 7 with node 0 and all of the nodes
         // contained within node 5, meaning, a total of 4 nodes in the edge
         Edge e47 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(7));
+        CHECK(folded_tree.isEdgeValid(e47));
         CHECK_EQUAL((size_t) 4, folded_tree.getEdgeMembers(e47).size());
 
         // if we unreduce this edge, we should be back where we were
@@ -680,8 +681,124 @@ SUITE(Folded)
 
         Edge e37 = folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(7));
         CHECK_EQUAL((size_t) 3, folded_tree.getEdgeMembers(e37).size());
+
     }
 
+    TEST(FoldIterator)
+    {
+        denali::ScalarSimplicialComplex plex;
+
+        for (size_t i=0; i<n_wenger_vertices; ++i) {
+            plex.addNode(wenger_vertex_values[i]);
+        }
+
+        for (size_t i=0; i<n_wenger_edges; ++i) {
+            plex.addEdge(
+                plex.getNode(wenger_edges[i][0]),
+                plex.getNode(wenger_edges[i][1]));
+        }
+
+        typedef denali::ContourTree ContourTree;
+
+        denali::CarrsAlgorithm alg;
+        ContourTree tree = ContourTree::compute(plex, alg);
+
+        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
+
+        FoldedContourTree folded_tree(tree);
+
+        typedef FoldedContourTree::Node Node;
+        typedef FoldedContourTree::Edge Edge;
+
+        Node n1 = folded_tree.getNode(1);
+        Node n5 = folded_tree.getNode(5);
+
+        Edge e15 = folded_tree.findEdge(n1,n5);
+
+        typedef FoldedContourTree::Members Members;
+        const Members& members = folded_tree.getEdgeMembers(e15);
+
+        Members::iterator it = members.begin();
+        ++it;
+        CHECK(it == members.end());
+
+        folded_tree.collapse(e15);
+
+        const Members& n5members = folded_tree.getNodeMembers(n5);
+        CHECK_EQUAL(3, n5members.size());
+
+        it = n5members.begin();
+        ++it;
+        ++it;
+        ++it;
+        CHECK(it == n5members.end());
+
+        size_t counter = 0;
+        for (it = n5members.begin(); it != n5members.end(); ++it) {
+            counter++;
+        }
+        CHECK_EQUAL(counter, n5members.size());
+
+        folded_tree.reduce(n5);
+        Node n4 = folded_tree.getNode(4);
+        Node n7 = folded_tree.getNode(7);
+        Edge e47 = folded_tree.findEdge(n4, n7);
+
+        const Members& e47members = folded_tree.getEdgeMembers(e47);
+
+        counter = 0;
+        for (it = e47members.begin(); it != e47members.end(); ++it) {
+            counter++;
+        }
+        CHECK_EQUAL(counter, e47members.size());
+
+        Node n8 = folded_tree.getNode(8);
+        Node n11 = folded_tree.getNode(11);
+
+        Edge e78 = folded_tree.findEdge(n7, n8);
+        Edge e711 = folded_tree.findEdge(n7, n11);
+
+        folded_tree.collapse(e78);
+        folded_tree.collapse(e711);
+
+        const Members& n7members = folded_tree.getNodeMembers(n7);
+
+        counter = 0;
+        for (it = n7members.begin(); it != n7members.end(); ++it) {
+            counter++;
+        }
+        CHECK_EQUAL(counter, n7members.size());
+
+        folded_tree.reduce(n7);
+
+        Node n10 = folded_tree.getNode(10);
+        Edge e410 = folded_tree.findEdge(n4, n10);
+
+        const Members& e410members = folded_tree.getEdgeMembers(e410);
+
+        counter = 0;
+        for (it = e410members.begin(); it != e410members.end(); ++it) {
+            counter++;
+        }
+        CHECK_EQUAL(counter, e410members.size());
+
+        Node n3 = folded_tree.getNode(3);
+        Edge e310 = folded_tree.findEdge(n3, n10);
+        folded_tree.collapse(e310);
+
+        folded_tree.reduce(n10);
+
+        Node n9 = folded_tree.getNode(9);
+        Edge e49 = folded_tree.findEdge(n9, n4);
+
+        counter = 0;
+        const Members& e49members = folded_tree.getEdgeMembers(e49);
+        for (it = e49members.begin(); it != e49members.end(); ++it) {
+            counter++;
+        }
+        CHECK_EQUAL(counter, e49members.size());
+
+    }
 
 }
 

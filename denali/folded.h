@@ -601,20 +601,150 @@ public:
     {
         template <typename T> friend class FoldedContourTree;
 
+        typedef boost::shared_ptr<Members> MembersPtr;
+
         size_t _size;
         const typename ContourTree::Members* _ct_members;
-        std::list<const Members*> _nested_members;
+        std::list<MembersPtr> _nested_members;
 
         Members(const typename ContourTree::Members* ctm) :
                 _size(ctm->size()), _ct_members(ctm) {}
 
     public:
+        class iterator
+        {
+            friend class Members;
+
+            const Members* _members;
+            typename ContourTree::Members::iterator _ct_member_it;
+            typename std::list<MembersPtr>::const_iterator _folded_list_it;
+            boost::shared_ptr<iterator> _folded_member_it;
+
+            iterator(const Members* members) : _members(members) {}
+
+            void advanceList()
+            {
+                while (_folded_list_it != _members->_nested_members.end() &&
+                       (*_folded_list_it)->size() == 0) {
+                    _folded_list_it++;
+                }
+
+                if (_folded_list_it != _members->_nested_members.end()) 
+                {
+                    _folded_member_it = boost::shared_ptr<iterator>(new 
+                            iterator((*_folded_list_it)->begin()));
+                }
+            }
+
+
+        public:
+            bool operator==(const iterator& rhs) const 
+            {
+                if (_members != rhs._members) {
+                    return false;
+                }
+
+                if (_members->_ct_members) {
+                    if (_ct_member_it != rhs._ct_member_it) {
+                        return false;
+                    }
+                }
+
+                if (_folded_list_it != rhs._folded_list_it) {
+                    return false;
+                }
+
+                if (_folded_list_it != _members->_nested_members.end()) {
+                    if ((*_folded_member_it) != (*rhs._folded_member_it)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            bool operator!=(const iterator rhs) const {
+                return !((*this) == (rhs));
+            }
+
+            /// \brief Advances the iterator until the end or a valid entry is met.
+            void operator++() 
+            {
+                if (_members->_ct_members)
+                {
+                    if (_ct_member_it != _members->_ct_members->end())
+                    {
+                        _ct_member_it++;
+                        return;
+                    }
+                }
+
+                // either there are no ct members, or we have reached the end of them
+                ++(*_folded_member_it);
+
+                if ((*_folded_member_it) == (*_folded_list_it)->end()) {
+                    _folded_list_it++;
+                    advanceList();
+                }
+            }
+
+            const unsigned int& operator*() const 
+            {
+                if (_members->_ct_members)
+                {
+                    if (_ct_member_it != _members->_ct_members->end())
+                    {
+                        return *_ct_member_it;
+                    }
+                }
+
+                // either there are no ct members, of we have reached the end of them
+                return **_folded_member_it;
+            }
+
+        };
+        friend class iterator;
+
         Members() : 
                 _size(0), _ct_members(0) {}
 
         size_t size() const {
             return _size;
         }
+
+        iterator begin() const {
+            iterator it(this);
+
+            if (_ct_members)
+            {
+                it._ct_member_it = (_ct_members->begin());
+            }
+
+
+            it._folded_list_it = _nested_members.begin();
+
+            if (_nested_members.begin() != _nested_members.end()) {
+                it.advanceList();
+            }
+
+
+            return it;
+        }
+
+        iterator end() const
+        {
+            iterator it(this);
+
+            if (_ct_members)
+            {
+                it._ct_member_it = (_ct_members->end());
+            }
+
+            it._folded_list_it = _nested_members.end();
+
+            return it;
+        }
+
     };
 
 
@@ -637,8 +767,10 @@ private:
     ObservingEdgeFoldMap<FoldTree, typename ContourTree::Edge>
             _fold_to_ct_edge;
 
-    ObservingNodeFoldMap<FoldTree, Members> _node_members;
-    ObservingEdgeFoldMap<FoldTree, Members> _edge_members;
+    typedef boost::shared_ptr<Members> MembersPtr;
+
+    ObservingNodeFoldMap<FoldTree, boost::shared_ptr<Members> > _node_members;
+    ObservingEdgeFoldMap<FoldTree, boost::shared_ptr<Members> > _edge_members;
 
     typename ContourTree::Node getContourTreeNode(Node node) const {
         return _fold_to_ct_node[_fold_tree.getNodeFold(node)];
@@ -676,7 +808,7 @@ public:
 
             // set the node's members to be the CT node's members
             const ContourTreeMembers* ctm = &_contour_tree.getNodeMembers(it.node());
-            _node_members[node_fold] = Members(ctm);
+            _node_members[node_fold] = MembersPtr(new Members(ctm));
         }
 
         for (EdgeIterator<ContourTree> it(_contour_tree); !it.done(); ++it)
@@ -704,7 +836,7 @@ public:
 
             // set the edge's members to be the CT edge's members
             const ContourTreeMembers* ctm = &_contour_tree.getEdgeMembers(it.edge());
-            _edge_members[edge_fold] = Members(ctm);
+            _edge_members[edge_fold] = MembersPtr(new Members(ctm));
         }
     }
 
@@ -737,19 +869,19 @@ public:
         NodeFold base_fold = _fold_tree.getNodeFold(base);
 
         // get the base's members
-        Members& base_members = _node_members[base_fold];
+        MembersPtr base_members = _node_members[base_fold];
 
         // add the leaf members and collapsed edge members to the base node's members
         NodeFold leaf_fold = _fold_tree.getNodeFold(leaf);
-        Members& leaf_members = _node_members[leaf_fold];
-        base_members._nested_members.push_back(&leaf_members);
+        MembersPtr leaf_members = _node_members[leaf_fold];
+        base_members->_nested_members.push_back(leaf_members);
 
         EdgeFold edge_fold = _fold_tree.getEdgeFold(edge);
-        Members& edge_members = _edge_members[edge_fold];
-        base_members._nested_members.push_back(&edge_members);
+        MembersPtr edge_members = _edge_members[edge_fold];
+        base_members->_nested_members.push_back(edge_members);
 
         // update the size of the node's members
-        base_members._size += leaf_members._size + edge_members._size;
+        base_members->_size += leaf_members->_size + edge_members->_size;
 
         // collapse the edge.
         _fold_tree.collapse(edge);
@@ -763,23 +895,22 @@ public:
         Edge uv = it.edge(); ++it;
         Edge vw = it.edge();
 
-        const Members& v_members  = getNodeMembers(v);
-        const Members& uv_members = getEdgeMembers(uv);
-        const Members& vw_members = getEdgeMembers(vw);
+        MembersPtr v_members = _node_members[_fold_tree.getNodeFold(v)];
+        MembersPtr uv_members = _edge_members[_fold_tree.getEdgeFold(uv)];
+        MembersPtr vw_members = _edge_members[_fold_tree.getEdgeFold(vw)];
 
         // make the new edge
         Edge uw = _fold_tree.reduce(v);
 
         // we have a new set of members for the new edge
-        Members& uw_members = _edge_members[_fold_tree.getEdgeFold(uw)];
-        uw_members = Members();
+        MembersPtr uw_members = MembersPtr(new Members());
+        _edge_members[_fold_tree.getEdgeFold(uw)] = uw_members;
 
-        uw_members._nested_members.push_back(&v_members);
-        uw_members._nested_members.push_back(&uv_members);
-        uw_members._nested_members.push_back(&vw_members);
+        uw_members->_nested_members.push_back(v_members);
+        uw_members->_nested_members.push_back(uv_members);
+        uw_members->_nested_members.push_back(vw_members);
 
-        // now we need to update the size
-        uw_members._size += v_members._size + uv_members._size + vw_members._size;
+        uw_members->_size += v_members->_size + uv_members->_size + vw_members->_size;
 
         return uw;
     }
@@ -835,16 +966,16 @@ public:
         Node v = _fold_tree.opposite(u, edge);
 
         // get their member sets
-        const Members& edge_members = getEdgeMembers(edge);
-        const Members& v_members = getNodeMembers(v);
+        MembersPtr edge_members = _edge_members[_fold_tree.getEdgeFold(edge)];
+        MembersPtr v_members = _node_members[_fold_tree.getNodeFold(v)];
 
         // now remove these from u's nested members
-        Members& u_members = _node_members[_fold_tree.getNodeFold(u)];
-        u_members._nested_members.remove(&v_members);
-        u_members._nested_members.remove(&edge_members);
+        MembersPtr u_members = _node_members[_fold_tree.getNodeFold(u)];
+        u_members->_nested_members.remove(v_members);
+        u_members->_nested_members.remove(edge_members);
 
         // and decrease the size by the appropriate amount
-        u_members._size -= v_members._size + edge_members._size;
+        u_members->_size -= v_members->_size + edge_members->_size;
 
         return edge;
     }
@@ -855,11 +986,13 @@ public:
     }
 
     const Members& getNodeMembers(Node node) const {
-        return _node_members[_fold_tree.getNodeFold(node)];
+        return *_node_members[_fold_tree.getNodeFold(node)];
     }
 
     const Members& getEdgeMembers(Edge edge) const {
-        return _edge_members[_fold_tree.getEdgeFold(edge)];
+        Node u = _fold_tree.u(edge);
+        Node v = _fold_tree.v(edge);
+        return *_edge_members[_fold_tree.getEdgeFold(edge)];
     }
 
     // HERE FOR COMPATIBILITY, REMOVE AFTER TESTS PASS: 
