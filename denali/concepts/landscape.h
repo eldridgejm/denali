@@ -154,6 +154,13 @@ public:
             typename ContourTree::Edge ctedge = _tree.getContourTreeEdge(Arc());
             node = _tree.getLandscapeTreeNode(typename ContourTree::Node());
             _Arc arc = _tree.getLandscapeTreeArc(typename ContourTree::Edge());
+
+            ignore_unused_variable_warning(x);
+            ignore_unused_variable_warning(u);
+            ignore_unused_variable_warning(root);
+            ignore_unused_variable_warning(ctnode);
+            ignore_unused_variable_warning(ctedge);
+            ignore_unused_variable_warning(arc);
         }
 
         _LandscapeTree& _tree;

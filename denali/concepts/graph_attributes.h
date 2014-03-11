@@ -761,6 +761,7 @@ public:
             arc = _graph.getInvalidArc();
             
             ignore_unused_variable_warning(n);
+            ignore_unused_variable_warning(node);
 
         }
 

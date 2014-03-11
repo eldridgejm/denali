@@ -32,10 +32,14 @@ public:
             _ObservingNodeMap new_map(_graph);
             ValueType value = _map[_Node()];
             const ValueType const_value = _map[_Node()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _ObservingNodeMap& _map;
         GraphType& _graph;
         typedef typename GraphType::Node _Node;
+
     };
 };
 
@@ -68,6 +72,9 @@ public:
             _ObservingArcMap new_map(_graph);
             ValueType value = _map[_Arc()];
             const ValueType const_value = _map[_Arc()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _ObservingArcMap& _map;
         GraphType& _graph;
@@ -104,6 +111,9 @@ public:
             _ObservingEdgeMap new_map(_graph);
             ValueType value = _map[_Edge()];
             const ValueType const_value = _map[_Edge()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _ObservingEdgeMap& _map;
         GraphType& _graph;
@@ -133,6 +143,9 @@ public:
             _StaticNodeMap new_map(_graph);
             ValueType value = _map[_Node()];
             const ValueType const_value = _map[_Node()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _StaticNodeMap& _map;
         const GraphType& _graph;
@@ -162,6 +175,9 @@ public:
             _StaticArcMap new_map(_graph);
             ValueType value = _map[_Arc()];
             const ValueType const_value = _map[_Arc()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _StaticArcMap& _map;
         const GraphType& _graph;
@@ -191,6 +207,9 @@ public:
             _StaticEdgeMap new_map(_graph);
             ValueType value = _map[_Edge()];
             const ValueType const_value = _map[_Edge()];
+
+            ignore_unused_variable_warning(value);
+            ignore_unused_variable_warning(const_value);
         }
         _StaticEdgeMap& _map;
         const GraphType& _graph;
