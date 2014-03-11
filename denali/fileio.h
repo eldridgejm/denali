@@ -341,7 +341,7 @@ public:
 
         Edge edge = _graph.addEdge(_graph.getNode(u), _graph.getNode(v));
 
-        for (int i=2; i<line.size(); ++i) {
+        for (size_t i=2; i<line.size(); ++i) {
             char * err;
             unsigned int member = strtol(line[i].c_str(), &err, 10);
             if (*err != 0)

@@ -484,7 +484,7 @@ public:
         // create a point for every point in the boundary
         std::vector<Point> inserted_points;
 
-        for (int i=0; i<split.size(); ++i) {
+        for (size_t i=0; i<split.size(); ++i) {
             // get the boundary point
             Rectangle::Point boundary_point = split.getBoundaryPoint(i);
 

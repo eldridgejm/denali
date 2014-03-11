@@ -208,28 +208,28 @@ SUITE(GraphStructures)
         Graph::Arc next_arc = graph.getNextArc(first_arc);
         CHECK(graph.isArcValid(next_arc));
 
-        CHECK_EQUAL(2, graph.degree(n1));
-        CHECK_EQUAL(1, graph.degree(n2));
-        CHECK_EQUAL(1, graph.degree(n3));
+        CHECK_EQUAL((size_t) 2, graph.degree(n1));
+        CHECK_EQUAL((size_t) 1, graph.degree(n2));
+        CHECK_EQUAL((size_t) 1, graph.degree(n3));
 
-        CHECK_EQUAL(2, graph.outDegree(n1));
-        CHECK_EQUAL(0, graph.inDegree(n1));
+        CHECK_EQUAL((size_t) 2, graph.outDegree(n1));
+        CHECK_EQUAL((size_t) 0, graph.inDegree(n1));
 
-        CHECK_EQUAL(1, graph.inDegree(n2));
-        CHECK_EQUAL(1, graph.inDegree(n3));
+        CHECK_EQUAL((size_t) 1, graph.inDegree(n2));
+        CHECK_EQUAL((size_t) 1, graph.inDegree(n3));
 
-        CHECK_EQUAL(0, graph.outDegree(n2));
-        CHECK_EQUAL(0, graph.outDegree(n3));
+        CHECK_EQUAL((size_t) 0, graph.outDegree(n2));
+        CHECK_EQUAL((size_t) 0, graph.outDegree(n3));
 
         graph.removeNode(n1);
 
         // The graph now has no arcs, and nodes n2,n3,n4,n5
 
-        CHECK_EQUAL(0, graph.inDegree(n2));
-        CHECK_EQUAL(0, graph.inDegree(n3));
+        CHECK_EQUAL((size_t) 0, graph.inDegree(n2));
+        CHECK_EQUAL((size_t) 0, graph.inDegree(n3));
 
-        CHECK_EQUAL(0, graph.outDegree(n2));
-        CHECK_EQUAL(0, graph.outDegree(n3));
+        CHECK_EQUAL((size_t) 0, graph.outDegree(n2));
+        CHECK_EQUAL((size_t) 0, graph.outDegree(n3));
 
         CHECK(!graph.isNodeValid(n1));
 
@@ -260,17 +260,17 @@ SUITE(GraphStructures)
 
         graph.clearArcs();
 
-        CHECK_EQUAL(5, graph.numberOfNodes());
-        CHECK_EQUAL(0, graph.numberOfArcs());
+        CHECK_EQUAL((size_t) 5, graph.numberOfNodes());
+        CHECK_EQUAL((size_t) 0, graph.numberOfArcs());
 
         graph.clearNodes();
 
-        CHECK_EQUAL(0, graph.numberOfNodes());
+        CHECK_EQUAL((size_t) 0, graph.numberOfNodes());
 
         graph.addNode();
         CHECK(!graph.isNodeValid(n6));
 
-        CHECK_EQUAL(1, graph.numberOfNodes());
+        CHECK_EQUAL((size_t) 1, graph.numberOfNodes());
 
         graph.clearNodes();
 
@@ -401,8 +401,8 @@ SUITE(ContourTree)
                 plex.getNode(wenger_edges[i][1]));
         }
 
-        CHECK_EQUAL(n_wenger_vertices, plex.numberOfNodes());
-        CHECK_EQUAL(n_wenger_edges, plex.numberOfEdges());
+        CHECK_EQUAL((size_t) n_wenger_vertices, plex.numberOfNodes());
+        CHECK_EQUAL((size_t) n_wenger_edges, plex.numberOfEdges());
     }
 
     TEST(UndirectedScalarMemberIDGraph)
@@ -548,8 +548,8 @@ SUITE(fileio)
 
         denali::ContourTree ct = denali::readContourTreeFile("wenger_tree");
 
-        CHECK_EQUAL(9, ct.numberOfNodes());
-        CHECK_EQUAL(8, ct.numberOfEdges());
+        CHECK_EQUAL((size_t) 9, ct.numberOfNodes());
+        CHECK_EQUAL((size_t) 8, ct.numberOfEdges());
     }
 }
 
@@ -624,19 +624,19 @@ SUITE(Folded)
         Edge e15 = folded_tree.findEdge(n1, n5);
         Edge e57 = folded_tree.findEdge(n5, n7);
 
-        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e45).size());
-        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e15).size());
-        CHECK_EQUAL(0, folded_tree.getEdgeMembers(e57).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getEdgeMembers(e45).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getEdgeMembers(e15).size());
+        CHECK_EQUAL((size_t) 0, folded_tree.getEdgeMembers(e57).size());
 
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n4).size());
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n4).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n5).size());
 
         // now we'll collapse an edge: e15
         folded_tree.collapse(e15);
 
         // now node five has the edge e15 (which has a member: node 2) and node 1 inside.
         // The size should be 3: node 5, 1, and 2.
-        CHECK_EQUAL(3, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL((size_t) 3, folded_tree.getNodeMembers(n5).size());
 
         // now if we reduce node 5
         folded_tree.reduce(n5);
@@ -644,42 +644,42 @@ SUITE(Folded)
         // we should have an edge from 4 to 7 with node 0 and all of the nodes
         // contained within node 5, meaning, a total of 4 nodes in the edge
         Edge e47 = folded_tree.findEdge(folded_tree.getNode(4), folded_tree.getNode(7));
-        CHECK_EQUAL(4, folded_tree.getEdgeMembers(e47).size());
+        CHECK_EQUAL((size_t) 4, folded_tree.getEdgeMembers(e47).size());
 
         // if we unreduce this edge, we should be back where we were
         n5 = folded_tree.unreduce(e47);
         e45 = folded_tree.findEdge(n4, n5);
         e57 = folded_tree.findEdge(n5, n7);
 
-        CHECK_EQUAL(3, folded_tree.getNodeMembers(n5).size());
-        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e45).size());
-        CHECK_EQUAL(0, folded_tree.getEdgeMembers(e57).size());
+        CHECK_EQUAL((size_t) 3, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getEdgeMembers(e45).size());
+        CHECK_EQUAL((size_t) 0, folded_tree.getEdgeMembers(e57).size());
 
         // and uncollapsing should get us back to the start
         e15 = folded_tree.uncollapse(n5);
-        CHECK_EQUAL(1, folded_tree.getEdgeMembers(e15).size());
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n1).size());
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n5).size());
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n4).size());
-        CHECK_EQUAL(1, folded_tree.getNodeMembers(n7).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getEdgeMembers(e15).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n1).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n5).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n4).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getNodeMembers(n7).size());
 
         
         // now let's do a massive simplification
-        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(3)).size());
-        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
-        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(9)).size());
-        CHECK_EQUAL(1,folded_tree.getNodeMembers(folded_tree.getNode(7)).size());
-        CHECK_EQUAL(0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(9), folded_tree.getNode(10))).size());
+        CHECK_EQUAL((size_t) 1,folded_tree.getNodeMembers(folded_tree.getNode(3)).size());
+        CHECK_EQUAL((size_t) 1,folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
+        CHECK_EQUAL((size_t) 1,folded_tree.getNodeMembers(folded_tree.getNode(9)).size());
+        CHECK_EQUAL((size_t) 1,folded_tree.getNodeMembers(folded_tree.getNode(7)).size());
+        CHECK_EQUAL((size_t) 0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(9), folded_tree.getNode(10))).size());
 
         folded_tree.collapse(folded_tree.findEdge(folded_tree.getNode(9), folded_tree.getNode(10)));
-        CHECK_EQUAL(2, folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
-        CHECK_EQUAL(1, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(10))).size());
-        CHECK_EQUAL(0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(7), folded_tree.getNode(10))).size());
+        CHECK_EQUAL((size_t) 2, folded_tree.getNodeMembers(folded_tree.getNode(10)).size());
+        CHECK_EQUAL((size_t) 1, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(10))).size());
+        CHECK_EQUAL((size_t) 0, folded_tree.getEdgeMembers(folded_tree.findEdge(folded_tree.getNode(7), folded_tree.getNode(10))).size());
 
         folded_tree.reduce(folded_tree.getNode(10));
 
         Edge e37 = folded_tree.findEdge(folded_tree.getNode(3), folded_tree.getNode(7));
-        CHECK_EQUAL(3, folded_tree.getEdgeMembers(e37).size());
+        CHECK_EQUAL((size_t) 3, folded_tree.getEdgeMembers(e37).size());
     }
 
 
