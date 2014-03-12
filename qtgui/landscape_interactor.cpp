@@ -19,8 +19,6 @@ void LandscapeInteractorStyle::OnRightButtonDown()
         _event_manager->notifyCellSelection(cell);
     }
 
-    std::cout << cell << std::endl;
-
 }
 
 void LandscapeInteractorStyle::OnLeftButtonDown()

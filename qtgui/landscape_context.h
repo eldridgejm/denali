@@ -77,7 +77,6 @@ void printContourTree(const ContourTree& tree)
     for (denali::EdgeIterator<ContourTree> it(tree); !it.done(); ++it) {
         typename ContourTree::Node u = tree.u(it.edge());
         typename ContourTree::Node v = tree.v(it.edge());
-        std::cout << tree.getID(u) << " <-----> " << tree.getID(v) << std::endl;
     }
 }
 
@@ -240,13 +239,12 @@ public:
         parent_node = _folded_tree.getNode(parent_id);
         child_node  = _folded_tree.getNode(child_id);
 
-        std::cout << "The tree had " << _folded_tree.numberOfNodes() << std::endl;
         expandSubtree(_folded_tree, parent_node, child_node);
         denali::PersistenceSimplifier simplifier(persistence); 
         simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
-        std::cout << "Now it has " << _folded_tree.numberOfNodes() << std::endl;
     }
 
+    /// \brief Sets the weight map, assuming ownership of the memory.
     virtual void setWeightMap(WeightMap* weight_map)
     {
         _weight_map = boost::shared_ptr<WeightMap>(weight_map);

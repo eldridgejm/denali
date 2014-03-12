@@ -5,6 +5,7 @@
 #include <vtkAxesActor.h>
 #include <vtkCallbackCommand.h>
 #include <vtkCellArray.h>
+#include <vtkCellData.h>
 #include <vtkCellPicker.h>
 #include <vtkCubeSource.h>
 #include <vtkDataObjectToTable.h>
@@ -30,7 +31,116 @@
 #include <vtkTextProperty.h>
 #include <vtkTriangle.h>
 
+#include <denali/fileio.h>
 #include "landscape_context.h"
+
+#include <map>
+
+typedef std::map<unsigned int, double> ColorMap;
+
+class ValueMapper
+{
+public:
+    virtual ~ValueMapper() {}
+    virtual double operator()(unsigned int) const = 0;
+    virtual double getMaxValue() const = 0;
+    virtual double getMinValue() const = 0;
+};
+
+
+class HeightValueMapper : public ValueMapper
+{
+    LandscapeContext* _context;
+
+public:
+    HeightValueMapper(LandscapeContext* context) :
+        _context(context) {}
+
+    double operator()(unsigned int i) const {
+        return _context->getPoint(i).z();
+    }
+
+    double getMaxValue() const {
+        return _context->getMaxPoint().z();
+    }
+
+    double getMinValue() const {
+        return _context->getMinPoint().z();
+    }
+};
+
+
+inline void 
+pointColorizer(
+        vtkSmartPointer<vtkPolyData> trianglePolyData,
+        ValueMapper& valueMapper)
+{
+    vtkSmartPointer<vtkLookupTable> color_table =
+            vtkSmartPointer<vtkLookupTable>::New();
+
+    color_table->SetTableRange(valueMapper.getMinValue(), valueMapper.getMaxValue());
+    color_table->Build();
+
+    // Generate the colors for each point based on the color map
+    vtkSmartPointer<vtkUnsignedCharArray> colors = 
+        vtkSmartPointer<vtkUnsignedCharArray>::New();
+    colors->SetNumberOfComponents(3);
+    colors->SetName("Colors");
+
+    for(int i = 0; i < trianglePolyData->GetNumberOfPoints(); i++)
+    {
+        // get the value of the point
+        double value = valueMapper(i);
+
+        // lookup the color
+        double dcolor[3];
+        color_table->GetColor(value, dcolor);
+
+        unsigned char color[3];
+        for(unsigned int j = 0; j < 3; j++)
+        {
+            color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+        }
+
+        // Notice this hack! The colors were backwards: blue was high,
+        // red was low. This flips the two.
+        unsigned char better_colors[3];
+        better_colors[0] = color[2];
+        better_colors[1] = color[1];
+        better_colors[2] = color[0];
+
+        colors->InsertNextTupleValue(better_colors);
+    }
+
+    trianglePolyData->GetPointData()->SetScalars(colors);
+}
+
+
+inline void
+cellColorizer(
+        vtkSmartPointer<vtkPolyData> trianglePolyData)
+{
+    vtkSmartPointer<vtkUnsignedCharArray> cell_data =
+            vtkSmartPointer<vtkUnsignedCharArray>::New();
+
+    size_t n_cells = trianglePolyData->GetNumberOfCells();
+
+    cell_data->SetNumberOfComponents(3);
+    cell_data->SetNumberOfTuples(n_cells);
+
+    for (size_t i=0; i<n_cells; ++i)
+    {
+        float colors[3];
+        colors[0] = 255;
+        colors[1] = 10;
+        colors[2] = 10;
+
+        cell_data->InsertTuple(i, colors);
+    }
+
+    trianglePolyData->GetCellData()->SetScalars(cell_data);
+}
+
 
 template <typename _LandscapeContext>
 struct LandscapeMeshBuilderArguments
@@ -49,8 +159,6 @@ template <typename Args>
 void LandscapeMeshBuilder(void* args)
 {
     typedef typename Args::LandscapeContext LandscapeContext;
-
-    std::cout << "building mesh" << std::endl;
 
     // cast the input
     Args* input = static_cast<Args*>(args);
@@ -92,6 +200,12 @@ void LandscapeMeshBuilder(void* args)
     // set the output
     input->source->GetPolyDataOutput()->SetPoints(points);
     input->source->GetPolyDataOutput()->SetPolys(triangles);
+
+    // cellColorizer(input->source->GetPolyDataOutput());
+
+    HeightValueMapper value_mapper(&context);
+    pointColorizer(input->source->GetPolyDataOutput(), value_mapper);
+
 }
 
 
@@ -147,6 +261,7 @@ private:
 };
 
 
+
 class LandscapeInterface
 {
     LandscapeEventManager _event_manager;
@@ -157,6 +272,8 @@ class LandscapeInterface
     vtkSmartPointer<vtkRenderer> _renderer;
     vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
     vtkRenderWindow* _render_window;
+
+    boost::shared_ptr<ColorMap> _color_map;
 
 public:
     LandscapeInterface(vtkRenderWindow* render_window) :
@@ -199,6 +316,13 @@ public:
 
         _render_window->Render();
     }
+
+    void setColorMap(ColorMap* color_map)
+    {
+        _color_map = boost::shared_ptr<ColorMap>(color_map);
+    }
+
+    
 
 };
 
