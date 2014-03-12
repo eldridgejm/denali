@@ -292,11 +292,8 @@ public:
         return members;
     }
 
-    /// \brief Clear the nodes of the graph.
-    void clearNodes() { }
-
-    /// \brief Clear the edges of the graph.
-    void clearEdges() { }
+    /// \brief Clear the graph.
+    void clear() { }
 
     template <typename _UndirectedScalarMemberIDGraph>
     struct Constraints
@@ -321,8 +318,7 @@ public:
             const _Members& node_members = _graph.getNodeMembers(_Node());
             node = _graph.getNode(id);
             const _Members& edge_members = _graph.getEdgeMembers(_Edge());
-            _graph.clearNodes();
-            _graph.clearEdges();
+            _graph.clear();
             _graph.removeNode(_Node());
             _graph.removeEdge(_Edge());
 

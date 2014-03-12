@@ -924,11 +924,7 @@ public:
     void removeArc(Arc) { }
 
     /// \brief Clears the nodes of the graph.
-    void clearNodes() { }
-
-    /// \brief Clears the arcs of the graph.
-    void clearArcs() { }
-
+    void clear() { }
 
     template <typename _WritableReadableDirectedGraph>
     struct Constraints
@@ -943,8 +939,7 @@ public:
             _Arc arc = graph.addArc(_Node(), _Node());
             graph.removeArc(arc);
 
-            graph.clearNodes();
-            graph.clearArcs();
+            graph.clear();
         }
         _WritableReadableDirectedGraph& graph;
         typedef typename _WritableReadableDirectedGraph::Node _Node;
@@ -984,10 +979,7 @@ public:
     void removeEdge(Edge) { }
 
     /// \brief Clear the nodes of the graph
-    void clearNodes() { }
-
-    /// \brief Clear the edges of the graph
-    void clearEdges() { }
+    void clear() { }
 
 
     template <typename _WritableReadableUndirectedGraph>
@@ -1003,8 +995,7 @@ public:
             _Edge edge = graph.addEdge(_Node(), _Node());
             graph.removeEdge(edge);
 
-            graph.clearNodes();
-            graph.clearEdges();
+            graph.clear();
         }
         _WritableReadableUndirectedGraph& graph;
         typedef typename _WritableReadableUndirectedGraph::Node _Node;

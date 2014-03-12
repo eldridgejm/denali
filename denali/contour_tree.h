@@ -180,6 +180,9 @@ private:
     ObservingNodeMap<GraphType, Members> _node_to_members;
     ObservingEdgeMap<GraphType, Members> _edge_to_members;
 
+    // the total number of nodes + number of members
+    size_t _total_graph_size;
+
 public:
 
     typedef typename GraphType::Node Node;
@@ -187,7 +190,7 @@ public:
 
     UndirectedScalarMemberIDGraphBase()
         : Mixin(_graph), _node_to_id(_graph), _node_to_value(_graph), _node_to_members(_graph),
-          _edge_to_members(_graph)
+          _edge_to_members(_graph), _total_graph_size(0)
     {
     }
 
@@ -202,6 +205,8 @@ public:
         _node_to_id[node] = id;
         _node_to_value[node] = value;
         _id_to_node[id] = node;
+
+        _total_graph_size++;
 
         // the convention: a node is in its own member set
         _node_to_members[node].insert(id);
@@ -218,6 +223,8 @@ public:
     /// \brief Remove the node.
     void removeNode(Node node)
     {
+        _total_graph_size -= _node_to_members[node].size();
+
         _id_to_node.erase(_node_to_id[node]);
         _graph.removeNode(node);
     }
@@ -225,6 +232,7 @@ public:
     /// \brief Remove the edge.
     void removeEdge(Edge edge)
     {
+        _total_graph_size -= _edge_to_members[edge].size();
         _graph.removeEdge(edge);
     }
 
@@ -232,12 +240,14 @@ public:
     void insertNodeMember(Node node, unsigned int member)
     {
         _node_to_members[node].insert(member);
+        _total_graph_size++;
     }
 
     /// \brief Insert a member into the edge's member set.
     void insertEdgeMember(Edge edge, unsigned int member)
     {
         _edge_to_members[edge].insert(member);
+        _total_graph_size++;
     }
 
     /// \brief Insert members into node member set.
@@ -247,6 +257,7 @@ public:
                 it != members.end();
                 ++it) {
             _node_to_members[node].insert(*it);
+            _total_graph_size++;
         }
     }
 
@@ -257,6 +268,7 @@ public:
                 it != members.end();
                 ++it) {
             _edge_to_members[edge].insert(*it);
+            _total_graph_size++;
         }
     }
 
@@ -297,13 +309,9 @@ public:
     }
 
     /// \brief Clear the nodes of the graph
-    void clearNodes() {
-        return _graph.clearNodes();
-    }
-
-    /// \brief Clear the edges of the graph
-    void clearEdges() {
-        return _graph.clearEdges();
+    void clear() {
+        _total_graph_size = 0;
+        return _graph.clear();
     }
 
 };
@@ -831,8 +839,7 @@ public:
     {
 
         // clear the output
-        graph.clearNodes();
-        graph.clearEdges();
+        graph.clear();
 
         // we need to establish a total order on the nodes of the simplicial
         // complex. First, we'll adapt the complex so that we can treat it

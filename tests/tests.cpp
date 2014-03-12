@@ -258,13 +258,12 @@ SUITE(GraphStructures)
         CHECK(graph.isArcValid(graph.findArc(n2,n3)));
         CHECK(!graph.isArcValid(graph.findArc(n3,n2)));
 
-        graph.clearArcs();
+        graph.clear();
 
-        CHECK_EQUAL((size_t) 5, graph.numberOfNodes());
+        CHECK_EQUAL((size_t) 0, graph.numberOfNodes());
         CHECK_EQUAL((size_t) 0, graph.numberOfArcs());
 
-        graph.clearNodes();
-
+        graph.clear();
         CHECK_EQUAL((size_t) 0, graph.numberOfNodes());
 
         graph.addNode();
@@ -272,7 +271,7 @@ SUITE(GraphStructures)
 
         CHECK_EQUAL((size_t) 1, graph.numberOfNodes());
 
-        graph.clearNodes();
+        graph.clear();
 
         denali::ObservingNodeMap<Graph, int> ids(graph);
 

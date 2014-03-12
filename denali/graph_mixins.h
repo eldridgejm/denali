@@ -380,14 +380,9 @@ public:
         return _graph.removeArc(arc);
     }
 
-    /// \brief Clear the nodes of the graph.
-    void clearNodes() {
-        return _graph.clearNodes();
-    }
-
-    /// \brief Clear the arcs of the graph.
-    void clearArcs() {
-        return _graph.clearArcs();
+    /// \brief Clear the graph.
+    void clear() {
+        return _graph.clear();
     }
 
 };
@@ -431,14 +426,9 @@ public:
         return _graph.removeEdge(edge);
     }
 
-    /// \brief Clear the nodes of the graph.
-    void clearNodes() {
-        return _graph.clearNodes();
-    }
-
-    /// \brief Clear the edges of the graph.
-    void clearEdges() {
-        return _graph.clearEdges();
+    /// \brief Clear the graph.
+    void clear() {
+        return _graph.clear();
     }
 };
 

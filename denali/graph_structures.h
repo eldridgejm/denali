@@ -591,20 +591,11 @@ public:
         return Arc(-1);
     }
 
-    void clearNodes()
+    void clear()
     {
         for (size_t i=0; i<nodes.size(); ++i) {
             if (isNodeValid(Node(i))) {
                 removeNode(Node(i));
-            }
-        }
-    }
-
-    void clearArcs()
-    {
-        for (size_t i=0; i<arcs.size(); ++i) {
-            if (isArcValid(Arc(i))) {
-                removeArc(Arc(i));
             }
         }
     }
@@ -831,11 +822,8 @@ public:
         impl.removeArc(edge.base);
     }
 
-    void clearNodes() {
-        impl.clearNodes();
-    }
-    void clearEdges() {
-        impl.clearArcs();
+    void clear() {
+        impl.clear();
     }
 
     void attachNodeObserver(Observer& ob) {
