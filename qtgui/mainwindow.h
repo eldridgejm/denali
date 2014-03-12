@@ -29,9 +29,13 @@ public slots:
     void renderLandscape();
     void changeLandscapeRoot();
     void updateCellSelection(unsigned int);
+
     void enablePersistenceSlider();
     void updatePersistence(int);
+
     void enableRefineSubtree();
+    void disableRefineSubtree();
+
     void refineSubtree();
     void cellSelectionCallback(unsigned int);
     void treeBuilderCallback();

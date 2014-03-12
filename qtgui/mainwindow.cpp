@@ -44,6 +44,11 @@ MainWindow::MainWindow() :
     connect(this, SIGNAL(cellSelected(unsigned int)), 
             this, SLOT(enableRefineSubtree()));
 
+    // changing the landscape may invalidate the selection, making the refine button
+    // invalid
+    connect(this, SIGNAL(landscapeChanged()),
+            this, SLOT(disableRefineSubtree()));
+
     connect(_mainwindow.pushButtonRefineSubtree, SIGNAL(clicked()),
             this, SLOT(refineSubtree()));
 
@@ -199,7 +204,6 @@ void MainWindow::enablePersistenceSlider()
     this->updatePersistence(0);
 }
 
-
 void MainWindow::updatePersistence(int value)
 {
     // compute the persistence level
@@ -216,6 +220,11 @@ void MainWindow::updatePersistence(int value)
 void MainWindow::enableRefineSubtree()
 {
     _mainwindow.pushButtonRefineSubtree->setEnabled(true);
+}
+
+void MainWindow::disableRefineSubtree()
+{
+    _mainwindow.pushButtonRefineSubtree->setEnabled(false);
 }
 
 void MainWindow::refineSubtree()
