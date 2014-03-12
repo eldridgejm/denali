@@ -859,6 +859,18 @@ class denali::RectangularLandscape :
     RectangularLandscape(const RectangularLandscape&);
     RectangularLandscape& operator=(const RectangularLandscape&);
 
+    void buildLandscape()
+    {
+        // create an embedder
+        rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);
+        embedder.embed();
+
+        // create a triangularizer
+        rectangular::Triangularizer<LandscapeTree>
+        triangularizer(_tree, _embedding, _triangularization);
+        triangularizer.triangularize();
+    }
+
 public:
     
     typedef typename LandscapeTree::Node Node;
@@ -872,14 +884,16 @@ public:
         typename ContourTree::Node root)
         : Mixin(_tree), _tree(tree, root), _weights(_tree), _embedding(_tree)
     {
-        // create an embedder
-        rectangular::Embedder<LandscapeTree> embedder(_tree, _weights, _embedding);
-        embedder.embed();
+        buildLandscape();
+    }
 
-        // create a triangularizer
-        rectangular::Triangularizer<LandscapeTree>
-        triangularizer(_tree, _embedding, _triangularization);
-        triangularizer.triangularize();
+    RectangularLandscape(
+        const ContourTree& tree,
+        typename ContourTree::Node root,
+        WeightMap* weight_map)
+        : Mixin(_tree), _tree(tree, root), _weights(_tree, weight_map), _embedding(_tree)
+    {
+        buildLandscape();
     }
 
     size_t numberOfPoints() const {
@@ -957,6 +971,18 @@ public:
         }
 
         return new LandscapeType(contour_tree, root);
+    }
+
+    static LandscapeType* build(
+            const ContourTree& contour_tree,
+            typename ContourTree::Node root,
+            WeightMap* weight_map)
+    {
+        if (!contour_tree.isNodeValid(root)) {
+            throw std::runtime_error("Invalid root given for landscape generation.");
+        }
+
+        return new LandscapeType(contour_tree, root, weight_map);
     }
 
 

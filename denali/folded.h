@@ -584,7 +584,6 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 template <typename ContourTree>
 class FoldedContourTree :
         public
@@ -611,17 +610,18 @@ public:
                 _size(ctm->size()), _ct_members(ctm) {}
 
     public:
-        class iterator
+        class const_iterator
         {
             friend class Members;
 
             const Members* _members;
             typename ContourTree::Members::iterator _ct_member_it;
             typename std::list<MembersPtr>::const_iterator _folded_list_it;
-            boost::shared_ptr<iterator> _folded_member_it;
+            boost::shared_ptr<const_iterator> _folded_member_it;
 
-            iterator(const Members* members) : _members(members) {}
+            const_iterator(const Members* members) : _members(members) {}
 
+            /// \brief Advance the list and make the _folded_member_it valid, if possible.
             void advanceList()
             {
                 while (_folded_list_it != _members->_nested_members.end() &&
@@ -631,15 +631,16 @@ public:
 
                 if (_folded_list_it != _members->_nested_members.end()) 
                 {
-                    _folded_member_it = boost::shared_ptr<iterator>(new 
-                            iterator((*_folded_list_it)->begin()));
+                    _folded_member_it = boost::shared_ptr<const_iterator>(new 
+                            const_iterator((*_folded_list_it)->begin()));
                 }
             }
 
 
         public:
-            bool operator==(const iterator& rhs) const 
+            bool operator==(const const_iterator& rhs) const 
             {
+                // check that the two iterators iterate over the same set
                 if (_members != rhs._members) {
                     return false;
                 }
@@ -663,7 +664,7 @@ public:
                 return true;
             }
 
-            bool operator!=(const iterator rhs) const {
+            bool operator!=(const const_iterator rhs) const {
                 return !((*this) == (rhs));
             }
 
@@ -703,7 +704,7 @@ public:
             }
 
         };
-        friend class iterator;
+        friend class const_iterator;
 
         Members() : 
                 _size(0), _ct_members(0) {}
@@ -712,14 +713,13 @@ public:
             return _size;
         }
 
-        iterator begin() const {
-            iterator it(this);
+        const_iterator begin() const {
+            const_iterator it(this);
 
             if (_ct_members)
             {
                 it._ct_member_it = (_ct_members->begin());
             }
-
 
             it._folded_list_it = _nested_members.begin();
 
@@ -731,9 +731,9 @@ public:
             return it;
         }
 
-        iterator end() const
+        const_iterator end() const
         {
-            iterator it(this);
+            const_iterator it(this);
 
             if (_ct_members)
             {

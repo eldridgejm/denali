@@ -52,6 +52,12 @@ MainWindow::MainWindow() :
 
     connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
             this, SLOT(treeBuilderCallback()));
+
+    connect(this, SIGNAL(landscapeChanged()),
+            this, SLOT(enableLoadWeightMap()));
+
+    connect(_mainwindow.actionLoad_Weight_Map, SIGNAL(triggered()),
+            this, SLOT(loadWeightMapFile()));
 }
 
 
@@ -212,7 +218,6 @@ void MainWindow::enableRefineSubtree()
     _mainwindow.pushButtonRefineSubtree->setEnabled(true);
 }
 
-
 void MainWindow::refineSubtree()
 {
     std::cout << "Refining subtree..." << std::endl;
@@ -285,3 +290,32 @@ void MainWindow::treeBuilderCallback()
     message << "Contour tree callback was run." << std::endl;
     this->appendStatus(message.str());
 }
+
+
+void MainWindow::enableLoadWeightMap()
+{
+    _mainwindow.actionLoad_Weight_Map->setEnabled(true);
+}
+
+
+void MainWindow::loadWeightMapFile()
+{
+    // open a file dialog to get the filename
+    QString qfilename = QFileDialog::getOpenFileName(
+            this, tr("Open Weight Map File"), "", tr("Files(*.weights)"));
+
+    // convert the filename to a std::string
+    std::string filename = qfilename.toUtf8().constData();
+
+    // read the contour tree file
+    denali::WeightMap* weight_map = new denali::WeightMap;
+    denali::readWeightMapFile(filename.c_str(), *weight_map);
+
+    _landscape_context->setWeightMap(weight_map);
+    _landscape_context->buildLandscape(_landscape_context->getRootID());
+    
+    emit landscapeChanged();
+
+}
+
+

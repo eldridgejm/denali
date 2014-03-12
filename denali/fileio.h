@@ -385,6 +385,76 @@ inline ContourTree readContourTreeFile(
     return readContourTreeFromStream(fh);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// WeightMap
+//
+////////////////////////////////////////////////////////////////////////////////
+
+class WeightMapFormatParser
+{
+    WeightMap& _weight_map;
+    int lineno;
+
+public:
+
+    WeightMapFormatParser(WeightMap& weight_map)
+        : _weight_map(weight_map), lineno(0) { }
+
+
+    void insert(std::vector<std::string>& line)
+    {
+        if (line.size() != 2) {
+            std::stringstream msg;
+            msg << "More or less than 2 entries on line " << lineno;
+            throw std::runtime_error(msg.str());
+        }
+
+        char * err_u;
+        long int u = strtol(line[0].c_str(), &err_u, 10);
+        char * err_weight;
+        double weight = strtod(line[1].c_str(), &err_weight);
+
+        if (*err_u != 0 || *err_weight != 0 || u < 0) {
+            std::stringstream msg;
+            msg << "Problem interpreting line " << lineno << " as an edge.";
+            throw std::runtime_error(msg.str());
+        }
+        lineno++;
+
+        _weight_map[u] = weight;
+    }
+};
+
+
+inline void readWeightMapFromStream(
+    std::istream& ctstream,
+    WeightMap& weight_map)
+{
+    // clear the weight map
+    weight_map.clear();
+
+    // make a new contour tree format parser
+    WeightMapFormatParser format_parser(weight_map);
+
+    // and a tabular file parser
+    TabularFileParser parser;
+
+    // now parse
+    parser.parse(ctstream, format_parser);
+}
+
+
+inline void readWeightMapFile(
+    const char * filename,
+    WeightMap& weight_map)
+{
+    // create a file stream
+    std::ifstream fh;
+    safeOpenFile(filename, fh);
+
+    readWeightMapFromStream(fh, weight_map);
+}
 
 } // namespace denali
 

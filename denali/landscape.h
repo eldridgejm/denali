@@ -250,6 +250,7 @@ class LandscapeWeights
 {
     typedef typename LandscapeTree::Node Node;
     typedef typename LandscapeTree::Arc Arc;
+    typedef typename LandscapeTree::Members Members;
 
     const LandscapeTree& _tree;
 
@@ -257,21 +258,52 @@ class LandscapeWeights
     StaticNodeMap<LandscapeTree, double> _node_to_total_weight;
     StaticArcMap<LandscapeTree, double> _arc_to_weight;
 
+    WeightMap* _weight_map;
+
 private:
+
+    double lookupWeight(unsigned int node_id)
+    {
+        // find the weight in the map
+        WeightMap::iterator weight_it = _weight_map->find(node_id);
+        if (weight_it != _weight_map->end())
+        {
+            return weight_it->second;
+        } else {
+            return 1;
+        }
+    }
+
+    double sumMemberWeights(const Members& members)
+    {
+        if (_weight_map)
+        {
+            double weight = 0.0;
+            for (typename Members::const_iterator it = members.begin(); 
+                    it != members.end(); ++it)
+            {
+                weight += lookupWeight(*it);
+            }
+            return weight;
+
+        } else {
+            return members.size();
+        }
+    }
+
     double computeNodeWeight(Node node)
     {
-        return _tree.getNodeMembers(node).size();
+        const Members& members = _tree.getNodeMembers(node);
+        return sumMemberWeights(members);
     }
 
     double computeArcWeight(Arc arc)
     {
-        return _tree.getArcMembers(arc).size();
+        const Members& members = _tree.getArcMembers(arc);
+        return sumMemberWeights(members);
     }
 
-public:
-    LandscapeWeights(const LandscapeTree& tree)
-        : _tree(tree), _node_to_weight(_tree), _node_to_total_weight(_tree),
-          _arc_to_weight(_tree)
+    void initializeWeights()
     {
         // first, build a stack of the nodes in order of BFS visit, while recording
         // their weights
@@ -279,10 +311,10 @@ public:
 
         // handle the root node
         _node_to_weight[_tree.getRoot()] = computeNodeWeight(_tree.getRoot());
-        _bfs_nodes.push(tree.getRoot());
+        _bfs_nodes.push(_tree.getRoot());
 
         // handle the rest of the nodes
-        for (DirectedBFSIterator<LandscapeTree> it(tree, tree.getRoot());
+        for (DirectedBFSIterator<LandscapeTree> it(_tree, _tree.getRoot());
                 !it.done(); ++it) {
 
             _bfs_nodes.push(it.child());
@@ -300,12 +332,27 @@ public:
             _bfs_nodes.pop();
 
             double total_weight = _node_to_weight[node];
-            for (ChildIterator<LandscapeTree> it(tree, node); !it.done(); ++it) {
+            for (ChildIterator<LandscapeTree> it(_tree, node); !it.done(); ++it) {
                 total_weight += _arc_to_weight[it.arc()];
                 total_weight += _node_to_total_weight[it.child()];
             }
             _node_to_total_weight[node] = total_weight;
         }
+    }
+
+public:
+    LandscapeWeights(const LandscapeTree& tree)
+        : _tree(tree), _node_to_weight(_tree), _node_to_total_weight(_tree),
+          _arc_to_weight(_tree), _weight_map(0)
+    {
+        initializeWeights();
+    }
+
+    LandscapeWeights(const LandscapeTree& tree, WeightMap* weight_map)
+        : _tree(tree), _node_to_weight(_tree), _node_to_total_weight(_tree),
+          _arc_to_weight(_tree), _weight_map(weight_map)
+    {
+        initializeWeights();
     }
 
     /// \brief Get the total weight of the node.

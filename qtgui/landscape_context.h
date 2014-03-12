@@ -67,6 +67,8 @@ public:
 
     virtual void simplifySubtreeByPersistence(size_t, size_t, double) = 0;
 
+    virtual void setWeightMap(denali::WeightMap*) = 0;
+
 };
 
 template <typename ContourTree>
@@ -86,10 +88,12 @@ class ConcreteLandscapeContext : public LandscapeContext
     typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
     typedef LandscapeBuilderTemplate<FoldedContourTree> LandscapeBuilder;
     typedef typename LandscapeBuilder::LandscapeType Landscape;
+    typedef denali::WeightMap WeightMap;
 
     boost::shared_ptr<ContourTree> _contour_tree;
     boost::shared_ptr<LandscapeBuilder> _landscape_builder;
     boost::shared_ptr<Landscape> _landscape;
+    boost::shared_ptr<WeightMap> _weight_map;
 
     FoldedContourTree _folded_tree;
 
@@ -117,7 +121,15 @@ public:
     {
         printContourTree(_folded_tree);
         typename ContourTree::Node root = _folded_tree.getNode(root_id);
-        Landscape* lscape = _landscape_builder->build(_folded_tree, root);
+        Landscape* lscape;
+
+        if (_weight_map)
+        {
+            lscape = _landscape_builder->build(_folded_tree, root, &*_weight_map);
+        } else {
+            lscape = _landscape_builder->build(_folded_tree, root);
+        }
+
         _landscape = boost::shared_ptr<Landscape>(lscape);
     }
 
@@ -233,6 +245,11 @@ public:
         denali::PersistenceSimplifier simplifier(persistence); 
         simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
         std::cout << "Now it has " << _folded_tree.numberOfNodes() << std::endl;
+    }
+
+    virtual void setWeightMap(WeightMap* weight_map)
+    {
+        _weight_map = boost::shared_ptr<WeightMap>(weight_map);
     }
 
 

@@ -718,7 +718,7 @@ SUITE(Folded)
         typedef FoldedContourTree::Members Members;
         const Members& members = folded_tree.getEdgeMembers(e15);
 
-        Members::iterator it = members.begin();
+        Members::const_iterator it = members.begin();
         ++it;
         CHECK(it == members.end());
 

@@ -188,7 +188,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>707</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -196,6 +196,8 @@ p, li { white-space: pre-wrap; }
      <string>File</string>
     </property>
     <addaction name="actionOpen_Tree"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Weight_Map"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -209,8 +211,19 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>false</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Open Tree</string>
+   </property>
+  </action>
+  <action name="actionLoad_Weight_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Load Weight Map</string>
    </property>
   </action>
  </widget>
