@@ -37,6 +37,28 @@ public:
 };
 
 
+class Reduction
+{
+public:
+    virtual ~Reduction() {}
+    virtual void insertMember(unsigned int) = 0;
+    virtual double reduce() = 0;
+};
+
+
+class MaxReduction : public Reduction
+{
+public:
+    void insertMember(unsigned int member) {
+
+    }
+
+    virtual double reduce() {
+        return 42.;
+    }
+};
+
+
 class LandscapeContext
 {
 
@@ -51,6 +73,16 @@ public:
     virtual Point getMinPoint() const = 0;
     virtual size_t numberOfTriangles() const = 0;
     virtual Triangle getTriangle(size_t i) const = 0;
+
+    /// \brief Get the component ID of the ith cell
+    virtual size_t getComponentIdentifier(size_t i) const = 0;
+
+    /// \brief Get the maximum possible component ID
+    virtual size_t getMaxComponentIdentifier() const = 0;
+
+    /// \brief Run a reduction on the members of a component
+    virtual double reduceComponent(size_t, Reduction*) const = 0;
+
 
     virtual size_t getRootID() const = 0;
     virtual size_t getMinLeafID() const = 0;
@@ -253,6 +285,27 @@ public:
     virtual void setWeightMap(WeightMap* weight_map)
     {
         _weight_map = boost::shared_ptr<WeightMap>(weight_map);
+    }
+
+    virtual size_t getComponentIdentifier(size_t i) const
+    {
+        // get the i-th triangle
+        typename Landscape::Triangle tri = _landscape->getTriangle(i);
+
+        // map it to a landscape arc
+        typename Landscape::Arc arc = _landscape->getComponent(tri);
+
+        // return the ID
+        return _landscape->getArcIdentifier(arc);
+    }
+
+    virtual size_t getMaxComponentIdentifier() const {
+        return _landscape->getMaxArcIdentifier();
+    }
+
+    virtual double reduceComponent(size_t component_id, Reduction* reduction) const
+    {
+        return 0.;
     }
 
 

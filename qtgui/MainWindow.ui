@@ -198,6 +198,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionOpen_Tree"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_Weight_Map"/>
+    <addaction name="actionLoad_Color_Map"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -224,6 +225,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Load Weight Map</string>
+   </property>
+  </action>
+  <action name="actionLoad_Color_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Load Color Map</string>
    </property>
   </action>
  </widget>

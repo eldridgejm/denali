@@ -38,6 +38,72 @@
 
 typedef std::map<unsigned int, double> ColorMap;
 
+class ColorMapFormatParser
+{
+    ColorMap& _color_map;
+    int lineno;
+
+public:
+
+    ColorMapFormatParser(ColorMap& color_map)
+        : _color_map(color_map), lineno(0) { }
+
+
+    void insert(std::vector<std::string>& line)
+    {
+        size_t u = lineno;
+
+        if (line.size() != 1) {
+            std::stringstream msg;
+            msg << "More or less than 1 entry on line " << lineno;
+            throw std::runtime_error(msg.str());
+        }
+
+        char * err_color;
+        double color = strtod(line[0].c_str(), &err_color);
+
+        if (*err_color != 0) {
+            std::stringstream msg;
+            msg << "Problem interpreting line " << lineno << " as an edge.";
+            throw std::runtime_error(msg.str());
+        }
+        lineno++;
+
+        _color_map[u] = color;
+    }
+};
+
+
+inline void readColorMapFromStream(
+    std::istream& ctstream,
+    ColorMap& color_map)
+{
+    // clear the color map
+    color_map.clear();
+
+    // make a new contour tree format parser
+    ColorMapFormatParser format_parser(color_map);
+
+    // and a tabular file parser
+    denali::TabularFileParser parser;
+
+    // now parse
+    parser.parse(ctstream, format_parser);
+}
+
+
+inline void readColorMapFile(
+    const char * filename,
+    ColorMap& color_map)
+{
+    // create a file stream
+    std::ifstream fh;
+    denali::safeOpenFile(filename, fh);
+
+    readColorMapFromStream(fh, color_map);
+}
+
+
 class ValueMapper
 {
 public:
@@ -50,23 +116,53 @@ public:
 
 class HeightValueMapper : public ValueMapper
 {
-    LandscapeContext* _context;
+    LandscapeContext& _context;
 
 public:
-    HeightValueMapper(LandscapeContext* context) :
+    HeightValueMapper(LandscapeContext& context) :
         _context(context) {}
 
     double operator()(unsigned int i) const {
-        return _context->getPoint(i).z();
+        return _context.getPoint(i).z();
     }
 
     double getMaxValue() const {
-        return _context->getMaxPoint().z();
+        return _context.getMaxPoint().z();
     }
 
     double getMinValue() const {
-        return _context->getMinPoint().z();
+        return _context.getMinPoint().z();
     }
+};
+
+
+class ReductionValueMapper : public ValueMapper
+{
+    LandscapeContext& _context;
+    ColorMap& _color_map;
+    Reduction& _reduction;
+
+public:
+
+    ReductionValueMapper(
+        LandscapeContext& context, 
+        ColorMap& color_map, 
+        Reduction& reduction) :
+        _context(context), _color_map(color_map), _reduction(reduction) 
+    {}
+
+    double operator()(unsigned int i) const {
+        return 42;
+    }
+
+    double getMaxValue() const {
+        return 42;
+    }
+
+    double getMinValue() const {
+        return 42;
+    }
+
 };
 
 
@@ -118,7 +214,8 @@ pointColorizer(
 
 inline void
 cellColorizer(
-        vtkSmartPointer<vtkPolyData> trianglePolyData)
+        vtkSmartPointer<vtkPolyData> trianglePolyData,
+        ValueMapper& value_mapper)
 {
     vtkSmartPointer<vtkUnsignedCharArray> cell_data =
             vtkSmartPointer<vtkUnsignedCharArray>::New();
@@ -159,6 +256,8 @@ template <typename Args>
 void LandscapeMeshBuilder(void* args)
 {
     typedef typename Args::LandscapeContext LandscapeContext;
+
+    std::cout << "Computing mesh..." << std::endl;
 
     // cast the input
     Args* input = static_cast<Args*>(args);
@@ -201,12 +300,32 @@ void LandscapeMeshBuilder(void* args)
     input->source->GetPolyDataOutput()->SetPoints(points);
     input->source->GetPolyDataOutput()->SetPolys(triangles);
 
-    // cellColorizer(input->source->GetPolyDataOutput());
-
-    HeightValueMapper value_mapper(&context);
-    pointColorizer(input->source->GetPolyDataOutput(), value_mapper);
-
 }
+
+
+struct LandscapeColorUpdaterArguments
+{
+    // the source that will be modified
+    vtkProgrammableSource* source;
+};
+
+
+template <typename Args>
+void LandscapeColorUpdater(void* args)
+{
+    // cast the input
+    Args* input = static_cast<Args*>(args);
+
+    std::cout << "Color updater called..." << std::endl;
+    vtkPoints* points = input->source->GetPolyDataOutput()->GetPoints();
+    vtkCellArray* triangles = input->source->GetPolyDataOutput()->GetPolys();
+
+    input->source->GetPolyDataOutput()->SetPoints(points);
+    input->source->GetPolyDataOutput()->SetPolys(triangles);
+
+    std::cout << input->source->GetPolyDataOutput()->GetNumberOfCells() << std::endl;
+};
+
 
 
 class LandscapeEventObserver
@@ -274,6 +393,7 @@ class LandscapeInterface
     vtkRenderWindow* _render_window;
 
     boost::shared_ptr<ColorMap> _color_map;
+    boost::shared_ptr<Reduction> _reduction;
 
 public:
     LandscapeInterface(vtkRenderWindow* render_window) :
@@ -303,7 +423,7 @@ public:
         _event_manager.registerObserver(observer);
     }
 
-    void buildLandscapeMesh(LandscapeContext& landscape_context)
+    void renderLandscape(LandscapeContext& landscape_context)
     {
         typedef LandscapeMeshBuilderArguments<LandscapeContext> Args;;
         Args args;
@@ -311,15 +431,48 @@ public:
         args.landscape_context = &landscape_context;
 
         _landscape_source->SetExecuteMethod(LandscapeMeshBuilder<Args>, &args);
+
+        _landscape_source->Modified();
+        _landscape_source->Update();
+
+        colorizeLandscape(landscape_context);
+
+
+        _render_window->Render();
+
+    }
+
+    void setColorMap(ColorMap* color_map) {
+        _color_map = boost::shared_ptr<ColorMap>(color_map);
+    }
+
+    void setColorReduction(Reduction* reduction) {
+        _reduction = boost::shared_ptr<Reduction>(reduction);
+    }
+
+    void colorizeLandscape(LandscapeContext& landscape_context)
+    {
+        std::cout << "Colorizing..." << std::endl;
+
+        if (_color_map && _reduction) {
+            std::cout << "This is working!." << std::endl;
+            ReductionValueMapper value_mapper(landscape_context, *_color_map, *_reduction);
+            cellColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+        } else {
+            HeightValueMapper value_mapper(landscape_context);
+            pointColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+        }
+
+        typedef LandscapeColorUpdaterArguments Args;
+        Args args;
+        args.source = _landscape_source;
+
+        _landscape_source->SetExecuteMethod(LandscapeColorUpdater<Args>, &args);
+
         _landscape_source->Modified();
         _landscape_source->Update();
 
         _render_window->Render();
-    }
-
-    void setColorMap(ColorMap* color_map)
-    {
-        _color_map = boost::shared_ptr<ColorMap>(color_map);
     }
 
     

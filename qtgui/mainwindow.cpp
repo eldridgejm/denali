@@ -63,6 +63,12 @@ MainWindow::MainWindow() :
 
     connect(_mainwindow.actionLoad_Weight_Map, SIGNAL(triggered()),
             this, SLOT(loadWeightMapFile()));
+
+    connect(this, SIGNAL(landscapeChanged()),
+            this, SLOT(enableLoadColorMap()));
+
+    connect(_mainwindow.actionLoad_Color_Map, SIGNAL(triggered()),
+            this, SLOT(loadColorMapFile()));
 }
 
 
@@ -124,7 +130,7 @@ void MainWindow::renderLandscape()
     if (!_landscape_context) return;
 
     // now update the display
-    _landscape_interface->buildLandscapeMesh(*_landscape_context);
+    _landscape_interface->renderLandscape(*_landscape_context);
 }
 
 
@@ -316,7 +322,7 @@ void MainWindow::loadWeightMapFile()
     // convert the filename to a std::string
     std::string filename = qfilename.toUtf8().constData();
 
-    // read the contour tree file
+    // read the weight file
     denali::WeightMap* weight_map = new denali::WeightMap;
     denali::readWeightMapFile(filename.c_str(), *weight_map);
 
@@ -328,3 +334,26 @@ void MainWindow::loadWeightMapFile()
 }
 
 
+void MainWindow::enableLoadColorMap()
+{
+    _mainwindow.actionLoad_Color_Map->setEnabled(true);
+}
+
+
+void MainWindow::loadColorMapFile()
+{
+    // open a file dialog to get the filename
+    QString qfilename = QFileDialog::getOpenFileName(
+            this, tr("Open Color Map File"), "", tr("Files(*.colors)"));
+
+    // convert the filename to a std::string
+    std::string filename = qfilename.toUtf8().constData();
+
+    // read the color file
+    ColorMap* color_map = new ColorMap;
+    readColorMapFile(filename.c_str(), *color_map);
+
+    _landscape_interface->setColorMap(color_map);
+    _landscape_interface->setColorReduction(new MaxReduction);
+    _landscape_interface->colorizeLandscape(*_landscape_context);
+}

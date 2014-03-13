@@ -39,8 +39,12 @@ public slots:
     void refineSubtree();
     void cellSelectionCallback(unsigned int);
     void treeBuilderCallback();
+
     void enableLoadWeightMap();
     void loadWeightMapFile();
+
+    void enableLoadColorMap();
+    void loadColorMapFile();
 
 signals:
     void landscapeChanged();
