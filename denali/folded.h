@@ -614,6 +614,8 @@ public:
         {
             friend class Members;
 
+            typedef typename ContourTree::Member Member;
+
             const Members* _members;
             typename ContourTree::Members::iterator _ct_member_it;
             typename std::list<MembersPtr>::const_iterator _folded_list_it;
@@ -689,7 +691,7 @@ public:
                 }
             }
 
-            const unsigned int& operator*() const 
+            const Member& operator*() const 
             {
                 if (_members->_ct_members)
                 {

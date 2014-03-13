@@ -83,13 +83,48 @@ public:
 };
 
 
+/// \brief A node or edge member.
+/// \ingroup concepts_contour_tree
+class Member
+{
+public:
+
+    Member(unsigned int, double) {}
+
+    unsigned int getID() const {
+        return 0;
+    }
+
+    double getValue() const {
+        return 42.;
+    }
+
+
+    template <typename _Member>
+    struct Constraints
+    {
+        void constraints()
+        {
+            unsigned int id = _m.getID();
+            double v = _m.getValue();
+
+            ignore_unused_variable_warning(id);
+            ignore_unused_variable_warning(v);
+        }
+
+        const Member& _m;
+    };
+};
+
 /// \brief A set of member node ids.
 /// \ingroup concepts_contour_tree
 class Members
 {
 public:
-    typedef std::set<unsigned int>::iterator iterator;
-    typedef std::set<unsigned int>::const_iterator const_iterator;
+    typedef concepts::Member MemberType;
+
+    typedef std::set<concepts::Member>::iterator iterator;
+    typedef std::set<concepts::Member>::const_iterator const_iterator;
 
     const_iterator begin() {
         return const_iterator();
@@ -109,11 +144,17 @@ public:
     {
         void constraints()
         {
+            checkConcept
+            <
+            concepts::Member,
+            typename _Members::MemberType
+            > ();
+
             typename _Members::const_iterator it = _members.begin();
             it != _members.end();
             // make sure that the iterator can be dereferenced to
             // get an unsigned integer
-            unsigned int id = *it;
+            MemberType id = *it;
             _members.insert(42);
             size_t sz = _members.size();
 
@@ -234,6 +275,7 @@ class UndirectedScalarMemberIDGraph :
 public:
 
     typedef concepts::Members Members;
+    typedef concepts::Member Member;
 
     /// \brief Add a node to the graph.
     /*!
@@ -256,10 +298,10 @@ public:
     void removeEdge(Edge edge) { }
 
     /// \brief Insert a member into the node's member set.
-    void insertNodeMember(Node node, unsigned int member) { }
+    void insertNodeMember(Node node, Member member) { }
 
     /// \brief Insert a member into the edge's member set.
-    void insertEdgeMember(Edge edge, unsigned int member) { }
+    void insertEdgeMember(Edge edge, Member member) { }
 
     /// \brief Insert multiple members.
     void insertNodeMembers(Node node, const Members& members) { }
@@ -308,8 +350,8 @@ public:
 
             _Node node = _graph.addNode(14, 42.);
             _Edge edge = _graph.addEdge(_Node(), _Node());
-            _graph.insertNodeMember(_Node(), 42);
-            _graph.insertEdgeMember(_Edge(), 42);
+            _graph.insertNodeMember(_Node(), member);
+            _graph.insertEdgeMember(_Edge(), member);
             _graph.insertNodeMembers(_Node(), members);
             _graph.insertEdgeMembers(_Edge(), members);
 
@@ -332,8 +374,10 @@ public:
         typedef typename _UndirectedScalarMemberIDGraph::Node _Node;
         typedef typename _UndirectedScalarMemberIDGraph::Edge _Edge;
         typedef typename _UndirectedScalarMemberIDGraph::Members _Members;
+        typedef typename _UndirectedScalarMemberIDGraph::Member _Member;
 
         _Members& members;
+        _Member& member;
     };
 
 };

@@ -160,7 +160,33 @@ class UndirectedScalarMemberIDGraphBase :
     BaseGraphMixin <GraphType> > > >
 {
 public:
-    typedef std::set<unsigned int> Members;
+
+    class Member
+    {
+        unsigned int _id;
+        double _value;
+    public:
+        Member(unsigned int id, double value) :
+            _id(id), _value(value) {}
+
+        bool operator==(const Member& rhs) const {
+            return _id == rhs._id;
+        }
+
+        bool operator<(const Member& rhs) const {
+            return _id < rhs._id;
+        }
+
+        unsigned int getID() const {
+            return _id;
+        }
+
+        double getValue() const {
+            return _value;
+        }
+    };
+
+    typedef std::set<Member> Members;
 
 private:
     typedef
@@ -181,7 +207,7 @@ private:
     ObservingEdgeMap<GraphType, Members> _edge_to_members;
 
     // the total number of nodes + number of members
-    size_t _total_graph_size;
+    size_t _nodes_plus_members;
 
 public:
 
@@ -190,7 +216,7 @@ public:
 
     UndirectedScalarMemberIDGraphBase()
         : Mixin(_graph), _node_to_id(_graph), _node_to_value(_graph), _node_to_members(_graph),
-          _edge_to_members(_graph), _total_graph_size(0)
+          _edge_to_members(_graph), _nodes_plus_members(0)
     {
     }
 
@@ -206,10 +232,10 @@ public:
         _node_to_value[node] = value;
         _id_to_node[id] = node;
 
-        _total_graph_size++;
+        _nodes_plus_members++;
 
         // the convention: a node is in its own member set
-        _node_to_members[node].insert(id);
+        _node_to_members[node].insert(Member(id, value));
         return node;
     }
 
@@ -223,7 +249,7 @@ public:
     /// \brief Remove the node.
     void removeNode(Node node)
     {
-        _total_graph_size -= _node_to_members[node].size();
+        _nodes_plus_members -= _node_to_members[node].size();
 
         _id_to_node.erase(_node_to_id[node]);
         _graph.removeNode(node);
@@ -232,43 +258,43 @@ public:
     /// \brief Remove the edge.
     void removeEdge(Edge edge)
     {
-        _total_graph_size -= _edge_to_members[edge].size();
+        _nodes_plus_members -= _edge_to_members[edge].size();
         _graph.removeEdge(edge);
     }
 
     /// \brief Insert a member into the node's member set.
-    void insertNodeMember(Node node, unsigned int member)
+    void insertNodeMember(Node node, Member member)
     {
         _node_to_members[node].insert(member);
-        _total_graph_size++;
+        _nodes_plus_members++;
     }
 
     /// \brief Insert a member into the edge's member set.
-    void insertEdgeMember(Edge edge, unsigned int member)
+    void insertEdgeMember(Edge edge, Member member)
     {
         _edge_to_members[edge].insert(member);
-        _total_graph_size++;
+        _nodes_plus_members++;
     }
 
     /// \brief Insert members into node member set.
     void insertNodeMembers(Node node, const Members& members)
     {
-        for (Members::const_iterator it = members.begin();
+        for (typename Members::const_iterator it = members.begin();
                 it != members.end();
                 ++it) {
             _node_to_members[node].insert(*it);
-            _total_graph_size++;
+            _nodes_plus_members++;
         }
     }
 
     /// \brief Insert members into edge member set.
     void insertEdgeMembers(Edge edge, const Members& members)
     {
-        for (Members::const_iterator it = members.begin();
+        for (typename Members::const_iterator it = members.begin();
                 it != members.end();
                 ++it) {
             _edge_to_members[edge].insert(*it);
-            _total_graph_size++;
+            _nodes_plus_members++;
         }
     }
 
@@ -310,8 +336,12 @@ public:
 
     /// \brief Clear the nodes of the graph
     void clear() {
-        _total_graph_size = 0;
+        _nodes_plus_members = 0;
         return _graph.clear();
+    }
+
+    size_t numberNodesPlusMembers() const {
+        return _nodes_plus_members;
     }
 
 };
@@ -356,6 +386,7 @@ public:
     typedef typename Base::Node Node;
     typedef typename Base::Edge Edge;
     typedef typename GraphType::Members Members;
+    typedef typename GraphType::Member Member;
 
     ContourTreeMixin(GraphType& graph)
         : Base(graph), _graph(graph) {}
@@ -388,6 +419,10 @@ public:
     const Members& getEdgeMembers(Edge edge) const
     {
         return _graph.getEdgeMembers(edge);
+    }
+
+    size_t numberNodesPlusMembers() const {
+        return _graph.numberNodesPlusMembers();
     }
 
 };
@@ -1111,6 +1146,7 @@ public:
         typedef UndirectedScalarMemberIDGraph Tree;
         typedef typename Tree::Node Node;
         typedef typename Tree::Edge Edge;
+        typedef typename UndirectedScalarMemberIDGraph::Member Member;
 
         // make a list of regular nodes
         std::queue<Node> regular_nodes;
@@ -1137,7 +1173,8 @@ public:
             Edge edge_uw = tree.addEdge(u,w);
 
             // add the to-be-deleted node to the new edge's members
-            tree.insertEdgeMember(edge_uw, tree.getID(v));
+            Member member(tree.getID(v), tree.getValue(v));
+            tree.insertEdgeMember(edge_uw, member);
 
             // union the members from the old edges
             tree.insertEdgeMembers(edge_uw, tree.getEdgeMembers(edge_uv));

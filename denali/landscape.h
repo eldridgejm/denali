@@ -282,7 +282,7 @@ private:
             for (typename Members::const_iterator it = members.begin(); 
                     it != members.end(); ++it)
             {
-                weight += lookupWeight(*it);
+                weight += lookupWeight((*it).getID());
             }
             return weight;
 
