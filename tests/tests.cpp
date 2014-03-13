@@ -724,7 +724,7 @@ SUITE(Folded)
         folded_tree.collapse(e15);
 
         const Members& n5members = folded_tree.getNodeMembers(n5);
-        CHECK_EQUAL(3, n5members.size());
+        CHECK_EQUAL((size_t) 3, n5members.size());
 
         it = n5members.begin();
         ++it;

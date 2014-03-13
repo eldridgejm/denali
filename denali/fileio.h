@@ -208,41 +208,14 @@ void writeContourTreeFile(
     }
 
     // write the number of vertices
-    fh << tree.numberNodesPlusMembers() << std::endl;
+    fh << tree.numberOfNodes() << std::endl;
 
-    // we make a vector of the vertex values
-    std::vector<double> vertex_values;
-    vertex_values.resize(tree.numberNodesPlusMembers());
-
-    // and populate it by iterating over every member of the graph
+    // write each vertex (node and member alike) to the file
     for (NodeIterator<ContourTree> it(tree); !it.done(); ++it)
     {
-        const Members& members = tree.getNodeMembers(it.node());
-
-        for (typename Members::const_iterator m_it = members.begin();
-                m_it != members.end(); ++m_it)
-        {
-            vertex_values[m_it->getID()] = m_it->getValue();
-        }
+        fh << tree.getID(it.node()) << "\t" 
+           << tree.getValue(it.node()) << std::endl;
     }
-
-    for (EdgeIterator<ContourTree> it(tree); !it.done(); ++it)
-    {
-        const Members& members = tree.getEdgeMembers(it.edge());
-
-        for (typename Members::const_iterator m_it = members.begin();
-                m_it != members.end(); ++m_it)
-        {
-            vertex_values[m_it->getID()] = m_it->getValue();
-        }
-    }
-
-    // now write each vertex value to the file
-    for (size_t i=0; i<vertex_values.size(); ++i)
-    {
-        fh << vertex_values[i] << std::endl;
-    }
-
 
     // write each edge to the file
     for (EdgeIterator<ContourTree> it(tree);
@@ -255,7 +228,7 @@ void writeContourTreeFile(
 
         for (typename Members::const_iterator m_it = members.begin();
                 m_it != members.end(); ++m_it) {
-            fh << "\t" << m_it->getID();
+            fh << "\t" << m_it->getID() << "\t" << m_it->getValue();
         }
 
         fh << std::endl;
@@ -328,20 +301,21 @@ public:
         msg << "The contour tree file has a malformed vertex definition on line "
             << _lineno + 1 << ".";
 
-        size_t vertex_number = _lineno - 1;
-
-        if (line.size() != 1) {
+        if (line.size() != 2) {
             throw std::runtime_error(msg.str());
         }
 
-        char * value_err;
-        double value = strtod(line[0].c_str(), &value_err);
+        char* id_err;
+        long int id = strtol(line[0].c_str(), &id_err, 10);
 
-        if (*value_err != 0) {
+        char* value_err;
+        double value = strtod(line[1].c_str(), &value_err);
+
+        if (*value_err != 0 || *id_err !=0 || id < 0) {
             throw std::runtime_error(msg.str());
         }
 
-        _vertex_values[vertex_number] = value;
+        _graph.addNode(id, value);
     }
 
     void readEdgeLine(const Line& line)
@@ -350,37 +324,36 @@ public:
         msg << "The contour tree file has a malformed edge definition on line "
             << _lineno+1 << ".";
 
-        if (line.size() < 2)
+        if (line.size() < 2 || line.size() % 2 != 0) {
             throw std::runtime_error(msg.str());
+        }
 
         char * u_err;
         char * v_err;
         unsigned int u_id = strtol(line[0].c_str(), &u_err, 10);
         unsigned int v_id = strtol(line[1].c_str(), &v_err, 10);
 
-        if (*u_err != 0 || *v_err != 0)
+        if (*u_err != 0 || *v_err != 0) {
             throw std::runtime_error(msg.str());
+        }
 
         Node u = _graph.getNode(u_id);
         Node v = _graph.getNode(v_id);
 
-        if (!_graph.isNodeValid(u)) {
-            u = _graph.addNode(u_id, _vertex_values[u_id]);
-        }
-
-        if (!_graph.isNodeValid(v)) {
-            v = _graph.addNode(v_id, _vertex_values[v_id]);
-        }
-
         Edge edge = _graph.addEdge(u,v);
 
-        for (size_t i=2; i<line.size(); ++i) {
-            char * err;
-            unsigned int member_id = strtol(line[i].c_str(), &err, 10);
-            if (*err != 0)
-                throw std::runtime_error(msg.str());
+        for (size_t i=2; i<line.size(); i+=2) {
+            char* id_err;
+            unsigned int member_id = strtol(line[i].c_str(), &id_err, 10);
 
-            Member member(member_id, _vertex_values[member_id]);
+            char* value_err;
+            double member_value = strtod(line[i+1].c_str(), &value_err);
+
+            if (*id_err != 0 || *value_err != 0) {
+                throw std::runtime_error(msg.str());
+            }
+
+            Member member(member_id, member_value);
             _graph.insertEdgeMember(edge, member);
         }
 

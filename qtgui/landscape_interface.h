@@ -410,11 +410,15 @@ public:
 
         if (_color_map && _reduction) {
             std::cout << "This is working!." << std::endl;
-            ReductionValueMapper value_mapper(landscape_context, *_color_map, *_reduction);
+            ReductionValueMapper value_mapper(landscape_context, 
+                                              *_color_map, 
+                                              *_reduction);
+
             cellColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
         } else {
             HeightValueMapper value_mapper(landscape_context);
-            pointColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+            pointColorizer(_landscape_source->GetPolyDataOutput(), 
+                           value_mapper);
         }
 
         _render_window->Render();

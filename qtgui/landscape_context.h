@@ -103,15 +103,6 @@ public:
 
 };
 
-template <typename ContourTree>
-void printContourTree(const ContourTree& tree)
-{
-    for (denali::EdgeIterator<ContourTree> it(tree); !it.done(); ++it) {
-        typename ContourTree::Node u = tree.u(it.edge());
-        typename ContourTree::Node v = tree.v(it.edge());
-    }
-}
-
 
 template <typename ContourTree, template <class T> class LandscapeBuilderTemplate>
 class ConcreteLandscapeContext : public LandscapeContext
@@ -135,7 +126,8 @@ public:
     ConcreteLandscapeContext(
             ContourTree* contour_tree) :
             _contour_tree(contour_tree),
-            _landscape_builder(boost::shared_ptr<LandscapeBuilder>(new LandscapeBuilder)),
+            _landscape_builder(boost::shared_ptr<LandscapeBuilder>(
+                    new LandscapeBuilder)),
             _folded_tree(*_contour_tree)
     {
         _max_persistence = computeMaxPersistence(*_contour_tree);
@@ -150,7 +142,6 @@ public:
 
     void buildLandscape(size_t root_id)
     {
-        printContourTree(_folded_tree);
         typename ContourTree::Node root = _folded_tree.getNode(root_id);
         Landscape* lscape;
 
@@ -170,8 +161,6 @@ public:
     size_t getMinLeafID() const 
     {
         typename ContourTree::Node node = denali::findMinLeaf(_folded_tree);
-        std::cout << "Found min leaf, degree is: " << _folded_tree.degree(node) << std::endl;
-        std::cout << "It has the id: " << _folded_tree.getID(node) << std::endl;
         return _folded_tree.getID(node);
     }
 

@@ -992,8 +992,6 @@ public:
     }
 
     const Members& getEdgeMembers(Edge edge) const {
-        Node u = _fold_tree.u(edge);
-        Node v = _fold_tree.v(edge);
         return *_edge_members[_fold_tree.getEdgeFold(edge)];
     }
 
