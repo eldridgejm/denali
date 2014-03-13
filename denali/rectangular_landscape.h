@@ -920,8 +920,12 @@ public:
         return _triangularization.getTriangle(index);
     }
 
-    Arc getComponent(Triangle tri) const {
+    Arc getComponentFromTriangle(Triangle tri) const {
         return _triangularization.getArc(tri);
+    }
+
+    Arc getComponentFromIdentifier(unsigned int identifier) const {
+        return this->getArcFromIdentifier(identifier);
     }
 
     double getComponentWeight(Arc arc) const {

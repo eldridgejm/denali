@@ -370,6 +370,8 @@ class NodeMappable : public BaseConcept
 {
 public:
 
+    typedef concepts::Node Node;
+
     /// \brief Gets the maximum node identifier in the graph.
     unsigned int getMaxNodeIdentifier() const {
         return 0;
@@ -378,6 +380,10 @@ public:
     /// \brief Get the identifier of the node.
     unsigned int getNodeIdentifier(Node) const {
         return 0;
+    }
+
+    Node getNodeFromIdentifier(unsigned int) const {
+        return Node();
     }
 
     template <typename _NodeMappable>
@@ -390,7 +396,10 @@ public:
             unsigned int n = graph.getMaxNodeIdentifier();
             n = graph.getNodeIdentifier(_Node());
 
+            _Node node = graph.getNodeFromIdentifier(0);
+
             ignore_unused_variable_warning(n);
+            ignore_unused_variable_warning(node);
         }
         _NodeMappable& graph;
         typedef typename _NodeMappable::Node _Node;
@@ -408,6 +417,8 @@ template <typename BaseConcept>
 class ArcMappable : public BaseConcept
 {
 public:
+    
+    typedef concepts::Arc Arc;
 
     /// \brief Gets the maximum arc identifier in the graph.
     unsigned int getMaxArcIdentifier() const {
@@ -419,6 +430,11 @@ public:
         return 0;
     }
 
+    /// \brief Get an arc from an identifier.
+    Arc getArcFromIdentifier(unsigned int identifier) const {
+        return Arc();
+    }
+
     template <typename _ArcMappable>
     struct Constraints
     {
@@ -428,8 +444,10 @@ public:
 
             unsigned int n = graph.getMaxArcIdentifier();
             n = graph.getArcIdentifier(_Arc());
+            _Arc arc = graph.getArcFromIdentifier(0);
 
             ignore_unused_variable_warning(n);
+            ignore_unused_variable_warning(arc);
         }
         _ArcMappable& graph;
         typedef typename _ArcMappable::Arc _Arc;
@@ -448,6 +466,8 @@ class EdgeMappable : public BaseConcept
 {
 public:
 
+    typedef concepts::Edge Edge;
+
     /// \brief Gets the maximum edge identifier in the graph.
     unsigned int getMaxEdgeIdentifier() const {
         return 0;
@@ -456,6 +476,11 @@ public:
     /// \brief Get the identifier of the edge.
     unsigned int getEdgeIdentifier(Edge) const {
         return 0;
+    }
+
+    /// \brief Get an edge from an identifier.
+    Edge getEdgeFromIdentifier(unsigned int identifier) const {
+        return Edge();
     }
 
     template <typename _EdgeMappable>
@@ -467,8 +492,10 @@ public:
 
             unsigned int n = graph.getMaxEdgeIdentifier();
             n = graph.getEdgeIdentifier(_Edge());
+            _Edge edge = graph.getEdgeFromIdentifier(0);
 
             ignore_unused_variable_warning(n);
+            ignore_unused_variable_warning(edge);
         }
         _EdgeMappable& graph;
         typedef typename _EdgeMappable::Edge _Edge;

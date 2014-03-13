@@ -51,25 +51,26 @@ public:
 
     void insert(std::vector<std::string>& line)
     {
-        size_t u = lineno;
-
-        if (line.size() != 1) {
+        if (line.size() != 2) {
             std::stringstream msg;
-            msg << "More or less than 1 entry on line " << lineno;
+            msg << "More or less than 2 entries on line " << lineno;
             throw std::runtime_error(msg.str());
         }
 
-        char * err_color;
-        double color = strtod(line[0].c_str(), &err_color);
+        char* err_id;
+        long int id = strtol(line[0].c_str(), &err_id, 10);
 
-        if (*err_color != 0) {
+        char* err_color;
+        double color = strtod(line[1].c_str(), &err_color);
+
+        if (*err_color != 0 || *err_id != 0) {
             std::stringstream msg;
             msg << "Problem interpreting line " << lineno << " as an edge.";
             throw std::runtime_error(msg.str());
         }
         lineno++;
 
-        _color_map[u] = color;
+        _color_map[id] = color;
     }
 };
 
@@ -141,6 +142,12 @@ class ReductionValueMapper : public ValueMapper
     LandscapeContext& _context;
     ColorMap& _color_map;
     Reduction& _reduction;
+    
+    std::vector<double> _component_values;
+    std::vector<bool> _component_computed;
+
+    double _max;
+    double _min;
 
 public:
 
@@ -148,40 +155,83 @@ public:
         LandscapeContext& context, 
         ColorMap& color_map, 
         Reduction& reduction) :
-        _context(context), _color_map(color_map), _reduction(reduction) 
-    {}
+        _context(context), _color_map(color_map), _reduction(reduction),
+        _component_values(context.getMaxComponentIdentifier()),
+        _component_computed(context.getMaxComponentIdentifier(), false)
+    {
+        // precompute the values for every cell in the landscape 
+        for (size_t i=0; i<context.numberOfTriangles(); ++i)
+        {
+            size_t component_id = context.getComponentIdentifierFromTriangle(i);
+
+            if (!_component_computed[component_id])
+            {
+                std::cout << "Computing for component: " << component_id << std::endl;
+                double res = context.reduceComponent(component_id, &_reduction);
+                _component_values[component_id] = res;
+                _component_computed[component_id] = true;
+
+                if (res > _max || i == 0)
+                    _max = res;
+
+                if (res < _min || i == 0)
+                    _min = res;
+            }
+        }
+    }
 
     double operator()(unsigned int i) const {
-        return 42;
+        // map the triangle to a component
+        unsigned int component = _context.getComponentIdentifierFromTriangle(i);
+
+        assert(component <= _component_values.size());
+        assert(_component_computed[component]);
+
+        std::cout << "Component " << component << " has value " << _component_values[component] << std::endl;
+        return _component_values[component];
     }
 
     double getMaxValue() const {
-        return 42;
+        return _max;;
     }
 
     double getMinValue() const {
-        return 42;
+        return _min;
     }
 
 };
 
+
+namespace {
+
+vtkSmartPointer<vtkLookupTable>
+makeColorTable(ValueMapper& valueMapper)
+{
+    vtkSmartPointer<vtkLookupTable> color_table =
+            vtkSmartPointer<vtkLookupTable>::New();
+
+    color_table->SetTableRange(valueMapper.getMinValue(), valueMapper.getMaxValue());
+    color_table->SetHueRange(2./3, 0);
+    color_table->Build();
+
+    return color_table;
+}
+
+}
 
 inline void 
 pointColorizer(
         vtkSmartPointer<vtkPolyData> trianglePolyData,
         ValueMapper& valueMapper)
 {
-    vtkSmartPointer<vtkLookupTable> color_table =
-            vtkSmartPointer<vtkLookupTable>::New();
-
-    color_table->SetTableRange(valueMapper.getMinValue(), valueMapper.getMaxValue());
-    color_table->Build();
+    vtkSmartPointer<vtkLookupTable> color_table = makeColorTable(valueMapper);
 
     // Generate the colors for each point based on the color map
-    vtkSmartPointer<vtkUnsignedCharArray> colors = 
-        vtkSmartPointer<vtkUnsignedCharArray>::New();
-    colors->SetNumberOfComponents(3);
-    colors->SetName("Colors");
+    vtkSmartPointer<vtkUnsignedCharArray> point_data = 
+            vtkSmartPointer<vtkUnsignedCharArray>::New();
+
+    point_data->SetNumberOfComponents(3);
+    point_data->SetName("Colors");
 
     for(int i = 0; i < trianglePolyData->GetNumberOfPoints(); i++)
     {
@@ -189,34 +239,27 @@ pointColorizer(
         double value = valueMapper(i);
 
         // lookup the color
-        double dcolor[3];
-        color_table->GetColor(value, dcolor);
+        double colors[3];
+        color_table->GetColor(value, colors);
 
-        unsigned char color[3];
-        for(unsigned int j = 0; j < 3; j++)
-        {
-            color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
-        }
+        colors[0] *= 255;
+        colors[1] *= 255;
+        colors[2] *= 255;
 
-        // Notice this hack! The colors were backwards: blue was high,
-        // red was low. This flips the two.
-        unsigned char better_colors[3];
-        better_colors[0] = color[2];
-        better_colors[1] = color[1];
-        better_colors[2] = color[0];
-
-        colors->InsertNextTupleValue(better_colors);
+        point_data->InsertTuple(i, colors);
     }
 
-    trianglePolyData->GetPointData()->SetScalars(colors);
+    trianglePolyData->GetPointData()->SetScalars(point_data);
 }
 
 
 inline void
 cellColorizer(
         vtkSmartPointer<vtkPolyData> trianglePolyData,
-        ValueMapper& value_mapper)
+        ValueMapper& valueMapper)
 {
+    vtkSmartPointer<vtkLookupTable> color_table = makeColorTable(valueMapper);
+
     vtkSmartPointer<vtkUnsignedCharArray> cell_data =
             vtkSmartPointer<vtkUnsignedCharArray>::New();
 
@@ -225,12 +268,22 @@ cellColorizer(
     cell_data->SetNumberOfComponents(3);
     cell_data->SetNumberOfTuples(n_cells);
 
+    double colors[3];
+    color_table->GetColor(valueMapper.getMinValue(), colors);
+    std::cout << "Min color is: " << colors[0] << " " << colors[1] << " " << colors[2] << std::endl;
+    color_table->GetColor(valueMapper.getMaxValue(), colors);
+    std::cout << "Max color is: " << colors[0] << " " << colors[1] << " " << colors[2] << std::endl;
+
     for (size_t i=0; i<n_cells; ++i)
     {
-        float colors[3];
-        colors[0] = 255;
-        colors[1] = 10;
-        colors[2] = 10;
+        double value = valueMapper(i);
+
+        double colors[3];
+        color_table->GetColor(value, colors);
+
+        colors[0] *= 255;
+        colors[1] *= 255;
+        colors[2] *= 255;
 
         cell_data->InsertTuple(i, colors);
     }
@@ -408,8 +461,8 @@ public:
         _landscape_source->Modified();
         _landscape_source->Update();
 
-        if (_color_map && _reduction) {
-            std::cout << "This is working!." << std::endl;
+        if (_color_map && _reduction) 
+        {
             ReductionValueMapper value_mapper(landscape_context, 
                                               *_color_map, 
                                               *_reduction);

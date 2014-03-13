@@ -526,9 +526,17 @@ public:
         return node.index;
     }
 
+    Node getNodeFromIdentifier(unsigned int identifier) const {
+        return Node(identifier);
+    }
+
     unsigned int getArcIdentifier(const Arc arc) const
     {
         return arc.index;
+    }
+
+    Arc getArcFromIdentifier(unsigned int identifier) const {
+        return Arc(identifier);
     }
 
     unsigned int getMaxNodeIdentifier() const
@@ -798,13 +806,22 @@ public:
         return impl.getNodeIdentifier(node.base);
     }
 
+    Node getNodeFromIdentifier(unsigned int identifier) const {
+        return Node(impl.getNodeFromIdentifier(identifier));
+    }
+
     unsigned int getMaxEdgeIdentifier() const
     {
         return impl.getMaxArcIdentifier();
     }
+
     unsigned int getEdgeIdentifier(Edge edge) const
     {
         return impl.getArcIdentifier(edge.base);
+    }
+
+    Edge getEdgeFromIdentifier(unsigned int identifier) const {
+        return Edge(impl.getArcFromIdentifier(identifier));
     }
 
     Node addNode() {

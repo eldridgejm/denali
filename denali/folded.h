@@ -783,6 +783,8 @@ private:
     }
 
 public:
+
+    typedef typename ContourTree::Member Member;
     
     FoldedContourTree(const ContourTree& contour_tree) :
             Mixin(_fold_tree), _contour_tree(contour_tree),

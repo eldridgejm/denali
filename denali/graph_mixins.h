@@ -160,6 +160,11 @@ public:
         return _graph.getNodeIdentifier(node);
     }
 
+    /// \brief Retrieve a node by its identifier.
+    Node getNodeFromIdentifier(unsigned int identifier) const {
+        return _graph.getNodeFromIdentifier(identifier);
+    }
+
     /// \brief Gets the maximum arc identifier in the graph.
     unsigned int getMaxArcIdentifier() const {
         return _graph.getMaxArcIdentifier();
@@ -168,6 +173,10 @@ public:
     /// \brief Get the identifier of the arc.
     unsigned int getArcIdentifier(Arc arc) const {
         return _graph.getArcIdentifier(arc);
+    }
+
+    Arc getArcFromIdentifier(unsigned int id) const {
+        return _graph.getArcFromIdentifier(id);
     }
 
     /// \brief Finds an arc in the graph with the given source and target.
@@ -275,6 +284,11 @@ public:
         return _graph.getNodeIdentifier(node);
     }
 
+    /// \brief Retrieve a node by its identifier.
+    Node getNodeFromIdentifier(unsigned int identifier) const {
+        return _graph.getNodeFromIdentifier(identifier);
+    }
+
     /// \brief Gets the maximum edge identifier in the graph.
     unsigned int getMaxEdgeIdentifier() const
     {
@@ -285,6 +299,10 @@ public:
     unsigned int getEdgeIdentifier(Edge edge) const
     {
         return _graph.getEdgeIdentifier(edge);
+    }
+
+    Edge getEdgeFromIdentifier(unsigned int id) const {
+        return _graph.getEdgeFromIdentifier(id);
     }
 
     /// \brief Gets the degree of the node.

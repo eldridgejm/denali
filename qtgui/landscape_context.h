@@ -41,20 +41,41 @@ class Reduction
 {
 public:
     virtual ~Reduction() {}
-    virtual void insertMember(unsigned int) = 0;
+    virtual void insert(unsigned int) = 0;
     virtual double reduce() = 0;
+    virtual void clear() = 0;
 };
 
 
+template <typename ValueMap>
 class MaxReduction : public Reduction
 {
-public:
-    void insertMember(unsigned int member) {
+    bool _inserted;
+    double _current;
+    ValueMap& _value_map;
 
+public:
+    MaxReduction(ValueMap& value_map) : 
+        _inserted(false), _current(0), _value_map(value_map) {}
+
+    void insert(unsigned int member) {
+        double value = _value_map[member];
+        if (!_inserted || (value > _current)) {
+            _current = value;
+            _inserted = true;
+        }
     }
 
     virtual double reduce() {
-        return 42.;
+        if (!_inserted)
+            throw std::runtime_error("Reducing with nothing inserted.");
+
+        return _current;
+    }
+
+    virtual void clear() {
+        _inserted = false;
+        _current = 0;
     }
 };
 
@@ -75,14 +96,13 @@ public:
     virtual Triangle getTriangle(size_t i) const = 0;
 
     /// \brief Get the component ID of the ith cell
-    virtual size_t getComponentIdentifier(size_t i) const = 0;
+    virtual size_t getComponentIdentifierFromTriangle(size_t i) const = 0;
 
     /// \brief Get the maximum possible component ID
     virtual size_t getMaxComponentIdentifier() const = 0;
 
     /// \brief Run a reduction on the members of a component
     virtual double reduceComponent(size_t, Reduction*) const = 0;
-
 
     virtual size_t getRootID() const = 0;
     virtual size_t getMinLeafID() const = 0;
@@ -212,7 +232,7 @@ public:
         typename Landscape::Triangle tri = _landscape->getTriangle(i);
 
         // now map the triangle back to an arc of the landscape
-        typename Landscape::Arc arc = _landscape->getComponent(tri);
+        typename Landscape::Arc arc = _landscape->getComponentFromTriangle(tri);
 
         // get the endpoints of the arc
         typename Landscape::Node parent_node = _landscape->source(arc);
@@ -235,7 +255,7 @@ public:
         typename Landscape::Triangle tri = _landscape->getTriangle(i);
 
         // now map the triangle back to an arc of the landscape
-        typename Landscape::Arc arc = _landscape->getComponent(tri);
+        typename Landscape::Arc arc = _landscape->getComponentFromTriangle(tri);
 
         return _landscape->getComponentWeight(arc);
     }
@@ -276,13 +296,14 @@ public:
         _weight_map = boost::shared_ptr<WeightMap>(weight_map);
     }
 
-    virtual size_t getComponentIdentifier(size_t i) const
+    /// \brief Get the component ID of the ith triangle.
+    virtual size_t getComponentIdentifierFromTriangle(size_t i) const
     {
         // get the i-th triangle
         typename Landscape::Triangle tri = _landscape->getTriangle(i);
 
         // map it to a landscape arc
-        typename Landscape::Arc arc = _landscape->getComponent(tri);
+        typename Landscape::Arc arc = _landscape->getComponentFromTriangle(tri);
 
         // return the ID
         return _landscape->getArcIdentifier(arc);
@@ -294,7 +315,44 @@ public:
 
     virtual double reduceComponent(size_t component_id, Reduction* reduction) const
     {
-        return 0.;
+        typedef typename Landscape::Arc Arc;
+        typedef typename FoldedContourTree::Edge Edge;
+        typedef typename FoldedContourTree::Members Members;
+        typedef typename FoldedContourTree::Member Member;
+
+        Arc arc = _landscape->getComponentFromIdentifier(component_id);
+        assert(_landscape->isArcValid(arc));
+
+        // get the corresponding contour tree edge
+        Edge edge = _landscape->getContourTreeEdge(arc);
+        if (!_folded_tree.isEdgeValid(edge))
+            throw std::runtime_error("Invalid edge for reduction.");
+
+        // get the edge's members
+        const Members& edge_members = _folded_tree.getEdgeMembers(edge);
+
+        // insert each member into reduction
+        reduction->clear();
+        for (typename Members::const_iterator it = edge_members.begin();
+                it != edge_members.end(); ++it)
+        {
+            // insert the unsigned int id of the member
+            reduction->insert((*it).getID());
+        }
+
+        // do the same for each of the edge's nodes
+        typename FoldedContourTree::Node u = _folded_tree.u(edge);
+        typename FoldedContourTree::Node v = _folded_tree.v(edge);
+
+        unsigned int u_id = _folded_tree.getID(u);
+        unsigned int v_id = _folded_tree.getID(v);
+
+        std::cout << "The component " << component_id << " was: " << u_id << " " << v_id << std::endl;
+
+        reduction->insert(u_id);
+        reduction->insert(v_id);
+        
+        return reduction->reduce();
     }
 
 
