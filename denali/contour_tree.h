@@ -547,8 +547,8 @@ typename GraphType::Node findLeafByComparator(
         if (is_leaf && (!found || comparator(value, best_value))) {
             best_node = it.node();
             best_value = tree.getValue(it.node());
+            found = true;
         }
-        found = true;
     }
 
     return best_node;

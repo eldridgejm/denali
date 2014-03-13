@@ -122,6 +122,9 @@ public:
         typename ContourTree::Node root = _folded_tree.getNode(root_id);
         Landscape* lscape;
 
+        std::cout << "Using root: " << root_id << std::endl;
+        std::cout << "With degree: " << _folded_tree.degree(root) << std::endl;
+
         if (_weight_map)
         {
             lscape = _landscape_builder->build(_folded_tree, root, &*_weight_map);
@@ -135,6 +138,8 @@ public:
     size_t getMinLeafID() const 
     {
         typename ContourTree::Node node = denali::findMinLeaf(_folded_tree);
+        std::cout << "Found min leaf, degree is: " << _folded_tree.degree(node) << std::endl;
+        std::cout << "It has the id: " << _folded_tree.getID(node) << std::endl;
         return _folded_tree.getID(node);
     }
 
