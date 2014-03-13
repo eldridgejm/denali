@@ -355,5 +355,5 @@ void MainWindow::loadColorMapFile()
 
     _landscape_interface->setColorMap(color_map);
     _landscape_interface->setColorReduction(new MaxReduction);
-    _landscape_interface->colorizeLandscape(*_landscape_context);
+    _landscape_interface->renderLandscape(*_landscape_context);
 }

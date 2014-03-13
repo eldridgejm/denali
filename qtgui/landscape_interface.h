@@ -257,8 +257,6 @@ void LandscapeMeshBuilder(void* args)
 {
     typedef typename Args::LandscapeContext LandscapeContext;
 
-    std::cout << "Computing mesh..." << std::endl;
-
     // cast the input
     Args* input = static_cast<Args*>(args);
 
@@ -301,31 +299,6 @@ void LandscapeMeshBuilder(void* args)
     input->source->GetPolyDataOutput()->SetPolys(triangles);
 
 }
-
-
-struct LandscapeColorUpdaterArguments
-{
-    // the source that will be modified
-    vtkProgrammableSource* source;
-};
-
-
-template <typename Args>
-void LandscapeColorUpdater(void* args)
-{
-    // cast the input
-    Args* input = static_cast<Args*>(args);
-
-    std::cout << "Color updater called..." << std::endl;
-    vtkPoints* points = input->source->GetPolyDataOutput()->GetPoints();
-    vtkCellArray* triangles = input->source->GetPolyDataOutput()->GetPolys();
-
-    input->source->GetPolyDataOutput()->SetPoints(points);
-    input->source->GetPolyDataOutput()->SetPolys(triangles);
-
-    std::cout << input->source->GetPolyDataOutput()->GetNumberOfCells() << std::endl;
-};
-
 
 
 class LandscapeEventObserver
@@ -435,8 +408,14 @@ public:
         _landscape_source->Modified();
         _landscape_source->Update();
 
-        colorizeLandscape(landscape_context);
-
+        if (_color_map && _reduction) {
+            std::cout << "This is working!." << std::endl;
+            ReductionValueMapper value_mapper(landscape_context, *_color_map, *_reduction);
+            cellColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+        } else {
+            HeightValueMapper value_mapper(landscape_context);
+            pointColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+        }
 
         _render_window->Render();
 
@@ -450,32 +429,6 @@ public:
         _reduction = boost::shared_ptr<Reduction>(reduction);
     }
 
-    void colorizeLandscape(LandscapeContext& landscape_context)
-    {
-        std::cout << "Colorizing..." << std::endl;
-
-        if (_color_map && _reduction) {
-            std::cout << "This is working!." << std::endl;
-            ReductionValueMapper value_mapper(landscape_context, *_color_map, *_reduction);
-            cellColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
-        } else {
-            HeightValueMapper value_mapper(landscape_context);
-            pointColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
-        }
-
-        typedef LandscapeColorUpdaterArguments Args;
-        Args args;
-        args.source = _landscape_source;
-
-        _landscape_source->SetExecuteMethod(LandscapeColorUpdater<Args>, &args);
-
-        _landscape_source->Modified();
-        _landscape_source->Update();
-
-        _render_window->Render();
-    }
-
-    
 
 };
 
