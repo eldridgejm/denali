@@ -109,8 +109,8 @@ void MainWindow::openContourTreeFile()
 
     // invalidate the color map
     _use_color_map = false;
-    _landscape_context->setColorMap(0);
-    _landscape_context->setColorReduction(0);
+    _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
+    _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
@@ -342,7 +342,8 @@ void MainWindow::loadWeightMapFile()
     if (filename.size() == 0) return;
 
     // read the weight file
-    denali::WeightMap* weight_map = new denali::WeightMap;
+    boost::shared_ptr<denali::WeightMap> weight_map = 
+            boost::shared_ptr<denali::WeightMap>(new denali::WeightMap);
 
     try 
     {
@@ -365,7 +366,6 @@ void MainWindow::loadWeightMapFile()
     _landscape_context->buildLandscape(_landscape_context->getRootID());
     
     emit landscapeChanged();
-
 }
 
 
@@ -380,8 +380,8 @@ void MainWindow::configureColorMap()
     // the reduction is automatically recalculated if a new color map 
     // or reduction functor is specified, and the other is non-null.
     // we set both to be null to prevent this from happening.
-    _landscape_context->setColorMap(0);
-    _landscape_context->setColorReduction(0);
+    _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
+    _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
 
     if (_color_map_dialog->exec() == QDialog::Accepted)
     {
@@ -391,17 +391,15 @@ void MainWindow::configureColorMap()
         if (filename.size() == 0) return;
 
         // read the color file
-        denali::ColorMap* color_map;
+        boost::shared_ptr<denali::ColorMap> color_map = 
+                boost::shared_ptr<denali::ColorMap>(new denali::ColorMap);
 
         try
         {
-            color_map = new denali::ColorMap;
             denali::readColorMapFile(filename.c_str(), *color_map);
         }
         catch (std::exception& e)
         {
-            delete color_map;
-
             QString message = QString::fromStdString(
                     std::string("There was a problem reading the color file: ") + 
                     e.what());
@@ -413,47 +411,46 @@ void MainWindow::configureColorMap()
             return;
         }
 
-        _landscape_context->setColorMap(color_map);
-
         int reduction_id = _color_map_dialog->getReductionIndex(); 
-        Reduction* reduction;
+        boost::shared_ptr<Reduction> reduction;
 
         switch(reduction_id)
         {
             case MAXIMUM:
-                reduction = new MaxReduction;
+                reduction = boost::shared_ptr<Reduction>(new MaxReduction);
                 break;
 
             case MINIMUM:
-                reduction = new MinReduction;
+                reduction = boost::shared_ptr<Reduction>(new MinReduction);
                 break;
 
             case MEAN:
-                reduction = new MeanReduction;
+                reduction = boost::shared_ptr<Reduction>(new MeanReduction);
                 break;
 
             case COUNT:
-                reduction = new CountReduction;
+                reduction = boost::shared_ptr<Reduction>(new CountReduction);
                 break;
 
             case VARIANCE:
-                reduction = new VarianceReduction;
+                reduction = boost::shared_ptr<Reduction>(new VarianceReduction);
                 break;
 
             case COVARIANCE:
-                reduction = new CovarianceReduction;
+                reduction = boost::shared_ptr<Reduction>(new CovarianceReduction);
                 break;
 
             case CORRELATION:
-                reduction = new CorrelationReduction;
+                reduction = boost::shared_ptr<Reduction>(new CorrelationReduction);
                 break;
 
             default:
-                _landscape_context->setColorReduction(new MaxReduction);
+                reduction = boost::shared_ptr<Reduction>(new MaxReduction);
         }
 
         try 
         {
+            _landscape_context->setColorMap(color_map);
             _landscape_context->setColorReduction(reduction);
         }
         catch (std::exception& e)
@@ -467,13 +464,16 @@ void MainWindow::configureColorMap()
             msgbox.setText(message);
             msgbox.exec();
 
+            // invalidate any traces of the color map
             _use_color_map = false;
-            _landscape_context->setColorMap(0);
-            _landscape_context->setColorReduction(0);
+            _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
+            _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
 
             return;
         }
 
+        // this isn't very elegant, but correlation color maps should have their
+        // ranges setto -1 to 1
         if (reduction_id == CORRELATION) 
         {
             _landscape_context->setMaxReductionValue(1);

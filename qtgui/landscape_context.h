@@ -286,10 +286,10 @@ public:
 
     virtual void simplifySubtreeByPersistence(size_t, size_t, double) = 0;
 
-    virtual void setWeightMap(denali::WeightMap*) = 0;
+    virtual void setWeightMap(boost::shared_ptr<denali::WeightMap>) = 0;
 
-    virtual void setColorMap(denali::ColorMap*) = 0;
-    virtual void setColorReduction(Reduction*) = 0;
+    virtual void setColorMap(boost::shared_ptr<denali::ColorMap>) = 0;
+    virtual void setColorReduction(boost::shared_ptr<Reduction>) = 0;
     virtual double getComponentReductionValue(unsigned int) = 0;
     virtual double getMaxReductionValue() = 0;
     virtual double getMinReductionValue() = 0;
@@ -554,9 +554,9 @@ public:
     }
 
     /// \brief Sets the weight map, assuming ownership of the memory.
-    virtual void setWeightMap(WeightMap* weight_map)
+    virtual void setWeightMap(boost::shared_ptr<WeightMap> weight_map)
     {
-        _weight_map = boost::shared_ptr<WeightMap>(weight_map);
+        _weight_map = weight_map;
     }
 
     /// \brief Get the component ID of the ith triangle.
@@ -576,13 +576,13 @@ public:
         return _landscape->getMaxArcIdentifier();
     }
 
-    virtual void setColorMap(ColorMap* color_map) {
-        _color_map = boost::shared_ptr<ColorMap>(color_map);
+    virtual void setColorMap(boost::shared_ptr<denali::ColorMap> color_map) {
+        _color_map = color_map;
         if (_color_map && _reduction) computeReductions();
     }
 
-    virtual void setColorReduction(Reduction* reduction) {
-        _reduction = boost::shared_ptr<Reduction>(reduction);
+    virtual void setColorReduction(boost::shared_ptr<Reduction> reduction) {
+        _reduction = reduction;
         if (_color_map && _reduction) computeReductions();
     }
 
