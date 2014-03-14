@@ -42,7 +42,7 @@ class Reduction
 {
 public:
     virtual ~Reduction() {}
-    virtual void insert(double) = 0;
+    virtual void insert(double, double) = 0;
     virtual double reduce() = 0;
     virtual void clear() = 0;
 };
@@ -57,9 +57,9 @@ public:
     MaxReduction() : 
         _inserted(false), _current(0)  {}
 
-    void insert(double value) {
-        if (!_inserted || (value > _current)) {
-            _current = value;
+    void insert(double reference_value, double color_value) {
+        if (!_inserted || (color_value > _current)) {
+            _current = color_value;
             _inserted = true;
         }
     }
@@ -87,9 +87,9 @@ public:
     MinReduction() : 
         _inserted(false), _current(0)  {}
 
-    virtual void insert(double value) {
-        if (!_inserted || (value < _current)) {
-            _current = value;
+    virtual void insert(double reference_value, double color_value) {
+        if (!_inserted || (color_value < _current)) {
+            _current = color_value;
             _inserted = true;
         }
     }
@@ -116,10 +116,10 @@ class MeanReduction : public Reduction
 public:
     MeanReduction() : _n(0), _sum(0) {}
 
-    virtual void insert(double value)
+    virtual void insert(double reference_value, double color_value)
     {
         _n++;
-        _sum += value;
+        _sum += color_value;
     }
 
     virtual double reduce() {
@@ -140,7 +140,7 @@ class CountReduction : public Reduction
 public:
     CountReduction() : _n(0) {}
 
-    virtual void insert(double value) {
+    virtual void insert(double reference_value, double color_value) {
         _n++;
     }
 
@@ -151,6 +151,69 @@ public:
     virtual void clear() {
         _n = 0;
     }
+};
+
+
+/// \brief An online variance reduction, using Knuth's algorithm.
+class VarianceReduction : public Reduction
+{
+    unsigned int _n;
+    double _mean;
+    double _m2;
+
+public:
+    VarianceReduction() : _n(0), _mean(0), _m2(0) {}
+
+    virtual void insert(double reference_value, double color_value)
+    {
+        _n++;
+        double delta = color_value - _mean;
+        _mean += delta / _n;
+        _m2 += delta * (color_value - _mean);
+    }
+
+    virtual double reduce() {
+        return _m2 / (_n - 1);
+    }
+
+    virtual void clear() {
+        _n = _mean = _m2 = 0;
+    }
+
+};
+
+
+class CovarianceReduction : public Reduction
+{
+    double _sum_xy;
+    double _sum_x;
+    double _sum_y;
+    unsigned int _n;
+
+public:
+    CovarianceReduction() : _sum_xy(0), _sum_x(0), _sum_y(0), _n(0) {}
+
+    virtual void insert(double x, double y)
+    {
+        _sum_x += x;
+        _sum_y += y;
+        _sum_xy += (x*y);
+        _n++;
+    }
+
+    virtual double reduce() 
+    {
+        // NOTE: investigate this for catastrophic cancellation
+        double e_xy = _sum_xy / _n;
+        double e_x = _sum_x / _n;
+        double e_y = _sum_y / _n;
+        return e_xy - (e_x * e_y);
+    }
+
+    virtual void clear() {
+        _sum_xy = _sum_x = _sum_y = _n = 0;
+    }
+
 };
 
 
@@ -242,19 +305,33 @@ class ConcreteLandscapeContext : public LandscapeContext
         for (typename Members::const_iterator it = edge_members.begin();
                 it != edge_members.end(); ++it)
         {
+            unsigned int member_id = (*it).getID();
+
+            // the reference value is the value of the contour tree node
+            double reference_value = (*it).getValue();
+
+            // lookup the member in the color map
+            double color_value = (*_color_map)[member_id];
+
             // insert the unsigned int id of the member
-            _reduction->insert((*it).getValue());
+            _reduction->insert(reference_value, color_value);
         }
 
         // do the same for each of the edge's nodes
         typename FoldedContourTree::Node u = _folded_tree.u(edge);
         typename FoldedContourTree::Node v = _folded_tree.v(edge);
 
-        unsigned int u_id = _folded_tree.getValue(u);
-        unsigned int v_id = _folded_tree.getValue(v);
+        unsigned int u_id = _folded_tree.getID(u);
+        unsigned int v_id = _folded_tree.getID(v);
 
-        _reduction->insert(u_id);
-        _reduction->insert(v_id);
+        double u_reference_value = _folded_tree.getValue(u);
+        double v_reference_value = _folded_tree.getValue(v);
+
+        double u_color_value = (*_color_map)[u_id];
+        double v_color_value = (*_color_map)[v_id];
+
+        _reduction->insert(u_reference_value, u_color_value);
+        _reduction->insert(v_reference_value, v_color_value);
         
         return _reduction->reduce();
     }    
