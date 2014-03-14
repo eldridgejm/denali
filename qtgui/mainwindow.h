@@ -6,7 +6,9 @@
 #include <QMainWindow>
 #include <QtGui>
 
+#include "colormapdialog.h"
 #include "ui_MainWindow.h"
+
 #include "landscape_context.h"
 #include "landscape_interface.h"
 
@@ -43,8 +45,9 @@ public slots:
     void enableLoadWeightMap();
     void loadWeightMapFile();
 
-    void enableLoadColorMap();
-    void loadColorMapFile();
+    void enableConfigureColorMap();
+    void configureColorMap();
+    void loadColorMapFile(std::string);
 
 signals:
     void landscapeChanged();
@@ -58,6 +61,8 @@ private:
 
     int _max_persistence_slider_value;
     unsigned int _cell_selection;
+
+    ColorMapDialog* _color_map_dialog;
 
 };
 

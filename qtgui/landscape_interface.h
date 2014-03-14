@@ -479,13 +479,13 @@ public:
     }
 
     void setColorMap(ColorMap* color_map) {
+        std::cout << "Setting color map..." << std::endl;
         _color_map = boost::shared_ptr<ColorMap>(color_map);
     }
 
     void setColorReduction(Reduction* reduction) {
         _reduction = boost::shared_ptr<Reduction>(reduction);
     }
-
 
 };
 

@@ -1,10 +1,10 @@
 FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE(${QT_USE_FILE})
 
-set(SOURCES main.cpp mainwindow.cpp landscape_interactor.cpp) 
-set(HEADERS mainwindow.h)
+set(SOURCES main.cpp mainwindow.cpp landscape_interactor.cpp colormapdialog.cpp) 
+set(HEADERS mainwindow.h colormapdialog.h)
 
-qt4_wrap_ui(UI_SRCS MainWindow.ui)
+qt4_wrap_ui(UI_SRCS MainWindow.ui ColorMapDialog.ui)
 qt4_wrap_cpp(HEADERS_MOC ${HEADERS})
 
 include_directories(

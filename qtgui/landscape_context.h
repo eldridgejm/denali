@@ -318,7 +318,6 @@ public:
         typedef typename Landscape::Arc Arc;
         typedef typename FoldedContourTree::Edge Edge;
         typedef typename FoldedContourTree::Members Members;
-        typedef typename FoldedContourTree::Member Member;
 
         Arc arc = _landscape->getComponentFromIdentifier(component_id);
         assert(_landscape->isArcValid(arc));

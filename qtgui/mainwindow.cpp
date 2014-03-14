@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "colormapdialog.h"
 
 #include <QProcess>
 
@@ -10,7 +11,8 @@
 #include <sstream>
 
 MainWindow::MainWindow() :
-    _max_persistence_slider_value(100)
+    _max_persistence_slider_value(100),
+    _color_map_dialog(new ColorMapDialog(this))
 {
     // set up the user inteface
     _mainwindow.setupUi(this);
@@ -65,10 +67,12 @@ MainWindow::MainWindow() :
             this, SLOT(loadWeightMapFile()));
 
     connect(this, SIGNAL(landscapeChanged()),
-            this, SLOT(enableLoadColorMap()));
+            this, SLOT(enableConfigureColorMap()));
 
-    connect(_mainwindow.actionLoad_Color_Map, SIGNAL(triggered()),
-            this, SLOT(loadColorMapFile()));
+    connect(_mainwindow.actionConfigure_Color_Map, SIGNAL(triggered()),
+            this, SLOT(configureColorMap()));
+
+
 }
 
 
@@ -98,6 +102,10 @@ void MainWindow::openContourTreeFile()
     // wrap them in a context
     Context* context = new Context(contour_tree);
     this->setContext(context);
+
+    // reset the color map
+    _landscape_interface->setColorMap(0);
+    _landscape_interface->setColorReduction(0);
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
@@ -334,21 +342,14 @@ void MainWindow::loadWeightMapFile()
 }
 
 
-void MainWindow::enableLoadColorMap()
+void MainWindow::enableConfigureColorMap()
 {
-    _mainwindow.actionLoad_Color_Map->setEnabled(true);
+    _mainwindow.actionConfigure_Color_Map->setEnabled(true);
 }
 
 
-void MainWindow::loadColorMapFile()
+void MainWindow::loadColorMapFile(std::string filename)
 {
-    // open a file dialog to get the filename
-    QString qfilename = QFileDialog::getOpenFileName(
-            this, tr("Open Color Map File"), "", tr("Files(*.colors)"));
-
-    // convert the filename to a std::string
-    std::string filename = qfilename.toUtf8().constData();
-
     // read the color file
     ColorMap* color_map = new ColorMap;
     readColorMapFile(filename.c_str(), *color_map);
@@ -356,4 +357,14 @@ void MainWindow::loadColorMapFile()
     _landscape_interface->setColorMap(color_map);
     _landscape_interface->setColorReduction(new MaxReduction<ColorMap>(*color_map));
     _landscape_interface->renderLandscape(*_landscape_context);
+}
+
+
+void MainWindow::configureColorMap()
+{
+    if (_color_map_dialog->exec() == QDialog::Accepted)
+    {
+        std::string filename = _color_map_dialog->getColorMapPath();
+        this->loadColorMapFile(filename);
+    }
 }
