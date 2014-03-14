@@ -228,7 +228,6 @@ public:
     
     virtual void insert(double x, double y)
     {
-        std::cout << "Inserting " << x << " " << y << std::endl;
         _var_x.insert(y, x);
         _var_y.insert(x, y);
         _cov.insert(x, y);
@@ -238,9 +237,6 @@ public:
     {
         double sigma_x = std::sqrt(_var_x.reduce());
         double sigma_y = std::sqrt(_var_y.reduce());
-        std::cout << "Cov: " << _cov.reduce() << std::endl;
-        std::cout << "Sigma x: " << sigma_x << std::endl;
-        std::cout << "Sigma y: " << sigma_y << std::endl;
         return _cov.reduce() / (sigma_x * sigma_y);
     }
 
@@ -405,8 +401,6 @@ class ConcreteLandscapeContext : public LandscapeContext
                 _min_reduction = value;
 
             first_iteration = false;
-
-            std::cout << "Computed reduction: " << value << std::endl;
         }
     }
 

@@ -163,9 +163,7 @@ cellColorizer(
 
     double colors[3];
     color_table->GetColor(valueMapper.getMinValue(), colors);
-    std::cout << "Min color is: " << colors[0] << " " << colors[1] << " " << colors[2] << std::endl;
     color_table->GetColor(valueMapper.getMaxValue(), colors);
-    std::cout << "Max color is: " << colors[0] << " " << colors[1] << " " << colors[2] << std::endl;
 
     for (size_t i=0; i<n_cells; ++i)
     {

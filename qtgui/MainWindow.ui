@@ -149,22 +149,6 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
     </item>
-    <item row="1" column="3">
-     <widget class="QGroupBox" name="groupBox_3">
-      <property name="title">
-       <string>Callbacks</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPushButton" name="pushButtonTreeBuilder">
-         <property name="text">
-          <string>Run Sampler</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="4">
      <widget class="QVTKWidget" name="qvtkWidget">
       <property name="sizePolicy">
@@ -180,7 +164,6 @@ p, li { white-space: pre-wrap; }
    <zorder>qvtkWidget</zorder>
    <zorder>groupBox_2</zorder>
    <zorder>groupBox</zorder>
-   <zorder>groupBox_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -188,7 +171,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>707</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -58,8 +58,8 @@ MainWindow::MainWindow() :
     connect(this, SIGNAL(cellSelected(unsigned int)),
             this, SLOT(cellSelectionCallback(unsigned int)));
 
-    connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
-            this, SLOT(treeBuilderCallback()));
+    //connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
+    //this, SLOT(treeBuilderCallback()));
 
     connect(this, SIGNAL(landscapeChanged()),
             this, SLOT(enableLoadWeightMap()));
@@ -254,7 +254,6 @@ void MainWindow::disableRefineSubtree()
 
 void MainWindow::refineSubtree()
 {
-    std::cout << "Refining subtree..." << std::endl;
     // get the parent and child nodes of the selection
     size_t parent, child;
     _landscape_context->getComponentParentChild(_cell_selection, parent, child);
@@ -296,8 +295,6 @@ void MainWindow::treeBuilderCallback()
     typedef ConcreteLandscapeContext
             <ContourTree, denali::RectangularLandscapeBuilder> Context;
 
-    std::cout << "Running treebuilder..." << std::endl;
-    
     QProcess process;
     process.start("./buildtree.sh");
     process.waitForFinished(-1);
@@ -449,8 +446,6 @@ void MainWindow::configureColorMap()
 
             case CORRELATION:
                 reduction = new CorrelationReduction;
-                _landscape_context->setMaxReductionValue(1);
-                _landscape_context->setMinReductionValue(-1);
                 break;
 
             default:
@@ -477,6 +472,12 @@ void MainWindow::configureColorMap()
             _landscape_context->setColorReduction(0);
 
             return;
+        }
+
+        if (reduction_id == CORRELATION) 
+        {
+            _landscape_context->setMaxReductionValue(1);
+            _landscape_context->setMinReductionValue(-1);
         }
 
         _use_color_map = true;
