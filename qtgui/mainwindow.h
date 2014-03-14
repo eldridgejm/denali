@@ -64,6 +64,8 @@ private:
 
     ColorMapDialog* _color_map_dialog;
 
+    bool _use_color_map;
+
 };
 
 

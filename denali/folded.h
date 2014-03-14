@@ -587,8 +587,10 @@ public:
 template <typename ContourTree>
 class FoldedContourTree :
         public
+        NodeObservableMixin <FoldTree,
+        EdgeObservableMixin <FoldTree,
         ReadableUndirectedGraphMixin <FoldTree,
-        BaseGraphMixin <FoldTree> >
+        BaseGraphMixin <FoldTree> > > >
 {
 public:
     typedef FoldTree::Node Node;
@@ -752,8 +754,10 @@ public:
 
 private:
     typedef
+    NodeObservableMixin <FoldTree,
+    EdgeObservableMixin <FoldTree,
     ReadableUndirectedGraphMixin <FoldTree,
-    BaseGraphMixin <FoldTree> >
+    BaseGraphMixin <FoldTree> > > >
     Mixin;
 
     typedef typename ContourTree::Members ContourTreeMembers;

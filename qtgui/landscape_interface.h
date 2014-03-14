@@ -36,74 +36,6 @@
 
 #include <map>
 
-typedef std::map<unsigned int, double> ColorMap;
-
-class ColorMapFormatParser
-{
-    ColorMap& _color_map;
-    int lineno;
-
-public:
-
-    ColorMapFormatParser(ColorMap& color_map)
-        : _color_map(color_map), lineno(0) { }
-
-
-    void insert(std::vector<std::string>& line)
-    {
-        if (line.size() != 2) {
-            std::stringstream msg;
-            msg << "More or less than 2 entries on line " << lineno;
-            throw std::runtime_error(msg.str());
-        }
-
-        char* err_id;
-        long int id = strtol(line[0].c_str(), &err_id, 10);
-
-        char* err_color;
-        double color = strtod(line[1].c_str(), &err_color);
-
-        if (*err_color != 0 || *err_id != 0) {
-            std::stringstream msg;
-            msg << "Problem interpreting line " << lineno << " as an edge.";
-            throw std::runtime_error(msg.str());
-        }
-        lineno++;
-
-        _color_map[id] = color;
-    }
-};
-
-
-inline void readColorMapFromStream(
-    std::istream& ctstream,
-    ColorMap& color_map)
-{
-    // clear the color map
-    color_map.clear();
-
-    // make a new contour tree format parser
-    ColorMapFormatParser format_parser(color_map);
-
-    // and a tabular file parser
-    denali::TabularFileParser parser;
-
-    // now parse
-    parser.parse(ctstream, format_parser);
-}
-
-
-inline void readColorMapFile(
-    const char * filename,
-    ColorMap& color_map)
-{
-    // create a file stream
-    std::ifstream fh;
-    denali::safeOpenFile(filename, fh);
-
-    readColorMapFromStream(fh, color_map);
-}
-
 
 class ValueMapper
 {
@@ -140,63 +72,24 @@ public:
 class ReductionValueMapper : public ValueMapper
 {
     LandscapeContext& _context;
-    ColorMap& _color_map;
-    Reduction& _reduction;
-    
-    std::vector<double> _component_values;
-    std::vector<bool> _component_computed;
-
-    double _max;
-    double _min;
 
 public:
 
-    ReductionValueMapper(
-        LandscapeContext& context, 
-        ColorMap& color_map, 
-        Reduction& reduction) :
-        _context(context), _color_map(color_map), _reduction(reduction),
-        _component_values(context.getMaxComponentIdentifier()),
-        _component_computed(context.getMaxComponentIdentifier(), false)
-    {
-        // precompute the values for every cell in the landscape 
-        for (size_t i=0; i<context.numberOfTriangles(); ++i)
-        {
-            size_t component_id = context.getComponentIdentifierFromTriangle(i);
-
-            if (!_component_computed[component_id])
-            {
-                std::cout << "Computing for component: " << component_id << std::endl;
-                double res = context.reduceComponent(component_id, &_reduction);
-                _component_values[component_id] = res;
-                _component_computed[component_id] = true;
-
-                if (res > _max || i == 0)
-                    _max = res;
-
-                if (res < _min || i == 0)
-                    _min = res;
-            }
-        }
-    }
+    ReductionValueMapper(LandscapeContext& context) :
+        _context(context)
+    { }
 
     double operator()(unsigned int i) const {
-        // map the triangle to a component
-        unsigned int component = _context.getComponentIdentifierFromTriangle(i);
-
-        assert(component <= _component_values.size());
-        assert(_component_computed[component]);
-
-        std::cout << "Component " << component << " has value " << _component_values[component] << std::endl;
-        return _component_values[component];
+        unsigned int component_id = _context.getComponentIdentifierFromTriangle(i);
+        return _context.getComponentReductionValue(component_id);
     }
 
     double getMaxValue() const {
-        return _max;;
+        return _context.getMaxReductionValue();
     }
 
     double getMinValue() const {
-        return _min;
+        return _context.getMinReductionValue();
     }
 
 };
@@ -418,9 +311,6 @@ class LandscapeInterface
     vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
     vtkRenderWindow* _render_window;
 
-    boost::shared_ptr<ColorMap> _color_map;
-    boost::shared_ptr<Reduction> _reduction;
-
 public:
     LandscapeInterface(vtkRenderWindow* render_window) :
             _landscape_source(vtkSmartPointer<vtkProgrammableSource>::New()),
@@ -449,7 +339,8 @@ public:
         _event_manager.registerObserver(observer);
     }
 
-    void renderLandscape(LandscapeContext& landscape_context)
+    void renderLandscape(LandscapeContext& landscape_context,
+                         bool use_color_map = false)
     {
         typedef LandscapeMeshBuilderArguments<LandscapeContext> Args;;
         Args args;
@@ -461,13 +352,12 @@ public:
         _landscape_source->Modified();
         _landscape_source->Update();
 
-        if (_color_map && _reduction) 
+        if (use_color_map) 
         {
-            ReductionValueMapper value_mapper(landscape_context, 
-                                              *_color_map, 
-                                              *_reduction);
+            ReductionValueMapper value_mapper(landscape_context);
 
             cellColorizer(_landscape_source->GetPolyDataOutput(), value_mapper);
+
         } else {
             HeightValueMapper value_mapper(landscape_context);
             pointColorizer(_landscape_source->GetPolyDataOutput(), 
@@ -476,15 +366,6 @@ public:
 
         _render_window->Render();
 
-    }
-
-    void setColorMap(ColorMap* color_map) {
-        std::cout << "Setting color map..." << std::endl;
-        _color_map = boost::shared_ptr<ColorMap>(color_map);
-    }
-
-    void setColorReduction(Reduction* reduction) {
-        _reduction = boost::shared_ptr<Reduction>(reduction);
     }
 
 };

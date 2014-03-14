@@ -12,7 +12,8 @@
 
 MainWindow::MainWindow() :
     _max_persistence_slider_value(100),
-    _color_map_dialog(new ColorMapDialog(this))
+    _color_map_dialog(new ColorMapDialog(this)),
+    _use_color_map(false)
 {
     // set up the user inteface
     _mainwindow.setupUi(this);
@@ -98,14 +99,11 @@ void MainWindow::openContourTreeFile()
     // read the contour tree file
     ContourTree* contour_tree;
     contour_tree = new ContourTree(denali::readContourTreeFile(filename.c_str()));
+    _use_color_map = false;
 
     // wrap them in a context
     Context* context = new Context(contour_tree);
     this->setContext(context);
-
-    // reset the color map
-    _landscape_interface->setColorMap(0);
-    _landscape_interface->setColorReduction(0);
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
@@ -138,7 +136,7 @@ void MainWindow::renderLandscape()
     if (!_landscape_context) return;
 
     // now update the display
-    _landscape_interface->renderLandscape(*_landscape_context);
+    _landscape_interface->renderLandscape(*_landscape_context, _use_color_map);
 }
 
 
@@ -204,6 +202,12 @@ void MainWindow::updateCellSelection(unsigned int cell)
     message << "<b>Component weight: </b>" << component_weight << "<br>";
     message << "<b>Parent total weight: </b>" << parent_tot_weight << "<br>";
     message << "<b>Child total weight: </b>" << child_tot_weight << "<br>";
+
+    if (_landscape_context->hasReduction()) {
+        unsigned int cid = _landscape_context->getComponentIdentifierFromTriangle(cell);
+        double reduction_value = _landscape_context->getComponentReductionValue(cid);
+        message << "<b>Reduction value: </b>" << reduction_value << "<br>";
+    }
 
     setStatus(message.str());
 }
@@ -351,12 +355,13 @@ void MainWindow::enableConfigureColorMap()
 void MainWindow::loadColorMapFile(std::string filename)
 {
     // read the color file
-    ColorMap* color_map = new ColorMap;
-    readColorMapFile(filename.c_str(), *color_map);
+    denali::ColorMap* color_map = new denali::ColorMap;
+    denali::readColorMapFile(filename.c_str(), *color_map);
 
-    _landscape_interface->setColorMap(color_map);
-    _landscape_interface->setColorReduction(new MaxReduction<ColorMap>(*color_map));
-    _landscape_interface->renderLandscape(*_landscape_context);
+    _landscape_context->setColorMap(color_map);
+    _landscape_context->setColorReduction(new MaxReduction);
+    _use_color_map = true;
+    renderLandscape();
 }
 
 

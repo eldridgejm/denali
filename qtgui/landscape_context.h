@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <denali/contour_tree.h>
+#include <denali/fileio.h>
 #include <denali/folded.h>
 #include <denali/graph_iterators.h>
 #include <denali/simplify.h>
@@ -41,25 +42,22 @@ class Reduction
 {
 public:
     virtual ~Reduction() {}
-    virtual void insert(unsigned int) = 0;
+    virtual void insert(double) = 0;
     virtual double reduce() = 0;
     virtual void clear() = 0;
 };
 
 
-template <typename ValueMap>
 class MaxReduction : public Reduction
 {
     bool _inserted;
     double _current;
-    ValueMap& _value_map;
 
 public:
-    MaxReduction(ValueMap& value_map) : 
-        _inserted(false), _current(0), _value_map(value_map) {}
+    MaxReduction() : 
+        _inserted(false), _current(0)  {}
 
-    void insert(unsigned int member) {
-        double value = _value_map[member];
+    void insert(double value) {
         if (!_inserted || (value > _current)) {
             _current = value;
             _inserted = true;
@@ -76,6 +74,82 @@ public:
     virtual void clear() {
         _inserted = false;
         _current = 0;
+    }
+};
+
+
+class MinReduction : public Reduction
+{
+    bool _inserted;
+    double _current;
+
+public:
+    MinReduction() : 
+        _inserted(false), _current(0)  {}
+
+    virtual void insert(double value) {
+        if (!_inserted || (value < _current)) {
+            _current = value;
+            _inserted = true;
+        }
+    }
+
+    virtual double reduce() {
+        if (!_inserted)
+            throw std::runtime_error("Reducing with nothing inserted.");
+
+        return _current;
+    }
+
+    virtual void clear() {
+        _inserted = false;
+        _current = 0;
+    }
+};
+
+
+class MeanReduction : public Reduction
+{
+    unsigned int _n;
+    double _sum;
+
+public:
+    MeanReduction() : _n(0), _sum(0) {}
+
+    virtual void insert(double value)
+    {
+        _n++;
+        _sum += value;
+    }
+
+    virtual double reduce() {
+        return _sum / _n;
+    }
+
+    virtual void clear() {
+        _n = 0;
+        _sum = 0;
+    }
+};
+
+
+class CountReduction : public Reduction
+{
+    unsigned int _n;
+
+public:
+    CountReduction() : _n(0) {}
+
+    virtual void insert(double value) {
+        _n++;
+    }
+
+    virtual double reduce() {
+        return _n;
+    }
+
+    virtual void clear() {
+        _n = 0;
     }
 };
 
@@ -101,9 +175,6 @@ public:
     /// \brief Get the maximum possible component ID
     virtual size_t getMaxComponentIdentifier() const = 0;
 
-    /// \brief Run a reduction on the members of a component
-    virtual double reduceComponent(size_t, Reduction*) const = 0;
-
     virtual size_t getRootID() const = 0;
     virtual size_t getMinLeafID() const = 0;
     virtual size_t getMaxLeafID() const = 0;
@@ -121,6 +192,13 @@ public:
 
     virtual void setWeightMap(denali::WeightMap*) = 0;
 
+    virtual void setColorMap(denali::ColorMap*) = 0;
+    virtual void setColorReduction(Reduction*) = 0;
+    virtual double getComponentReductionValue(unsigned int) = 0;
+    virtual double getMaxReductionValue() = 0;
+    virtual double getMinReductionValue() = 0;
+    virtual bool hasReduction() const = 0;
+
 };
 
 
@@ -130,16 +208,78 @@ class ConcreteLandscapeContext : public LandscapeContext
     typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
     typedef LandscapeBuilderTemplate<FoldedContourTree> LandscapeBuilder;
     typedef typename LandscapeBuilder::LandscapeType Landscape;
+    typedef denali::ColorMap ColorMap;
     typedef denali::WeightMap WeightMap;
+    typedef denali::ObservingEdgeMap<FoldedContourTree, double> ReductionMap;
 
     boost::shared_ptr<ContourTree> _contour_tree;
     boost::shared_ptr<LandscapeBuilder> _landscape_builder;
     boost::shared_ptr<Landscape> _landscape;
     boost::shared_ptr<WeightMap> _weight_map;
+    boost::shared_ptr<ColorMap> _color_map;
+    boost::shared_ptr<Reduction> _reduction;
 
     FoldedContourTree _folded_tree;
 
+    boost::shared_ptr<ReductionMap> _reduction_map;
+    double _max_reduction;
+    double _min_reduction;
+
     double _max_persistence;
+
+    virtual double computeEdgeReduction(typename FoldedContourTree::Edge edge) const
+    {
+        typedef typename FoldedContourTree::Members Members;
+
+        if (!_folded_tree.isEdgeValid(edge))
+            throw std::runtime_error("Invalid edge for reduction.");
+
+        // get the edge's members
+        const Members& edge_members = _folded_tree.getEdgeMembers(edge);
+
+        // insert each member into reduction
+        _reduction->clear();
+        for (typename Members::const_iterator it = edge_members.begin();
+                it != edge_members.end(); ++it)
+        {
+            // insert the unsigned int id of the member
+            _reduction->insert((*it).getValue());
+        }
+
+        // do the same for each of the edge's nodes
+        typename FoldedContourTree::Node u = _folded_tree.u(edge);
+        typename FoldedContourTree::Node v = _folded_tree.v(edge);
+
+        unsigned int u_id = _folded_tree.getValue(u);
+        unsigned int v_id = _folded_tree.getValue(v);
+
+        _reduction->insert(u_id);
+        _reduction->insert(v_id);
+        
+        return _reduction->reduce();
+    }    
+    
+    void computeReductions()
+    {
+        assert(_color_map && _reduction);
+        bool first_iteration = true;
+        for (denali::EdgeIterator<FoldedContourTree> it(_folded_tree);
+                !it.done(); ++it) 
+        {
+            double value = computeEdgeReduction(it.edge());            
+            (*_reduction_map)[it.edge()] = value;
+
+            if (value > _max_reduction || first_iteration)
+                _max_reduction = value;
+
+            if (value < _min_reduction || first_iteration)
+                _min_reduction = value;
+
+            first_iteration = false;
+
+            std::cout << "Computed reduction: " << value << std::endl;
+        }
+    }
 
 public:
 
@@ -148,7 +288,8 @@ public:
             _contour_tree(contour_tree),
             _landscape_builder(boost::shared_ptr<LandscapeBuilder>(
                     new LandscapeBuilder)),
-            _folded_tree(*_contour_tree)
+            _folded_tree(*_contour_tree),
+            _reduction_map(new ReductionMap(_folded_tree))
     {
         _max_persistence = computeMaxPersistence(*_contour_tree);
         
@@ -165,9 +306,6 @@ public:
         typename ContourTree::Node root = _folded_tree.getNode(root_id);
         Landscape* lscape;
 
-        std::cout << "Using root: " << root_id << std::endl;
-        std::cout << "With degree: " << _folded_tree.degree(root) << std::endl;
-
         if (_weight_map)
         {
             lscape = _landscape_builder->build(_folded_tree, root, &*_weight_map);
@@ -176,6 +314,7 @@ public:
         }
 
         _landscape = boost::shared_ptr<Landscape>(lscape);
+
     }
 
     size_t getMinLeafID() const 
@@ -280,7 +419,6 @@ public:
             size_t child_id,
             double persistence)
     {
-        std::cout << "simplifying " << parent_id << " " << child_id << " " << persistence << std::endl;
         typename FoldedContourTree::Node parent_node, child_node;
         parent_node = _folded_tree.getNode(parent_id);
         child_node  = _folded_tree.getNode(child_id);
@@ -288,6 +426,8 @@ public:
         expandSubtree(_folded_tree, parent_node, child_node);
         denali::PersistenceSimplifier simplifier(persistence); 
         simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
+
+        if (_color_map && _reduction) computeReductions();
     }
 
     /// \brief Sets the weight map, assuming ownership of the memory.
@@ -313,45 +453,43 @@ public:
         return _landscape->getMaxArcIdentifier();
     }
 
-    virtual double reduceComponent(size_t component_id, Reduction* reduction) const
+    virtual void setColorMap(ColorMap* color_map) {
+        _color_map = boost::shared_ptr<ColorMap>(color_map);
+        if (_color_map && _reduction) computeReductions();
+    }
+
+    virtual void setColorReduction(Reduction* reduction) {
+        _reduction = boost::shared_ptr<Reduction>(reduction);
+        if (_color_map && _reduction) computeReductions();
+    }
+
+    virtual double getComponentReductionValue(unsigned int component_id)
     {
-        typedef typename Landscape::Arc Arc;
-        typedef typename FoldedContourTree::Edge Edge;
-        typedef typename FoldedContourTree::Members Members;
+        assert(_color_map && _reduction);
 
-        Arc arc = _landscape->getComponentFromIdentifier(component_id);
-        assert(_landscape->isArcValid(arc));
+        typename Landscape::Arc arc =
+                _landscape->getComponentFromIdentifier(component_id);
 
-        // get the corresponding contour tree edge
-        Edge edge = _landscape->getContourTreeEdge(arc);
-        if (!_folded_tree.isEdgeValid(edge))
-            throw std::runtime_error("Invalid edge for reduction.");
+        typename FoldedContourTree::Edge edge = 
+                _landscape->getContourTreeEdge(arc);
 
-        // get the edge's members
-        const Members& edge_members = _folded_tree.getEdgeMembers(edge);
+        assert(_folded_tree.isEdgeValid(edge));
 
-        // insert each member into reduction
-        reduction->clear();
-        for (typename Members::const_iterator it = edge_members.begin();
-                it != edge_members.end(); ++it)
-        {
-            // insert the unsigned int id of the member
-            reduction->insert((*it).getID());
-        }
+        return (*_reduction_map)[edge];
+    }
 
-        // do the same for each of the edge's nodes
-        typename FoldedContourTree::Node u = _folded_tree.u(edge);
-        typename FoldedContourTree::Node v = _folded_tree.v(edge);
+    virtual double getMaxReductionValue() {
+        assert(_color_map && _reduction);
+        return _max_reduction;
+    }
 
-        unsigned int u_id = _folded_tree.getID(u);
-        unsigned int v_id = _folded_tree.getID(v);
+    virtual double getMinReductionValue() {
+        assert(_color_map && _reduction);
+        return _min_reduction;
+    }
 
-        std::cout << "The component " << component_id << " was: " << u_id << " " << v_id << std::endl;
-
-        reduction->insert(u_id);
-        reduction->insert(v_id);
-        
-        return reduction->reduce();
+    virtual bool hasReduction() const {
+        return _color_map && _reduction;
     }
 
 

@@ -464,6 +464,81 @@ inline void readWeightMapFile(
     readWeightMapFromStream(fh, weight_map);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// ColorMap
+//
+////////////////////////////////////////////////////////////////////////////////
+
+typedef std::map<unsigned int, double> ColorMap;
+
+class ColorMapFormatParser
+{
+    ColorMap& _color_map;
+    int lineno;
+
+public:
+
+    ColorMapFormatParser(ColorMap& color_map)
+        : _color_map(color_map), lineno(0) { }
+
+
+    void insert(std::vector<std::string>& line)
+    {
+        if (line.size() != 2) {
+            std::stringstream msg;
+            msg << "More or less than 2 entries on line " << lineno;
+            throw std::runtime_error(msg.str());
+        }
+
+        char* err_id;
+        long int id = strtol(line[0].c_str(), &err_id, 10);
+
+        char* err_color;
+        double color = strtod(line[1].c_str(), &err_color);
+
+        if (*err_color != 0 || *err_id != 0) {
+            std::stringstream msg;
+            msg << "Problem interpreting line " << lineno << " as an edge.";
+            throw std::runtime_error(msg.str());
+        }
+        lineno++;
+
+        _color_map[id] = color;
+    }
+};
+
+
+inline void readColorMapFromStream(
+    std::istream& ctstream,
+    ColorMap& color_map)
+{
+    // clear the color map
+    color_map.clear();
+
+    // make a new contour tree format parser
+    ColorMapFormatParser format_parser(color_map);
+
+    // and a tabular file parser
+    denali::TabularFileParser parser;
+
+    // now parse
+    parser.parse(ctstream, format_parser);
+}
+
+
+inline void readColorMapFile(
+    const char * filename,
+    ColorMap& color_map)
+{
+    // create a file stream
+    std::ifstream fh;
+    denali::safeOpenFile(filename, fh);
+
+    readColorMapFromStream(fh, color_map);
+}
+
+
 } // namespace denali
 
 #endif
