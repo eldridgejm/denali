@@ -51,13 +51,13 @@
       </widget>
      </item>
      <item row="3" column="0" colspan="2">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBoxReduction">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <item>
         <property name="text">
-         <string>Maximum</string>
+         <string notr="true">Maximum</string>
         </property>
        </item>
        <item>
@@ -68,6 +68,26 @@
        <item>
         <property name="text">
          <string>Mean</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Count</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Variance</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Covariance</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Correlation</string>
         </property>
        </item>
       </widget>

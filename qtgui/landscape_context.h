@@ -2,6 +2,8 @@
 #define LANDSCAPE_CONTEXT_H
 
 #include <boost/shared_ptr.hpp>
+#include <cmath>
+#include <sstream>
 
 #include <denali/contour_tree.h>
 #include <denali/fileio.h>
@@ -173,7 +175,7 @@ public:
     }
 
     virtual double reduce() {
-        return _m2 / (_n - 1);
+        return _m2 / _n;
     }
 
     virtual void clear() {
@@ -212,6 +214,41 @@ public:
 
     virtual void clear() {
         _sum_xy = _sum_x = _sum_y = _n = 0;
+    }
+};
+
+
+class CorrelationReduction : public Reduction
+{
+    VarianceReduction _var_x;
+    VarianceReduction _var_y;
+    CovarianceReduction _cov;
+
+public:
+    
+    virtual void insert(double x, double y)
+    {
+        std::cout << "Inserting " << x << " " << y << std::endl;
+        _var_x.insert(y, x);
+        _var_y.insert(x, y);
+        _cov.insert(x, y);
+    }
+
+    virtual double reduce()
+    {
+        double sigma_x = std::sqrt(_var_x.reduce());
+        double sigma_y = std::sqrt(_var_y.reduce());
+        std::cout << "Cov: " << _cov.reduce() << std::endl;
+        std::cout << "Sigma x: " << sigma_x << std::endl;
+        std::cout << "Sigma y: " << sigma_y << std::endl;
+        return _cov.reduce() / (sigma_x * sigma_y);
+    }
+
+    virtual void clear()
+    {
+        _var_x.clear();
+        _var_y.clear();
+        _cov.clear();
     }
 
 };
@@ -260,6 +297,8 @@ public:
     virtual double getComponentReductionValue(unsigned int) = 0;
     virtual double getMaxReductionValue() = 0;
     virtual double getMinReductionValue() = 0;
+    virtual void setMaxReductionValue(double) = 0;
+    virtual void setMinReductionValue(double) = 0;
     virtual bool hasReduction() const = 0;
 
 };
@@ -290,6 +329,19 @@ class ConcreteLandscapeContext : public LandscapeContext
 
     double _max_persistence;
 
+    virtual double getColorMapValue(unsigned int id) const
+    {
+        ColorMap::const_iterator it = (*_color_map).find(id);
+        if (it == (*_color_map).end()) {
+            std::stringstream message;
+            message << "The member '" << id << "' is not in the color map." 
+                    << std::endl;
+            throw std::runtime_error(message.str());
+        }
+
+        return it->second;
+    }
+
     virtual double computeEdgeReduction(typename FoldedContourTree::Edge edge) const
     {
         typedef typename FoldedContourTree::Members Members;
@@ -311,7 +363,7 @@ class ConcreteLandscapeContext : public LandscapeContext
             double reference_value = (*it).getValue();
 
             // lookup the member in the color map
-            double color_value = (*_color_map)[member_id];
+            double color_value = getColorMapValue(member_id);
 
             // insert the unsigned int id of the member
             _reduction->insert(reference_value, color_value);
@@ -327,8 +379,8 @@ class ConcreteLandscapeContext : public LandscapeContext
         double u_reference_value = _folded_tree.getValue(u);
         double v_reference_value = _folded_tree.getValue(v);
 
-        double u_color_value = (*_color_map)[u_id];
-        double v_color_value = (*_color_map)[v_id];
+        double u_color_value = getColorMapValue(u_id);
+        double v_color_value = getColorMapValue(v_id);
 
         _reduction->insert(u_reference_value, u_color_value);
         _reduction->insert(v_reference_value, v_color_value);
@@ -563,6 +615,14 @@ public:
     virtual double getMinReductionValue() {
         assert(_color_map && _reduction);
         return _min_reduction;
+    }
+
+    virtual void setMaxReductionValue(double value) {
+        _max_reduction = value;
+    }
+
+    virtual void setMinReductionValue(double value) {
+        _min_reduction = value;
     }
 
     virtual bool hasReduction() const {

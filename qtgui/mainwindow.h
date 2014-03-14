@@ -47,7 +47,6 @@ public slots:
 
     void enableConfigureColorMap();
     void configureColorMap();
-    void loadColorMapFile(std::string);
 
 signals:
     void landscapeChanged();
@@ -65,6 +64,17 @@ private:
     ColorMapDialog* _color_map_dialog;
 
     bool _use_color_map;
+
+    enum SelectedReduction 
+    {
+        MAXIMUM,
+        MINIMUM,
+        MEAN,
+        COUNT,
+        VARIANCE,
+        COVARIANCE,
+        CORRELATION
+    };
 
 };
 

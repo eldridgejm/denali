@@ -28,3 +28,8 @@ void ColorMapDialog::openColorMapFile()
 std::string ColorMapDialog::getColorMapPath() const {
     return _dialog.lineEditColorMapPath->text().toUtf8().constData();
 }
+
+
+int ColorMapDialog::getReductionIndex() const {
+    return _dialog.comboBoxReduction->currentIndex();
+}

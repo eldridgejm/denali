@@ -16,6 +16,7 @@ public:
     ColorMapDialog(QWidget* parent);
 
     std::string getColorMapPath() const;
+    int getReductionIndex() const;
 
 public slots:
     void openColorMapFile();

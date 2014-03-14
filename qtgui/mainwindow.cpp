@@ -96,14 +96,21 @@ void MainWindow::openContourTreeFile()
     // convert the filename to a std::string
     std::string filename = qfilename.toUtf8().constData();
 
+    // if there was no file specified, do nothing
+    if (filename.size() == 0) return;
+
     // read the contour tree file
     ContourTree* contour_tree;
     contour_tree = new ContourTree(denali::readContourTreeFile(filename.c_str()));
-    _use_color_map = false;
 
     // wrap them in a context
     Context* context = new Context(contour_tree);
     this->setContext(context);
+
+    // invalidate the color map
+    _use_color_map = false;
+    _landscape_context->setColorMap(0);
+    _landscape_context->setColorReduction(0);
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
@@ -334,9 +341,28 @@ void MainWindow::loadWeightMapFile()
     // convert the filename to a std::string
     std::string filename = qfilename.toUtf8().constData();
 
+    // if the user didn't specify a file, do nothing
+    if (filename.size() == 0) return;
+
     // read the weight file
     denali::WeightMap* weight_map = new denali::WeightMap;
-    denali::readWeightMapFile(filename.c_str(), *weight_map);
+
+    try 
+    {
+        denali::readWeightMapFile(filename.c_str(), *weight_map);
+    }
+    catch (std::exception& e)
+    {
+        QString message = QString::fromStdString(
+                std::string("There was a problem reading the weight file: ") + 
+                e.what());
+
+        QMessageBox msgbox;
+        msgbox.setIcon(QMessageBox::Warning);
+        msgbox.setText(message);
+        msgbox.exec();
+        return;
+    }
 
     _landscape_context->setWeightMap(weight_map);
     _landscape_context->buildLandscape(_landscape_context->getRootID());
@@ -352,24 +378,109 @@ void MainWindow::enableConfigureColorMap()
 }
 
 
-void MainWindow::loadColorMapFile(std::string filename)
-{
-    // read the color file
-    denali::ColorMap* color_map = new denali::ColorMap;
-    denali::readColorMapFile(filename.c_str(), *color_map);
-
-    _landscape_context->setColorMap(color_map);
-    _landscape_context->setColorReduction(new MaxReduction);
-    _use_color_map = true;
-    renderLandscape();
-}
-
-
 void MainWindow::configureColorMap()
 {
+    // the reduction is automatically recalculated if a new color map 
+    // or reduction functor is specified, and the other is non-null.
+    // we set both to be null to prevent this from happening.
+    _landscape_context->setColorMap(0);
+    _landscape_context->setColorReduction(0);
+
     if (_color_map_dialog->exec() == QDialog::Accepted)
     {
         std::string filename = _color_map_dialog->getColorMapPath();
-        this->loadColorMapFile(filename);
+
+        // if no file specified, do nothing
+        if (filename.size() == 0) return;
+
+        // read the color file
+        denali::ColorMap* color_map;
+
+        try
+        {
+            color_map = new denali::ColorMap;
+            denali::readColorMapFile(filename.c_str(), *color_map);
+        }
+        catch (std::exception& e)
+        {
+            delete color_map;
+
+            QString message = QString::fromStdString(
+                    std::string("There was a problem reading the color file: ") + 
+                    e.what());
+
+            QMessageBox msgbox;
+            msgbox.setIcon(QMessageBox::Warning);
+            msgbox.setText(message);
+            msgbox.exec();
+            return;
+        }
+
+        _landscape_context->setColorMap(color_map);
+
+        int reduction_id = _color_map_dialog->getReductionIndex(); 
+        Reduction* reduction;
+
+        switch(reduction_id)
+        {
+            case MAXIMUM:
+                reduction = new MaxReduction;
+                break;
+
+            case MINIMUM:
+                reduction = new MinReduction;
+                break;
+
+            case MEAN:
+                reduction = new MeanReduction;
+                break;
+
+            case COUNT:
+                reduction = new CountReduction;
+                break;
+
+            case VARIANCE:
+                reduction = new VarianceReduction;
+                break;
+
+            case COVARIANCE:
+                reduction = new CovarianceReduction;
+                break;
+
+            case CORRELATION:
+                reduction = new CorrelationReduction;
+                _landscape_context->setMaxReductionValue(1);
+                _landscape_context->setMinReductionValue(-1);
+                break;
+
+            default:
+                _landscape_context->setColorReduction(new MaxReduction);
+        }
+
+        try 
+        {
+            _landscape_context->setColorReduction(reduction);
+        }
+        catch (std::exception& e)
+        {
+            QString message = QString::fromStdString(
+                    std::string("There was a problem loading the color map: ") + 
+                    e.what());
+
+            QMessageBox msgbox;
+            msgbox.setIcon(QMessageBox::Warning);
+            msgbox.setText(message);
+            msgbox.exec();
+
+            _use_color_map = false;
+            _landscape_context->setColorMap(0);
+            _landscape_context->setColorReduction(0);
+
+            return;
+        }
+
+        _use_color_map = true;
+        renderLandscape();
     }
+
 }

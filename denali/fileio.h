@@ -425,7 +425,7 @@ public:
 
         if (*err_u != 0 || *err_weight != 0 || u < 0) {
             std::stringstream msg;
-            msg << "Problem interpreting line " << lineno << " as an edge.";
+            msg << "Problem interpreting line " << lineno << " as a vertex ID and a weight.";
             throw std::runtime_error(msg.str());
         }
         lineno++;
