@@ -25,7 +25,6 @@ MainWindow::MainWindow() :
     // register this as an observer of the landscape
     _landscape_interface->registerEventObserver(this);
 
-
     connect(_mainwindow.actionOpen_Tree, SIGNAL(triggered()), 
             this, SLOT(openContourTreeFile()));
 
@@ -61,11 +60,20 @@ MainWindow::MainWindow() :
     //connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
     //this, SLOT(treeBuilderCallback()));
 
+    // Weight maps
+    ////////////////////////////////////////////////////////////////////////////
+
     connect(this, SIGNAL(landscapeChanged()),
             this, SLOT(enableLoadWeightMap()));
 
     connect(_mainwindow.actionLoad_Weight_Map, SIGNAL(triggered()),
             this, SLOT(loadWeightMapFile()));
+
+    connect(_mainwindow.actionClear_Weight_Map, SIGNAL(triggered()),
+            this, SLOT(clearWeightMap()));
+
+    // Color maps
+    ////////////////////////////////////////////////////////////////////////////
 
     connect(this, SIGNAL(landscapeChanged()),
             this, SLOT(enableConfigureColorMap()));
@@ -73,6 +81,14 @@ MainWindow::MainWindow() :
     connect(_mainwindow.actionConfigure_Color_Map, SIGNAL(triggered()),
             this, SLOT(configureColorMap()));
 
+    connect(_mainwindow.actionClear_Color_Map, SIGNAL(triggered()),
+            this, SLOT(clearColorMap()));
+
+    // Callbacks
+    ////////////////////////////////////////////////////////////////////////////
+
+    connect(_mainwindow.actionConfigure_Callbacks, SIGNAL(triggered()),
+            this, SLOT(configureCallbacks()));
 
 }
 
@@ -111,6 +127,9 @@ void MainWindow::openContourTreeFile()
     _use_color_map = false;
     _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
     _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
+
+    disableClearColorMap();
+    disableClearWeightMap();
 
     // choose the root of the landscape
     this->changeLandscapeRoot();
@@ -329,6 +348,18 @@ void MainWindow::enableLoadWeightMap()
 }
 
 
+void MainWindow::enableClearWeightMap()
+{
+    _mainwindow.actionClear_Weight_Map->setEnabled(true);
+}
+
+
+void MainWindow::disableClearWeightMap()
+{
+    _mainwindow.actionClear_Weight_Map->setEnabled(false);
+}
+
+
 void MainWindow::loadWeightMapFile()
 {
     // open a file dialog to get the filename
@@ -364,7 +395,23 @@ void MainWindow::loadWeightMapFile()
 
     _landscape_context->setWeightMap(weight_map);
     _landscape_context->buildLandscape(_landscape_context->getRootID());
+
+    // now that there is a weight map, it can be cleared
+    enableClearWeightMap();
     
+    emit landscapeChanged();
+}
+
+
+void MainWindow::clearWeightMap()
+{
+    boost::shared_ptr<denali::WeightMap> null_map;
+    _landscape_context->setWeightMap(null_map);
+
+    disableClearWeightMap();
+
+    _landscape_context->buildLandscape(_landscape_context->getRootID());
+
     emit landscapeChanged();
 }
 
@@ -372,6 +419,18 @@ void MainWindow::loadWeightMapFile()
 void MainWindow::enableConfigureColorMap()
 {
     _mainwindow.actionConfigure_Color_Map->setEnabled(true);
+}
+
+
+void MainWindow::enableClearColorMap()
+{
+    _mainwindow.actionClear_Color_Map->setEnabled(true);
+}
+
+
+void MainWindow::disableClearColorMap()
+{
+    _mainwindow.actionClear_Color_Map->setEnabled(false);
 }
 
 
@@ -469,6 +528,7 @@ void MainWindow::configureColorMap()
             _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
             _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
 
+            disableClearColorMap();
             return;
         }
 
@@ -480,8 +540,28 @@ void MainWindow::configureColorMap()
             _landscape_context->setMinReductionValue(-1);
         }
 
+        _mainwindow.actionClear_Color_Map->setEnabled(true);
+
         _use_color_map = true;
         renderLandscape();
     }
 
+}
+
+
+void MainWindow::clearColorMap()
+{
+    _use_color_map = false;
+    _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
+    _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
+
+    disableClearColorMap();
+
+    renderLandscape();
+}
+
+
+void MainWindow::configureCallbacks()
+{
+    std::cout << "Configuring callbacks..." << std::endl;
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>707</width>
-    <height>642</height>
+    <width>801</width>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -159,18 +159,49 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
+    <item row="1" column="3">
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="title">
+       <string>Callbacks</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Info</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>Tree</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>Void</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
    </layout>
    <zorder>textEditStatusBox</zorder>
    <zorder>qvtkWidget</zorder>
    <zorder>groupBox_2</zorder>
    <zorder>groupBox</zorder>
+   <zorder>groupBox_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>707</width>
+     <width>801</width>
      <height>20</height>
     </rect>
    </property>
@@ -181,7 +212,14 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionOpen_Tree"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_Weight_Map"/>
+    <addaction name="actionClear_Weight_Map"/>
+    <addaction name="separator"/>
     <addaction name="actionConfigure_Color_Map"/>
+    <addaction name="actionClear_Color_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionConfigure_Callbacks"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -216,6 +254,32 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Configure Color Map</string>
+   </property>
+  </action>
+  <action name="actionClear_Weight_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Clear Weight Map</string>
+   </property>
+  </action>
+  <action name="actionClear_Color_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Clear Color Map</string>
+   </property>
+  </action>
+  <action name="actionConfigure_Callbacks">
+   <property name="text">
+    <string>Configure Callbacks</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

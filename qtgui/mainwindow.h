@@ -43,10 +43,18 @@ public slots:
     void treeBuilderCallback();
 
     void enableLoadWeightMap();
+    void enableClearWeightMap();
+    void disableClearWeightMap();
     void loadWeightMapFile();
+    void clearWeightMap();
 
     void enableConfigureColorMap();
+    void enableClearColorMap();
+    void disableClearColorMap();
     void configureColorMap();
+    void clearColorMap();
+
+    void configureCallbacks();
 
 signals:
     void landscapeChanged();
