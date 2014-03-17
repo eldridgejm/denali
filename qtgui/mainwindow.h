@@ -7,6 +7,7 @@
 #include <QtGui>
 
 #include "colormapdialog.h"
+#include "callbacksdialog.h"
 #include "ui_MainWindow.h"
 
 #include "landscape_context.h"
@@ -22,6 +23,7 @@ public:
 
     void setContext(LandscapeContext*);
     void receiveCellSelection(unsigned int);
+    std::string runCallback(std::string callback_path, unsigned int cell);
 
 public slots:
     void setStatus(const std::string&);
@@ -39,8 +41,6 @@ public slots:
     void disableRefineSubtree();
 
     void refineSubtree();
-    void cellSelectionCallback(unsigned int);
-    void treeBuilderCallback();
 
     void enableLoadWeightMap();
     void enableClearWeightMap();
@@ -55,6 +55,18 @@ public slots:
     void clearColorMap();
 
     void configureCallbacks();
+    void runInfoCallback();
+    void runTreeCallback();
+    void runVoidCallback();
+
+    void updateCallbackAvailability();
+    void enableInfoCallback();
+    void enableTreeCallback();
+    void enableVoidCallback();
+    void disableInfoCallback();
+    void disableTreeCallback();
+    void disableVoidCallback();
+
 
 signals:
     void landscapeChanged();
@@ -70,6 +82,7 @@ private:
     unsigned int _cell_selection;
 
     ColorMapDialog* _color_map_dialog;
+    CallbacksDialog* _callbacks_dialog;
 
     bool _use_color_map;
 

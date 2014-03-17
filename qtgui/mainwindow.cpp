@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "colormapdialog.h"
 
 #include <QProcess>
 
@@ -13,6 +12,7 @@
 MainWindow::MainWindow() :
     _max_persistence_slider_value(100),
     _color_map_dialog(new ColorMapDialog(this)),
+    _callbacks_dialog(new CallbacksDialog(this)),
     _use_color_map(false)
 {
     // set up the user inteface
@@ -54,12 +54,6 @@ MainWindow::MainWindow() :
     connect(_mainwindow.pushButtonRefineSubtree, SIGNAL(clicked()),
             this, SLOT(refineSubtree()));
 
-    connect(this, SIGNAL(cellSelected(unsigned int)),
-            this, SLOT(cellSelectionCallback(unsigned int)));
-
-    //connect(_mainwindow.pushButtonTreeBuilder, SIGNAL(clicked()),
-    //this, SLOT(treeBuilderCallback()));
-
     // Weight maps
     ////////////////////////////////////////////////////////////////////////////
 
@@ -90,12 +84,37 @@ MainWindow::MainWindow() :
     connect(_mainwindow.actionConfigure_Callbacks, SIGNAL(triggered()),
             this, SLOT(configureCallbacks()));
 
+    connect(_mainwindow.pushButtonInfoCallback, SIGNAL(clicked()),
+            this, SLOT(runInfoCallback()));
+
+    connect(_mainwindow.pushButtonTreeCallback, SIGNAL(clicked()),
+            this, SLOT(runTreeCallback()));
+
+    connect(_mainwindow.pushButtonVoidCallback, SIGNAL(clicked()),
+            this, SLOT(runVoidCallback()));
+
 }
 
 
 void MainWindow::setContext(LandscapeContext* context)
 {
     _landscape_context = boost::shared_ptr<LandscapeContext>(context);
+
+    // invalidate the color map
+    _use_color_map = false;
+    _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
+    _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
+
+    disableClearColorMap();
+    disableClearWeightMap();
+
+    // choose the root of the landscape
+    this->changeLandscapeRoot();
+
+    // update the persistence slider
+    this->enablePersistenceSlider();
+
+    this->updateCallbackAvailability();
 }
 
 
@@ -122,20 +141,6 @@ void MainWindow::openContourTreeFile()
     // wrap them in a context
     Context* context = new Context(contour_tree);
     this->setContext(context);
-
-    // invalidate the color map
-    _use_color_map = false;
-    _landscape_context->setColorMap(boost::shared_ptr<denali::ColorMap>());
-    _landscape_context->setColorReduction(boost::shared_ptr<Reduction>());
-
-    disableClearColorMap();
-    disableClearWeightMap();
-
-    // choose the root of the landscape
-    this->changeLandscapeRoot();
-
-    // update the persistence slider
-    this->enablePersistenceSlider();
 
     // notify the user that all is well
     std::stringstream message;
@@ -293,53 +298,6 @@ void MainWindow::refineSubtree()
 }
 
 
-void MainWindow::cellSelectionCallback(unsigned int cell)
-{
-    std::stringstream procname;
-    size_t parent, child;
-    _landscape_context->getComponentParentChild(_cell_selection, parent, child);
-    procname << "./testproc.py " << parent << " " << child << std::endl;
-    QProcess process;
-    process.start(procname.str().c_str());
-    process.waitForFinished(-1);
-
-    QString p_stdout = process.readAllStandardOutput();
-    this->appendStatus(p_stdout.toUtf8().constData());
-};
-
-
-void MainWindow::treeBuilderCallback()
-{
-    typedef denali::ContourTree ContourTree;
-    typedef ConcreteLandscapeContext
-            <ContourTree, denali::RectangularLandscapeBuilder> Context;
-
-    QProcess process;
-    process.start("./buildtree.sh");
-    process.waitForFinished(-1);
-
-    QString p_stdout = process.readAllStandardOutput();
-    std::istringstream readtree(p_stdout.toUtf8().constData());
-
-    // now read in the contour tree
-    ContourTree* contour_tree;
-    contour_tree = new ContourTree(denali::readContourTreeFromStream(readtree));
-
-    // wrap them in a context
-    Context* context = new Context(contour_tree);
-    this->setContext(context);
-
-    // choose the root of the landscape
-    this->changeLandscapeRoot();
-
-    // update the persistence slider
-    this->enablePersistenceSlider();
-
-    // notify the user that all is well
-    std::stringstream message;
-    message << "Contour tree callback was run." << std::endl;
-    this->appendStatus(message.str());
-}
 
 
 void MainWindow::enableLoadWeightMap()
@@ -563,5 +521,124 @@ void MainWindow::clearColorMap()
 
 void MainWindow::configureCallbacks()
 {
-    std::cout << "Configuring callbacks..." << std::endl;
+    _callbacks_dialog->exec();
+    this->updateCallbackAvailability();
+}
+
+void MainWindow::updateCallbackAvailability()
+{
+    if (_callbacks_dialog->getInfoCallback().size() != 0) {
+        this->enableInfoCallback();
+    } else {
+        this->disableInfoCallback();
+    }
+
+    if (_callbacks_dialog->getTreeCallback().size() != 0) {
+        this->enableTreeCallback();
+    } else {
+        this->disableTreeCallback();
+    }
+
+    if (_callbacks_dialog->getVoidCallback().size() != 0) {
+        this->enableVoidCallback();
+    } else {
+        this->disableVoidCallback();
+    }
+}
+
+std::string MainWindow::runCallback(std::string callback_path, unsigned int cell)
+{
+    std::stringstream command;
+    size_t parent, child;
+    _landscape_context->getComponentParentChild(_cell_selection, parent, child);
+    command << callback_path << " " << parent << " " << child << std::endl;
+
+    QProcess process;
+    process.start(command.str().c_str());
+    process.waitForFinished(-1);
+
+    QString p_stdout = process.readAll();
+    return p_stdout.toUtf8().constData();
+};
+
+
+void MainWindow::enableInfoCallback() {
+    _mainwindow.pushButtonInfoCallback->setEnabled(true);
+}
+
+
+void MainWindow::enableTreeCallback() {
+    _mainwindow.pushButtonTreeCallback->setEnabled(true);
+}
+
+
+void MainWindow::enableVoidCallback() {
+    _mainwindow.pushButtonVoidCallback->setEnabled(true);
+}
+
+
+void MainWindow::disableInfoCallback() {
+    _mainwindow.pushButtonInfoCallback->setEnabled(false);
+}
+
+
+void MainWindow::disableTreeCallback() {
+    _mainwindow.pushButtonTreeCallback->setEnabled(false);
+}
+
+
+void MainWindow::disableVoidCallback() {
+    _mainwindow.pushButtonVoidCallback->setEnabled(false);
+}
+
+
+
+void MainWindow::runInfoCallback()
+{
+    std::string callback_path = _callbacks_dialog->getInfoCallback();
+    std::string result = runCallback(callback_path, _cell_selection);
+    if (result.size() > 0) {
+        this->appendStatus(result);
+    }
+}
+
+
+void MainWindow::runTreeCallback()
+{
+    typedef denali::ContourTree ContourTree;
+    typedef ConcreteLandscapeContext
+            <ContourTree, denali::RectangularLandscapeBuilder> Context;
+
+    std::string callback_path = _callbacks_dialog->getTreeCallback();
+    std::string result = runCallback(callback_path, _cell_selection);
+
+    if (result.size() == 0) {
+            QString message = QString::fromStdString(
+                    std::string("The tree callback produced no output."));
+
+            QMessageBox msgbox;
+            msgbox.setIcon(QMessageBox::Warning);
+            msgbox.setText(message);
+            msgbox.exec();
+            return;
+    }
+
+    std::istringstream readtree(result);
+
+    // now read in the contour tree
+    ContourTree* contour_tree;
+    contour_tree = new ContourTree(denali::readContourTreeFromStream(readtree));
+
+    // wrap them in a context
+    Context* context = new Context(contour_tree);
+    this->setContext(context);
+
+
+}
+
+
+void MainWindow::runVoidCallback()
+{
+    std::string callback_path = _callbacks_dialog->getVoidCallback();
+    runCallback(callback_path, _cell_selection);
 }

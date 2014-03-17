@@ -166,21 +166,30 @@ p, li { white-space: pre-wrap; }
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButtonInfoCallback">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Info</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="pushButtonTreeCallback">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Tree</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="pushButtonVoidCallback">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Void</string>
          </property>
