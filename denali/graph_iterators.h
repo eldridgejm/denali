@@ -336,9 +336,8 @@ public:
         visit(root);
     }
 
-    /// \brief Perform a partial BFS, starting at the parent and searching down the edge
-    ///     containing the child.
-    UndirectedBFSIterator(const GraphType& graph, Node parent, Node child)
+    /// \brief Perform a partial BFS, starting at the pivot, and stopping when the parent it reached.
+    UndirectedBFSIterator(const GraphType& graph, Node parent, Node pivot)
         : _graph(graph), _visited(graph)
     {
         // no nodes have been visited
@@ -348,10 +347,10 @@ public:
 
         // except for the root node
         _visited[parent] = true;
-        _visited[child] = true;
+        _visited[pivot] = true;
 
-        // now visit the child on the edge
-        visit(child);
+        // now visit the pivot 
+        visit(pivot);
 
     }
 

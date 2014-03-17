@@ -93,6 +93,20 @@ MainWindow::MainWindow() :
     connect(_mainwindow.pushButtonVoidCallback, SIGNAL(clicked()),
             this, SLOT(runVoidCallback()));
 
+    connect(this, SIGNAL(cellSelected(unsigned int)), 
+            this, SLOT(runCallbacksOnSelection()));
+
+    // Rebasing
+    ////////////////////////////////////////////////////////////////////////////
+
+    connect(this, SIGNAL(cellSelected(unsigned int)),
+            this, SLOT(enableRebaseLandscape()));
+
+    connect(this, SIGNAL(landscapeChanged()),
+            this, SLOT(disableRebaseLandscape()));
+
+    connect(_mainwindow.pushButtonRebase, SIGNAL(clicked()),
+            this, SLOT(rebaseLandscape()));
 }
 
 
@@ -115,6 +129,8 @@ void MainWindow::setContext(LandscapeContext* context)
     this->enablePersistenceSlider();
 
     this->updateCallbackAvailability();
+
+    this->disableRebaseLandscape();
 }
 
 
@@ -592,6 +608,23 @@ void MainWindow::disableVoidCallback() {
 }
 
 
+void MainWindow::runCallbacksOnSelection()
+{
+    if (_callbacks_dialog->runInfoOnSelection() && 
+            _callbacks_dialog->getInfoCallback().size() != 0) {
+        runInfoCallback();
+    }
+
+    if (_callbacks_dialog->runTreeOnSelection() && 
+            _callbacks_dialog->getTreeCallback().size() != 0) {
+        runTreeCallback();
+    }
+
+    if (_callbacks_dialog->runVoidOnSelection() && 
+            _callbacks_dialog->getVoidCallback().size() != 0) {
+        runVoidCallback();
+    }
+}
 
 void MainWindow::runInfoCallback()
 {
@@ -641,4 +674,30 @@ void MainWindow::runVoidCallback()
 {
     std::string callback_path = _callbacks_dialog->getVoidCallback();
     runCallback(callback_path, _cell_selection);
+}
+
+
+void MainWindow::enableRebaseLandscape()
+{
+    _mainwindow.pushButtonRebase->setEnabled(true);
+}
+
+
+void MainWindow::disableRebaseLandscape()
+{
+    _mainwindow.pushButtonRebase->setEnabled(false);
+}
+
+
+void MainWindow::rebaseLandscape()
+{
+    // get the parent and child nodes of the selection
+    size_t parent, child;
+    _landscape_context->getComponentParentChild(_cell_selection, parent, child);
+
+    LandscapeContext* new_context = _landscape_context->rebaseLandscape(parent, child);
+
+    this->setContext(new_context);
+    
+    emit landscapeChanged();
 }

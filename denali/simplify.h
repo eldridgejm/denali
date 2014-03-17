@@ -287,10 +287,16 @@ public:
         simplifyCore(context, null_protected);
     }
 
+    /// \brief Simplifies a subtree.
+    /*!
+     *  A subtree is defined by giving a parent node, and a pivot node inside
+     *  the subtree. A BFS is done from the pivot, but stops at the parent. Every
+     *  node reached by the BFS is considered to be inside the subtree.
+     */
     template <typename Context>
     void simplifySubtree(Context& context, 
                          typename Context::Node parent,
-                         typename Context::Node child)
+                         typename Context::Node pivot)
     {
         // we create a new node map that defaults to false
         StaticNodeMap<Context, bool> protected_nodes(context);
@@ -304,11 +310,12 @@ public:
         // protected
         // protected_nodes[parent] = false;
         // protected_nodes[child] = false;
-        for (UndirectedBFSIterator<Context> it(context, parent, child);
+        for (UndirectedBFSIterator<Context> it(context, parent, pivot);
                 !it.done(); ++it)
         {
             protected_nodes[it.child()] = false; 
         }
+        protected_nodes[parent] = true;
 
         // perform the simplification
         simplifyCore(context, protected_nodes);

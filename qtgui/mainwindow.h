@@ -60,6 +60,7 @@ public slots:
     void runVoidCallback();
 
     void updateCallbackAvailability();
+    void runCallbacksOnSelection();
     void enableInfoCallback();
     void enableTreeCallback();
     void enableVoidCallback();
@@ -67,6 +68,9 @@ public slots:
     void disableTreeCallback();
     void disableVoidCallback();
 
+    void enableRebaseLandscape();
+    void disableRebaseLandscape();
+    void rebaseLandscape();
 
 signals:
     void landscapeChanged();

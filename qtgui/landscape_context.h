@@ -297,6 +297,8 @@ public:
     virtual void setMinReductionValue(double) = 0;
     virtual bool hasReduction() const = 0;
 
+    virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id) = 0;
+
 };
 
 
@@ -548,6 +550,7 @@ public:
 
         expandSubtree(_folded_tree, parent_node, child_node);
         denali::PersistenceSimplifier simplifier(persistence); 
+
         simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
 
         if (_color_map && _reduction) computeReductions();
@@ -621,6 +624,44 @@ public:
 
     virtual bool hasReduction() const {
         return _color_map && _reduction;
+    }
+
+    virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id)  
+    {
+        typename FoldedContourTree::Node parent_node, child_node;
+        parent_node = _folded_tree.getNode(parent_id);
+        child_node  = _folded_tree.getNode(child_id);
+
+        // expand the tree
+        expandSubtree(_folded_tree, parent_node, child_node);
+
+        typedef denali::UndirectedScalarMemberIDGraph Graph;
+        denali::StaticNodeMap<FoldedContourTree, Graph::Node> old_to_new(_folded_tree);
+
+        // now we do a BFS inside of the expansion and build a new contour tree
+        boost::shared_ptr<Graph> new_tree = boost::shared_ptr<Graph>(new Graph);
+
+        double child_value = _folded_tree.getValue(child_node);
+        Graph::Node new_node = new_tree->addNode(child_id, child_value);
+        old_to_new[child_node] = new_node;
+
+        for (denali::UndirectedBFSIterator<FoldedContourTree> it(_folded_tree, parent_node, child_node);
+                !it.done(); ++it)
+        {
+            unsigned int node_id = _folded_tree.getID(it.child());
+            double node_value = _folded_tree.getValue(it.child());
+            Graph::Node new_node = new_tree->addNode(node_id, node_value);
+
+            old_to_new[it.child()] = new_node;
+
+            Graph::Node new_parent = old_to_new[it.parent()];
+            new_tree->addEdge(new_node, new_parent);
+        }
+
+        denali::ContourTree* new_contour_tree = 
+                new denali::ContourTree(denali::ContourTree::fromPrecomputed(new_tree));
+
+        return new ConcreteLandscapeContext(new_contour_tree);
     }
 
 
