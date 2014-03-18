@@ -699,7 +699,5 @@ void MainWindow::rebaseLandscape()
 
     this->setContext(new_context);
 
-    new_context
-    
     emit landscapeChanged();
 }
