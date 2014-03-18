@@ -564,10 +564,30 @@ void MainWindow::updateCallbackAvailability()
 
 std::string MainWindow::runCallback(std::string callback_path, unsigned int cell)
 {
-    std::stringstream command;
+
     size_t parent, child;
     _landscape_context->getComponentParentChild(_cell_selection, parent, child);
-    command << callback_path << " " << parent << " " << child << std::endl;
+
+    double parent_value = _landscape_context->getValue(parent);
+    double child_value = _landscape_context->getValue(child);
+
+    std::stringstream command;
+    command << callback_path;
+    command << " " << parent << " " << parent_value;
+    command << " " << child << " " << child_value;
+
+    LandscapeContext::Members members = 
+            _landscape_context->getMembers(parent, child);
+
+    for (LandscapeContext::Members::const_iterator it = members.begin();
+            it != members.end(); ++it)
+    {
+        unsigned int id = it->first;
+        double value = it->second;
+        command << " " << id << " " << value;
+    }
+
+    command << std::endl;
 
     QProcess process;
     process.start(command.str().c_str());

@@ -254,6 +254,9 @@ class LandscapeContext
 {
 
 public:
+    typedef std::pair<unsigned int, double> Member;
+    typedef std::set<Member> Members;
+
     virtual ~LandscapeContext() {}
 
     virtual bool isValid() const = 0;
@@ -299,6 +302,7 @@ public:
 
     virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id) = 0;
 
+    virtual Members getMembers(size_t, size_t) const = 0;
 };
 
 
@@ -664,6 +668,33 @@ public:
         return new ConcreteLandscapeContext(new_contour_tree);
     }
 
+    Members
+    getMembers(size_t u, size_t v) const
+    {
+        typedef typename FoldedContourTree::Node Node;
+        typedef typename FoldedContourTree::Edge Edge;
+        typedef typename FoldedContourTree::Members Members;
+
+        Node parent_node, child_node;
+        parent_node = _folded_tree.getNode(u);
+        child_node  = _folded_tree.getNode(v);
+
+        Edge edge = _folded_tree.findEdge(parent_node, child_node);
+        
+        const Members& members = _folded_tree.getEdgeMembers(edge);
+
+        std::set<std::pair<unsigned int, double> > member_set;
+        for (typename Members::const_iterator it = members.begin();
+                it != members.end(); ++it)
+        {
+            unsigned int id = (*it).getID();
+            double value = (*it).getValue();
+            std::pair<unsigned int, double> member(id, value);
+            member_set.insert(member);
+        }
+
+        return member_set;
+    }
 
 };
 
