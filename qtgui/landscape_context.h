@@ -659,13 +659,31 @@ public:
             old_to_new[it.child()] = new_node;
 
             Graph::Node new_parent = old_to_new[it.parent()];
-            new_tree->addEdge(new_node, new_parent);
+            Graph::Edge edge = new_tree->addEdge(new_node, new_parent);
+
+            // now insert the members
+            const typename FoldedContourTree::Members& old_members = 
+                    _folded_tree.getEdgeMembers(it.edge());
+
+            typename FoldedContourTree::Members::const_iterator m_it = old_members.begin();
+            for (; m_it != old_members.end(); ++m_it) 
+            {
+                unsigned int member_id = (*m_it).getID();
+                double member_value = (*m_it).getValue();
+
+                Graph::Member new_member(member_id, member_value);
+
+                new_tree->insertEdgeMember(edge, new_member);
+            }
         }
 
         denali::ContourTree* new_contour_tree = 
                 new denali::ContourTree(denali::ContourTree::fromPrecomputed(new_tree));
 
-        return new ConcreteLandscapeContext(new_contour_tree);
+        ConcreteLandscapeContext* new_context = 
+                new ConcreteLandscapeContext(new_contour_tree);
+
+        return new_context;
     }
 
     Members
