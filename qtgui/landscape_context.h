@@ -423,7 +423,7 @@ public:
         _max_persistence = computeMaxPersistence(*_contour_tree);
         
         denali::PersistenceSimplifier simplifier(15); 
-        simplifier.simplify(_folded_tree);
+        // simplifier.simplify(_folded_tree);
     }
 
     virtual bool isValid() const {
@@ -442,7 +442,22 @@ public:
             lscape = _landscape_builder->build(_folded_tree, root);
         }
 
+        std::cout << "# of edges: " << _folded_tree.numberOfEdges() << std::endl;
+
+        for (denali::NodeIterator<FoldedContourTree> it(_folded_tree); !it.done(); ++it)
+        {
+            std::cout << _folded_tree.getID(it.node()) << " " << _folded_tree.getValue(it.node()) << std::endl;
+        }
+
+        for (denali::EdgeIterator<FoldedContourTree> it(_folded_tree); !it.done(); ++it)
+        {
+            std::cout << _folded_tree.getID(_folded_tree.u(it.edge())) << " "
+                      << _folded_tree.getID(_folded_tree.v(it.edge())) << std::endl;
+
+        }
+
         _landscape = boost::shared_ptr<Landscape>(lscape);
+        std::cout << "# triangles: " << numberOfTriangles() << std::endl;
 
     }
 
