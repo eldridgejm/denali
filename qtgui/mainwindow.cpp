@@ -698,6 +698,8 @@ void MainWindow::rebaseLandscape()
     LandscapeContext* new_context = _landscape_context->rebaseLandscape(parent, child);
 
     this->setContext(new_context);
+
+    new_context
     
     emit landscapeChanged();
 }

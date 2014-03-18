@@ -661,7 +661,8 @@ public:
         denali::ContourTree* new_contour_tree = 
                 new denali::ContourTree(denali::ContourTree::fromPrecomputed(new_tree));
 
-        return new ConcreteLandscapeContext(new_contour_tree);
+        ConcreteLandscapeContext* new_context = 
+                new ConcreteLandscapeContext(new_contour_tree);
     }
 
 

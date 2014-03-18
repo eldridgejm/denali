@@ -142,6 +142,10 @@ class PersistenceSimplifier
             Edge edge = neighbor_it.edge();
             Node parent = context.opposite(leaf, edge);
 
+            if (protected_nodes[parent] || protected_nodes[leaf]) {
+                continue;
+            }
+
             if (preserveForReduction(context, edge)) {
                 continue;
             }
@@ -316,6 +320,7 @@ public:
             protected_nodes[it.child()] = false; 
         }
         protected_nodes[parent] = true;
+        protected_nodes[pivot] = false;
 
         // perform the simplification
         simplifyCore(context, protected_nodes);
