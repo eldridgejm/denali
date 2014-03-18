@@ -107,6 +107,10 @@ MainWindow::MainWindow() :
 
     connect(_mainwindow.pushButtonRebase, SIGNAL(clicked()),
             this, SLOT(rebaseLandscape()));
+
+
+    connect(_mainwindow.actionExit, SIGNAL(triggered()),
+            this, SLOT(close()));
 }
 
 
