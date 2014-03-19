@@ -556,32 +556,84 @@ SUITE(fileio)
 SUITE(Simplify)
 {
 
-    TEST(PersistenceSimplifier)
+    TEST(Star)
     {
+        /*
+        //      0
+        //      |
+        //      1
+        //     / \
+        //    0  0
+        */
+        typedef denali::UndirectedScalarMemberIDGraph Graph;
+        typedef Graph::Node Node;
+        typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
 
-        denali::ScalarSimplicialComplex plex;
+        boost::shared_ptr<Graph> graph = 
+                boost::shared_ptr<Graph>(new Graph);
 
-        for (size_t i=0; i<n_wenger_vertices; ++i) {
-            plex.addNode(wenger_vertex_values[i]);
-        }
+        Node n0 = graph->addNode(0,0);
+        Node n1 = graph->addNode(1,0);
+        Node n2 = graph->addNode(2,0);
+        Node n3 = graph->addNode(3,1);
 
-        for (size_t i=0; i<n_wenger_edges; ++i) {
-            plex.addEdge(
-                plex.getNode(wenger_edges[i][0]),
-                plex.getNode(wenger_edges[i][1]));
-        }
+        graph->addEdge(n0, n3);
+        graph->addEdge(n1, n3);
+        graph->addEdge(n2, n3);
 
-        typedef denali::ContourTree ContourTree;
-        typedef denali::FoldedContourTree<ContourTree> FoldedContourTree;
+        denali::ContourTree contour_tree = denali::ContourTree::fromPrecomputed(graph);
+        FoldedContourTree folded_tree(contour_tree);
 
-        denali::CarrsAlgorithm alg;
-
-        ContourTree tree = ContourTree::compute(plex, alg);
-
-        denali::PersistenceSimplifier simplifier(15);
-        FoldedContourTree folded_tree(tree);
+        denali::PersistenceSimplifier simplifier(10);
         simplifier.simplify(folded_tree);
+
+        CHECK_EQUAL(2, folded_tree.numberOfNodes());
     }
+
+
+    TEST(Stuck)
+    {
+        /*
+                    7
+                   /
+            1--5--5
+                  \
+                  2
+        */
+        typedef denali::UndirectedScalarMemberIDGraph Graph;
+        typedef Graph::Node Node;
+        typedef denali::FoldedContourTree<denali::ContourTree> FoldedContourTree;
+
+        boost::shared_ptr<Graph> graph = 
+                boost::shared_ptr<Graph>(new Graph);
+
+        Node n0 = graph->addNode(0,1);
+        Node n1 = graph->addNode(1,5);
+        Node n2 = graph->addNode(2,5);
+        Node n3 = graph->addNode(3,7);
+        Node n4 = graph->addNode(4,2);
+
+        graph->addEdge(n0, n1);
+        graph->addEdge(n1, n2);
+        graph->addEdge(n3, n2);
+        graph->addEdge(n4, n2);
+
+        denali::ContourTree contour_tree = denali::ContourTree::fromPrecomputed(graph);
+        FoldedContourTree folded_tree(contour_tree);
+
+        denali::PersistenceSimplifier simplifier(10);
+
+        CHECK(simplifier.nodeLess(folded_tree, folded_tree.getNode(1), folded_tree.getNode(2)));
+        CHECK(!simplifier.nodeLess(folded_tree, folded_tree.getNode(2), folded_tree.getNode(1)));
+
+        simplifier.simplify(folded_tree);
+
+        CHECK_EQUAL(2, folded_tree.numberOfNodes());
+
+    }
+
+
+
 }
 
 

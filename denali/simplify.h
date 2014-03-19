@@ -89,7 +89,7 @@ class PersistenceSimplifier
         std::vector<Node> reduce_vector;
         for (NodeIterator<Context> it(context); !it.done(); ++it)
         {
-            if (context.degree(it.node()) == 2)
+            if (isRegular(context, it.node()))
             {
                 reduce_vector.push_back(it.node());
             }
@@ -158,7 +158,7 @@ class PersistenceSimplifier
             context.collapse(edge);
 
             // if the parent is reducible, reduce it now
-            if (context.degree(parent) == 2) 
+            if (isRegular(context, parent)) 
             {
                 Edge edge = context.reduce(parent);
 
@@ -166,7 +166,6 @@ class PersistenceSimplifier
                 // may no longer need to be preserved
                 Node u = context.u(edge);
                 Node v = context.v(edge);
-
 
                 if (context.degree(u) == 1) {
                     double persistence = computePersistence(context, edge);
@@ -199,8 +198,19 @@ class PersistenceSimplifier
                         }
                     }
                 }
-                
             }
+            else if (context.degree(parent) == 1)
+            {
+                // get the neighbor of the parent
+                UndirectedNeighborIterator<Context> neighbor_it(context, parent);
+
+                // compute the persistence
+                double persistence = computePersistence(context, neighbor_it.edge());
+
+                // add to the queue
+                simplify_queue.push(Priority(parent, persistence));
+            }
+
         }
     }
 
@@ -232,15 +242,37 @@ public:
         return std::abs(tree.getValue(u) - tree.getValue(v));
     }
 
+    /// \brief Returns true if u > v, breaking ties by ID.
+    template <typename Tree>
+    static bool nodeLess(const Tree& tree,
+                  typename Tree::Node u,
+                  typename Tree::Node v)
+    {
+        double u_value = tree.getValue(u);
+        double v_value = tree.getValue(v);
+
+        if (u_value < v_value)
+        {
+            return true;
+        } 
+        else if (u_value > v_value)
+        {
+            return false;
+        } 
+        else 
+        {
+            return tree.getID(u) < tree.getID(v);
+        }
+    }
+
     template <typename Tree>
     static unsigned int upDegree(const Tree& tree, typename Tree::Node node)
     {
         unsigned int n = 0;
-        const double node_value = tree.getValue(node);
 
         for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
         {
-            if (tree.getValue(it.neighbor()) > node_value) {
+            if (nodeLess(tree, node, it.neighbor())) {
                 n++;
             }
         }
@@ -251,11 +283,10 @@ public:
     static unsigned int downDegree(const Tree& tree, typename Tree::Node node)
     {
         unsigned int n = 0;
-        const double node_value = tree.getValue(node);
 
         for (UndirectedNeighborIterator<Tree> it(tree, node); !it.done(); ++it)
         {
-            if (tree.getValue(it.neighbor()) <= node_value) {
+            if (nodeLess(tree, it.neighbor(), node)) {
                 n++;
             }
         }
@@ -270,16 +301,23 @@ public:
         typename Tree::Node child = getLeaf(tree, edge);
         typename Tree::Node parent = tree.opposite(child, edge);
 
-        double parent_value = tree.getValue(parent);
-        double child_value = tree.getValue(child);
-
-        if ((child_value <= parent_value) && (downDegree(tree, parent) == 1)) {
+        if (nodeLess(tree, child, parent) && (downDegree(tree, parent) == 1)) 
+        {
             return true;
-        } else if ((child_value > parent_value) && (upDegree(tree, parent) == 1)) {
+        } 
+        else if (nodeLess(tree, parent, child) && (upDegree(tree, parent) == 1))
+        {
             return true;
-        } else {
+        } 
+        else 
+        {
             return false;
         }
+    }
+
+    template <typename Tree>
+    static bool isRegular(const Tree& tree, typename Tree::Node node) {
+        return (upDegree(tree, node) == 1) && (downDegree(tree, node) == 1);
     }
 
     /// \brief Simplifies the contour tree in the context.
