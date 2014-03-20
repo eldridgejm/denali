@@ -626,7 +626,6 @@ private:
         bool split_vertically)
     {
         Node current = _tree.target(arc);
-        Node parent = _tree.source(arc);
 
         // determine how much to shrink the rectangle
         double total_volume = _weights.getTotalNodeWeight(current);

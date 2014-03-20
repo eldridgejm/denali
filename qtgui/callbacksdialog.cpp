@@ -16,6 +16,15 @@ CallbacksDialog::CallbacksDialog(QWidget* parent) :
     connect(_dialog.pushButtonBrowseVoid, SIGNAL(clicked()),
             this, SLOT(setVoidCallback()));
 
+    connect(_dialog.pushButtonClearInfo, SIGNAL(clicked()),
+            this, SLOT(clearInfoCallback()));
+
+    connect(_dialog.pushButtonClearTree, SIGNAL(clicked()),
+            this, SLOT(clearTreeCallback()));
+
+    connect(_dialog.pushButtonClearVoid, SIGNAL(clicked()),
+            this, SLOT(clearVoidCallback()));
+
 }
 
 
@@ -85,4 +94,34 @@ bool CallbacksDialog::runTreeOnSelection() {
 
 bool CallbacksDialog::runVoidOnSelection() {
     return _dialog.checkBoxRunVoidOnSelection->isChecked();
+}
+
+
+bool CallbacksDialog::provideInfoSubtree() {
+    return _dialog.checkBoxInfoSubtree->isChecked();
+}
+
+
+bool CallbacksDialog::provideTreeSubtree() {
+    return _dialog.checkBoxTreeSubtree->isChecked();
+}
+
+
+bool CallbacksDialog::provideVoidSubtree() {
+    return _dialog.checkBoxVoidSubtree->isChecked();
+}
+
+
+void CallbacksDialog::clearInfoCallback() {
+    _dialog.lineEditInfoCallback->clear();
+}
+
+
+void CallbacksDialog::clearTreeCallback() {
+    _dialog.lineEditTreeCallback->clear();
+}
+
+
+void CallbacksDialog::clearVoidCallback() {
+    _dialog.lineEditVoidCallback->clear();
 }

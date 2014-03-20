@@ -23,10 +23,18 @@ public:
     bool runTreeOnSelection();
     bool runVoidOnSelection();
 
+    bool provideInfoSubtree();
+    bool provideTreeSubtree();
+    bool provideVoidSubtree();
+
 public slots:
     void setInfoCallback();
     void setTreeCallback();
     void setVoidCallback();
+
+    void clearInfoCallback();
+    void clearTreeCallback();
+    void clearVoidCallback();
 
 private:
 
