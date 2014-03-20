@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QProcess>
+#include <QTemporaryFile>
 
 #include <denali/contour_tree.h>
 #include <denali/fileio.h>
@@ -567,7 +568,10 @@ void MainWindow::updateCallbackAvailability()
     }
 }
 
-std::string MainWindow::runCallback(std::string callback_path, unsigned int cell)
+std::string MainWindow::runCallback(
+        std::string callback_path, 
+        unsigned int cell,
+        bool provide_subtree)
 {
 
     size_t parent, child;
@@ -579,13 +583,25 @@ std::string MainWindow::runCallback(std::string callback_path, unsigned int cell
     std::stringstream command;
     command << callback_path;
 
-    if (_filename.size() > 0) {
-        command << " file " << _filename;
+    QTemporaryFile tempfile;
+    if (!tempfile.open())
+    {
+        throw std::runtime_error("Problem opening tempfile.");
     }
 
-    command << " component ";
-    command << " " << parent << " " << parent_value;
-    command << " " << child << " " << child_value;
+    command << " " << tempfile.fileName().toUtf8().constData();
+
+    if (_filename.size() > 0) {
+        tempfile.write("file\n");
+        tempfile.write(_filename.c_str());
+        tempfile.write("\n");
+    }
+
+    tempfile.write("component\n");
+    std::stringstream component_str;
+    component_str << parent << " " << parent_value << std::endl;
+    component_str << child << " " << child_value << std::endl;
+    tempfile.write(component_str.str().c_str());
 
     LandscapeContext::Members members;
 
@@ -602,16 +618,37 @@ std::string MainWindow::runCallback(std::string callback_path, unsigned int cell
     members.insert(parent_members.begin(), parent_members.end());
     members.insert(child_members.begin(), child_members.end());
 
-    command << " members ";
+    tempfile.write("members\n");
     for (LandscapeContext::Members::const_iterator it = members.begin();
             it != members.end(); ++it)
     {
         unsigned int id = it->first;
         double value = it->second;
-        command << " " << id << " " << value;
+
+        std::stringstream member_line;
+        member_line << id << " " << value << std::endl;
+        tempfile.write(member_line.str().c_str());
     }
 
-    command << std::endl;
+    if (provide_subtree)
+    {
+        tempfile.write("subtree\n");
+        LandscapeContext::Members subtree_members = 
+                _landscape_context->getSubtreeMembers(parent, child);
+
+        for (LandscapeContext::Members::const_iterator it = subtree_members.begin();
+                it != subtree_members.end(); ++it)
+        {
+            unsigned int id = it->first;
+            double value = it->second;
+
+            std::stringstream member_line;
+            member_line << id << " " << value << std::endl;
+            tempfile.write(member_line.str().c_str());
+        }
+    } 
+
+    tempfile.close();
 
     QProcess process;
     process.start(command.str().c_str());
@@ -673,7 +710,9 @@ void MainWindow::runCallbacksOnSelection()
 void MainWindow::runInfoCallback()
 {
     std::string callback_path = _callbacks_dialog->getInfoCallback();
-    std::string result = runCallback(callback_path, _cell_selection);
+    bool provide_subtree = _callbacks_dialog->provideInfoSubtree();
+
+    std::string result = runCallback(callback_path, _cell_selection, provide_subtree);
     if (result.size() > 0) {
         this->appendStatus(result);
     }
@@ -687,7 +726,9 @@ void MainWindow::runTreeCallback()
             <ContourTree, denali::RectangularLandscapeBuilder> Context;
 
     std::string callback_path = _callbacks_dialog->getTreeCallback();
-    std::string result = runCallback(callback_path, _cell_selection);
+    bool provide_subtree = _callbacks_dialog->provideTreeSubtree();
+
+    std::string result = runCallback(callback_path, _cell_selection, provide_subtree);
 
     if (result.size() == 0) {
             QString message = QString::fromStdString(
@@ -700,7 +741,7 @@ void MainWindow::runTreeCallback()
             return;
     }
 
-    std::istringstream readtree(result);
+    std::stringstream readtree(result);
 
     // now read in the contour tree
     ContourTree* contour_tree;
@@ -717,7 +758,9 @@ void MainWindow::runTreeCallback()
 void MainWindow::runVoidCallback()
 {
     std::string callback_path = _callbacks_dialog->getVoidCallback();
-    runCallback(callback_path, _cell_selection);
+    bool provide_subtree = _callbacks_dialog->provideVoidSubtree();
+
+    runCallback(callback_path, _cell_selection, provide_subtree);
 }
 
 

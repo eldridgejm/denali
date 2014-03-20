@@ -24,7 +24,6 @@ CallbacksDialog::CallbacksDialog(QWidget* parent) :
 
     connect(_dialog.pushButtonClearVoid, SIGNAL(clicked()),
             this, SLOT(clearVoidCallback()));
-
 }
 
 

@@ -23,7 +23,9 @@ public:
 
     void setContext(LandscapeContext*);
     void receiveCellSelection(unsigned int);
-    std::string runCallback(std::string callback_path, unsigned int cell);
+    std::string runCallback(std::string callback_path, 
+                            unsigned int cell, 
+                            bool provide_subtree = false);
 
 public slots:
     void setStatus(const std::string&);

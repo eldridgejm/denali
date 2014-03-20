@@ -307,6 +307,8 @@ public:
 
     virtual Members getMembers(size_t, size_t) const = 0;
     virtual Members getMembers(size_t) const = 0;
+
+    virtual Members getSubtreeMembers(size_t, size_t) const = 0;
 };
 
 
@@ -731,7 +733,6 @@ public:
     {
         typedef typename FoldedContourTree::Node Node;
         typedef typename FoldedContourTree::Edge Edge;
-        typedef typename FoldedContourTree::Members Members;
 
         Node parent_node, child_node;
         parent_node = _folded_tree.getNode(u);
@@ -739,16 +740,63 @@ public:
 
         Edge edge = _folded_tree.findEdge(parent_node, child_node);
         
-        const Members& members = _folded_tree.getEdgeMembers(edge);
+        const typename FoldedContourTree::Members& members = 
+                _folded_tree.getEdgeMembers(edge);
 
         std::set<std::pair<unsigned int, double> > member_set;
-        for (typename Members::const_iterator it = members.begin();
+        for (typename FoldedContourTree::Members::const_iterator it = members.begin();
                 it != members.end(); ++it)
         {
             unsigned int id = (*it).getID();
             double value = (*it).getValue();
             std::pair<unsigned int, double> member(id, value);
             member_set.insert(member);
+        }
+
+        return member_set;
+    }
+
+    /// \brief Returns all members in the subtree rooted at the edge u-->v.
+    virtual Members
+    getSubtreeMembers(size_t u, size_t v) const
+    {
+        typedef typename FoldedContourTree::Node Node;
+        typedef typename FoldedContourTree::Members::const_iterator MembersIt;
+
+        Node parent_node, child_node;
+        parent_node = _folded_tree.getNode(u);
+        child_node  = _folded_tree.getNode(v);
+
+        Members member_set;
+
+        denali::UndirectedBFSIterator<FoldedContourTree> 
+                it(_folded_tree, parent_node, child_node);
+
+        for (; !it.done(); ++it)
+        {
+            const typename FoldedContourTree::Members& edge_members = 
+                    _folded_tree.getEdgeMembers(it.edge());
+
+            for (MembersIt m_it = edge_members.begin(); m_it != edge_members.end();
+                    ++m_it)
+            {
+                unsigned int id = (*m_it).getID();
+                double value = (*m_it).getValue();
+                std::pair<unsigned int, double> member(id, value);
+                member_set.insert(member);
+            }
+
+            const typename FoldedContourTree::Members& node_members = 
+                    _folded_tree.getNodeMembers(it.child());
+
+            for (MembersIt m_it = node_members.begin(); m_it != node_members.end();
+                    ++m_it)
+            {
+                unsigned int id = (*m_it).getID();
+                double value = (*m_it).getValue();
+                std::pair<unsigned int, double> member(id, value);
+                member_set.insert(member);
+            }
         }
 
         return member_set;
@@ -767,6 +815,7 @@ public:
             denali::expandSubtree(_folded_tree, root, it.neighbor());
         }
     }
+
 
 };
 
