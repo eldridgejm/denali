@@ -327,12 +327,14 @@ private:
         }
 
         // now recurse to compute the total weight of each node
-        while (_bfs_nodes.size() > 0) {
+        while (_bfs_nodes.size() > 0) 
+        {
             Node node = _bfs_nodes.top();
             _bfs_nodes.pop();
 
             double total_weight = _node_to_weight[node];
-            for (ChildIterator<LandscapeTree> it(_tree, node); !it.done(); ++it) {
+            for (ChildIterator<LandscapeTree> it(_tree, node); !it.done(); ++it) 
+            {
                 total_weight += _arc_to_weight[it.arc()];
                 total_weight += _node_to_total_weight[it.child()];
             }

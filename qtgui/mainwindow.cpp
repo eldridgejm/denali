@@ -108,9 +108,17 @@ MainWindow::MainWindow() :
     connect(_mainwindow.pushButtonRebase, SIGNAL(clicked()),
             this, SLOT(rebaseLandscape()));
 
+    // Expand
+    ////////////////////////////////////////////////////////////////////////////
+
+    connect(_mainwindow.pushButtonExpand, SIGNAL(clicked()),
+            this, SLOT(expandLandscape()));
 
     connect(_mainwindow.actionExit, SIGNAL(triggered()),
             this, SLOT(close()));
+
+    connect(this, SIGNAL(landscapeChanged()),
+            this, SLOT(enableExpandLandscape()));
 }
 
 
@@ -153,6 +161,9 @@ void MainWindow::openContourTreeFile()
 
     // if there was no file specified, do nothing
     if (filename.size() == 0) return;
+
+    // update the filename
+    _filename = filename;
 
     // read the contour tree file
     ContourTree* contour_tree;
@@ -199,17 +210,11 @@ void MainWindow::changeLandscapeRoot()
     size_t root_id;
     if (_mainwindow.radioButtonRootMin->isChecked()) 
     {
-        root_id = _landscape_context->getMinLeafID();
+        root_id = _landscape_context->getMinNodeID();
     } 
     else if (_mainwindow.radioButtonRootMax->isChecked()) 
     {
-        root_id = _landscape_context->getMaxLeafID();
-    }
-
-    if (_landscape_context->isValid())
-    {
-        size_t current_root = _landscape_context->getRootID();
-        if (current_root == root_id) return;
+        root_id = _landscape_context->getMaxNodeID();
     }
 
     std::stringstream message;
@@ -310,11 +315,7 @@ void MainWindow::refineSubtree()
     _landscape_context->simplifySubtreeByPersistence(parent, child, persistence);
 
     // we need to rebuild the landscape
-    size_t root = _landscape_context->getMinLeafID();
-    // size_t root = _landscape_context->getRootID();
-    _landscape_context->buildLandscape(root);
-    
-    emit landscapeChanged();
+    changeLandscapeRoot();
 }
 
 
@@ -577,12 +578,31 @@ std::string MainWindow::runCallback(std::string callback_path, unsigned int cell
 
     std::stringstream command;
     command << callback_path;
+
+    if (_filename.size() > 0) {
+        command << " file " << _filename;
+    }
+
+    command << " component ";
     command << " " << parent << " " << parent_value;
     command << " " << child << " " << child_value;
 
-    LandscapeContext::Members members = 
+    LandscapeContext::Members members;
+
+    LandscapeContext::Members arc_members = 
             _landscape_context->getMembers(parent, child);
 
+    LandscapeContext::Members parent_members =
+            _landscape_context->getMembers(parent);
+
+    LandscapeContext::Members child_members =
+            _landscape_context->getMembers(child);
+
+    members.insert(arc_members.begin(), arc_members.end());
+    members.insert(parent_members.begin(), parent_members.end());
+    members.insert(child_members.begin(), child_members.end());
+
+    command << " members ";
     for (LandscapeContext::Members::const_iterator it = members.begin();
             it != members.end(); ++it)
     {
@@ -724,4 +744,25 @@ void MainWindow::rebaseLandscape()
     this->setContext(new_context);
 
     emit landscapeChanged();
+}
+
+
+void MainWindow::enableExpandLandscape()
+{
+    _mainwindow.pushButtonExpand->setEnabled(true);
+}
+
+
+void MainWindow::disableExpandLandscape()
+{
+    _mainwindow.pushButtonExpand->setEnabled(false);
+}
+
+
+void MainWindow::expandLandscape()
+{
+    _landscape_context->expandLandscape();
+
+    // we need to rebuild the landscape
+    changeLandscapeRoot();
 }

@@ -277,6 +277,8 @@ public:
     virtual size_t getRootID() const = 0;
     virtual size_t getMinLeafID() const = 0;
     virtual size_t getMaxLeafID() const = 0;
+    virtual size_t getMinNodeID() const = 0;
+    virtual size_t getMaxNodeID() const = 0;
 
     virtual void buildLandscape(size_t) = 0;
 
@@ -288,6 +290,7 @@ public:
     virtual double getMaxPersistence() const = 0;
 
     virtual void simplifySubtreeByPersistence(size_t, size_t, double) = 0;
+    virtual void expandLandscape() = 0;
 
     virtual void setWeightMap(boost::shared_ptr<denali::WeightMap>) = 0;
 
@@ -303,6 +306,7 @@ public:
     virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id) = 0;
 
     virtual Members getMembers(size_t, size_t) const = 0;
+    virtual Members getMembers(size_t) const = 0;
 };
 
 
@@ -442,23 +446,7 @@ public:
             lscape = _landscape_builder->build(_folded_tree, root);
         }
 
-        std::cout << "# of edges: " << _folded_tree.numberOfEdges() << std::endl;
-
-        for (denali::NodeIterator<FoldedContourTree> it(_folded_tree); !it.done(); ++it)
-        {
-            std::cout << _folded_tree.getID(it.node()) << " " << _folded_tree.getValue(it.node()) << std::endl;
-        }
-
-        for (denali::EdgeIterator<FoldedContourTree> it(_folded_tree); !it.done(); ++it)
-        {
-            std::cout << _folded_tree.getID(_folded_tree.u(it.edge())) << " "
-                      << _folded_tree.getID(_folded_tree.v(it.edge())) << std::endl;
-
-        }
-
         _landscape = boost::shared_ptr<Landscape>(lscape);
-        std::cout << "# triangles: " << numberOfTriangles() << std::endl;
-
     }
 
     size_t getMinLeafID() const 
@@ -473,9 +461,22 @@ public:
         return _folded_tree.getID(node);
     }
 
+    size_t getMinNodeID() const 
+    {
+        typename ContourTree::Node node = denali::findMinNode(_folded_tree);
+        return _folded_tree.getID(node);
+    }
+
+    size_t getMaxNodeID() const
+    {
+        typename ContourTree::Node node = denali::findMaxNode(_folded_tree);
+        return _folded_tree.getID(node);
+    }
+
+
     size_t getRootID() const
     {
-        typename ContourTree::Node root = 
+        typename FoldedContourTree::Node root = 
                 _landscape->getContourTreeNode(_landscape->getRoot());
         return _folded_tree.getID(root);
     }
@@ -702,6 +703,30 @@ public:
     }
 
     Members
+    getMembers(size_t u) const
+    {
+        typedef typename FoldedContourTree::Node Node;
+        typedef typename FoldedContourTree::Members Members;
+
+        Node node;
+        node = _folded_tree.getNode(u);
+        
+        const Members& members = _folded_tree.getNodeMembers(node);
+
+        std::set<std::pair<unsigned int, double> > member_set;
+        for (typename Members::const_iterator it = members.begin();
+                it != members.end(); ++it)
+        {
+            unsigned int id = (*it).getID();
+            double value = (*it).getValue();
+            std::pair<unsigned int, double> member(id, value);
+            member_set.insert(member);
+        }
+
+        return member_set;
+    }
+
+    Members
     getMembers(size_t u, size_t v) const
     {
         typedef typename FoldedContourTree::Node Node;
@@ -727,6 +752,20 @@ public:
         }
 
         return member_set;
+    }
+
+    virtual void expandLandscape()
+    {
+        // get the root of the landscape
+        typedef typename FoldedContourTree::Node Node;
+        Node root = _landscape->getContourTreeNode(_landscape->getRoot());
+
+        // now we expand every edge outward from the root
+        for (denali::UndirectedNeighborIterator<FoldedContourTree> 
+                it(_folded_tree, root); !it.done(); ++it)
+        {
+            denali::expandSubtree(_folded_tree, root, it.neighbor());
+        }
     }
 
 };

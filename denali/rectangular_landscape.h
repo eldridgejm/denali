@@ -587,38 +587,51 @@ public:
         // first, we make a rectangle for the root
         Rectangle root_rectangle(0,0,1,1);
 
-        // now we "split" it into one piece
-        RectangleSplit split = RectangleSplitter(root_rectangle).addWeight(1).split();
+        RectangleSplitter splitter(root_rectangle);
 
-        // insert the split into the embedding
+        // now split the current rectangle according to the total volumes of the children
+        for (ChildIterator<LandscapeTree> child_it(_tree, _tree.getRoot());
+                !child_it.done(); ++child_it) 
+        {
+            double edge_weight = _weights.getArcWeight(child_it.arc()) +
+                                 _weights.getTotalNodeWeight(child_it.child());
+
+            splitter.addWeight(edge_weight);
+        }
+
+        RectangleSplit split = splitter.split();
         _embedding.insertSplit(split, _tree.getRoot());
 
-        // if there is more than one child, we have a problem
-        if (_tree.outDegree(_tree.getRoot()) > 1)
-            throw std::runtime_error("The root node has more than one child.");
-
-        // embed the child's contour
-        Node child = _tree.target(_tree.getFirstOutArc(_tree.getRoot()));
-
-        if (_tree.outDegree(child) == 0) {
-            // the child is a leaf
-            embedLeaf(child, root_rectangle);
-        } else {
-            // the child is a branch
-            embedBranch(child, _tree.getRoot(), root_rectangle, true);
+        // recursively embed the subtree
+        size_t i = 0;;
+        for (ChildIterator<LandscapeTree> it(_tree, _tree.getRoot());
+                !it.done(); ++it)
+        {
+            if (_tree.outDegree(it.child()) == 0) 
+            {
+                // the child is a leaf
+                embedLeaf(it.child(), split.getRectangle(i));
+            } else {
+                // the child is a branch
+                embedBranch(it.arc(), split.getRectangle(i), true);
+            }
+            ++i;
         }
     }
 
 private:
     void embedBranch(
-        Node current,
-        Node parent,
+        Arc arc,
         Rectangle parent_rectangle,
         bool split_vertically)
     {
-        // shrink the parent rectangle by the ratio of total volumes
-        double shrink_ratio = _weights.getTotalNodeWeight(current) /
-                              _weights.getTotalNodeWeight(parent);
+        Node current = _tree.target(arc);
+        Node parent = _tree.source(arc);
+
+        // determine how much to shrink the rectangle
+        double total_volume = _weights.getTotalNodeWeight(current);
+        double arc_volume   = _weights.getArcWeight(arc);
+        double shrink_ratio = total_volume / (total_volume + arc_volume + 1);
 
         Rectangle current_rectangle = parent_rectangle.shrink(shrink_ratio);
 
@@ -652,7 +665,7 @@ private:
                 embedLeaf(it.child(), split.getRectangle(i));
             } else {
                 // the child is a branch
-                embedBranch(it.child(), current, split.getRectangle(i), !split_vertically);
+                embedBranch(it.arc(), split.getRectangle(i), !split_vertically);
             }
             ++i;
         }

@@ -577,6 +577,56 @@ typename GraphType::Node findMaxLeaf(
     return findLeafByComparator(tree, comparator);
 }
 
+
+/// \brief Find the node with the minimum scalar value.
+template <typename GraphType>
+typename GraphType::Node findMinNode(
+    const GraphType& tree)
+{
+    typename GraphType::Node min_node;
+    double min_value = 0.;
+    bool found = false;
+
+    for (NodeIterator<GraphType> it(tree); !it.done(); ++it)
+    {
+        double value = tree.getValue(it.node());
+
+        if (!found || value < min_value)
+        {
+            min_value = value;
+            min_node = it.node();
+            found = true;
+        }
+    }
+
+    return min_node;
+}
+
+
+/// \brief Find the node with the minimum scalar value.
+template <typename GraphType>
+typename GraphType::Node findMaxNode(
+    const GraphType& tree)
+{
+    typename GraphType::Node max_node;
+    double max_value = 0.;
+    bool found = false;
+
+    for (NodeIterator<GraphType> it(tree); !it.done(); ++it)
+    {
+        double value = tree.getValue(it.node());
+
+        if (!found || value > max_value)
+        {
+            max_value = value;
+            max_node = it.node();
+            found = true;
+        }
+    }
+
+    return max_node;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // DisjointSetForest

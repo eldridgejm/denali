@@ -72,6 +72,10 @@ public slots:
     void disableRebaseLandscape();
     void rebaseLandscape();
 
+    void enableExpandLandscape();
+    void disableExpandLandscape();
+    void expandLandscape();
+
 signals:
     void landscapeChanged();
     void cellSelected(unsigned int);
@@ -89,6 +93,8 @@ private:
     CallbacksDialog* _callbacks_dialog;
 
     bool _use_color_map;
+
+    std::string _filename;
 
     enum SelectedReduction 
     {
