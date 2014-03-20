@@ -592,12 +592,12 @@ std::string MainWindow::runCallback(
     command << " " << tempfile.fileName().toUtf8().constData();
 
     if (_filename.size() > 0) {
-        tempfile.write("file\n");
+        tempfile.write("# file\n");
         tempfile.write(_filename.c_str());
         tempfile.write("\n");
     }
 
-    tempfile.write("component\n");
+    tempfile.write("# component\n");
     std::stringstream component_str;
     component_str << parent << " " << parent_value << std::endl;
     component_str << child << " " << child_value << std::endl;
@@ -618,7 +618,7 @@ std::string MainWindow::runCallback(
     members.insert(parent_members.begin(), parent_members.end());
     members.insert(child_members.begin(), child_members.end());
 
-    tempfile.write("members\n");
+    tempfile.write("# members\n");
     for (LandscapeContext::Members::const_iterator it = members.begin();
             it != members.end(); ++it)
     {
@@ -632,7 +632,7 @@ std::string MainWindow::runCallback(
 
     if (provide_subtree)
     {
-        tempfile.write("subtree\n");
+        tempfile.write("# subtree\n");
         LandscapeContext::Members subtree_members = 
                 _landscape_context->getSubtreeMembers(parent, child);
 
@@ -654,7 +654,15 @@ std::string MainWindow::runCallback(
     process.start(command.str().c_str());
     process.waitForFinished(-1);
 
-    QString p_stdout = process.readAll();
+    QString p_stdout = process.readAllStandardOutput();
+    QString p_stderr = process.readAllStandardError();
+
+    if (p_stderr.size() > 0)
+    {
+        std::cerr << "Error while running callback: " << std::endl;
+        std::cerr << p_stderr.toUtf8().constData() << std::endl;
+    }
+
     return p_stdout.toUtf8().constData();
 };
 
