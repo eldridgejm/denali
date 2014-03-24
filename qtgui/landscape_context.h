@@ -894,10 +894,21 @@ public:
         Node root = _landscape->getContourTreeNode(_landscape->getRoot());
 
         // now we expand every edge outward from the root
+        typedef std::vector<typename FoldedContourTree::Node> Neighbors;
+        Neighbors root_neighbors;
+
+        // We have to record the neighbors first, as expanding the neighbor
+        // edges as we find them invalidates the iterator
         for (denali::UndirectedNeighborIterator<FoldedContourTree> 
                 it(_folded_tree, root); !it.done(); ++it)
         {
-            denali::expandSubtree(_folded_tree, root, it.neighbor());
+            root_neighbors.push_back(it.neighbor());
+        }
+        
+        for (typename Neighbors::const_iterator it = root_neighbors.begin();
+                it != root_neighbors.end(); ++it)
+        {
+            denali::expandSubtree(_folded_tree, root, *it);
         }
     }
 
