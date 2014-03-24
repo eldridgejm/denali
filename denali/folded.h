@@ -859,9 +859,20 @@ public:
     }
 
     /// \brief Retrieve a node by ID.
-    Node getNode(unsigned int id) const {
-        NodeFold node_fold = _ct_to_fold_node[_contour_tree.getNode(id)];
-        return _fold_tree.getNodeFromFold(node_fold);
+    Node getNode(unsigned int id) const
+    {
+        typename ContourTree::Node node = _contour_tree.getNode(id);
+
+        // if there isn't a node with the ID, return an invalid node
+        if (_contour_tree.isNodeValid(node)) 
+        {
+            NodeFold node_fold = _ct_to_fold_node[_contour_tree.getNode(id)];
+            return _fold_tree.getNodeFromFold(node_fold);
+        }
+        else
+        {
+            return _fold_tree.getInvalidNode();
+        }
     }
 
     /// \brief Collapse an edge.

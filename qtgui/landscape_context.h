@@ -261,6 +261,8 @@ public:
 
     virtual bool isValid() const = 0;
 
+    virtual bool isNodeValid(unsigned int) const = 0;
+
     virtual size_t numberOfPoints() const = 0;
     virtual Point getPoint(size_t) const = 0;
     virtual Point getMaxPoint() const = 0;
@@ -434,6 +436,15 @@ public:
 
     virtual bool isValid() const {
         return _landscape;
+    }
+
+    virtual bool isNodeValid(unsigned int id) const 
+    {
+        // make a node with the identifier
+        typename FoldedContourTree::Node node = 
+                _folded_tree.getNode(id);
+
+        return _folded_tree.isNodeValid(node);
     }
 
     void buildLandscape(size_t root_id)

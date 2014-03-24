@@ -8,6 +8,7 @@
 
 #include "colormapdialog.h"
 #include "callbacksdialog.h"
+#include "chooserootdialog.h"
 #include "ui_MainWindow.h"
 
 #include "landscape_context.h"
@@ -78,6 +79,9 @@ public slots:
     void disableExpandLandscape();
     void expandLandscape();
 
+    void enableChooseRoot();
+    void chooseRoot();
+
 signals:
     void landscapeChanged();
     void cellSelected(unsigned int);
@@ -93,6 +97,7 @@ private:
 
     ColorMapDialog* _color_map_dialog;
     CallbacksDialog* _callbacks_dialog;
+    ChooseRootDialog* _choose_root_dialog;
 
     bool _use_color_map;
 

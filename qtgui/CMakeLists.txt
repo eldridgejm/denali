@@ -5,15 +5,18 @@ set(SOURCES main.cpp
             mainwindow.cpp 
             landscape_interactor.cpp 
             colormapdialog.cpp 
-            callbacksdialog.cpp)
+            callbacksdialog.cpp
+            chooserootdialog.cpp)
 
 set(HEADERS mainwindow.h 
             colormapdialog.h 
-            callbacksdialog.h)
+            callbacksdialog.h
+            chooserootdialog.h)
 
 qt4_wrap_ui(UI_SRCS MainWindow.ui 
                     ColorMapDialog.ui
-                    CallbacksDialog.ui)
+                    CallbacksDialog.ui
+                    ChooseRootDialog.ui)
 
 qt4_wrap_cpp(HEADERS_MOC ${HEADERS})
 

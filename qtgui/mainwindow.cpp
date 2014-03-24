@@ -14,6 +14,7 @@ MainWindow::MainWindow() :
     _max_persistence_slider_value(100),
     _color_map_dialog(new ColorMapDialog(this)),
     _callbacks_dialog(new CallbacksDialog(this)),
+    _choose_root_dialog(new ChooseRootDialog(this)),
     _use_color_map(false)
 {
     // set up the user inteface
@@ -28,12 +29,6 @@ MainWindow::MainWindow() :
 
     connect(_mainwindow.actionOpen_Tree, SIGNAL(triggered()), 
             this, SLOT(openContourTreeFile()));
-
-    connect(_mainwindow.radioButtonRootMin, SIGNAL(clicked(bool)),
-            this, SLOT(changeLandscapeRoot()));
-
-    connect(_mainwindow.radioButtonRootMax, SIGNAL(clicked(bool)),
-            this, SLOT(changeLandscapeRoot()));
 
     connect(this, SIGNAL(landscapeChanged()), 
             this, SLOT(renderLandscape()));
@@ -120,6 +115,15 @@ MainWindow::MainWindow() :
 
     connect(this, SIGNAL(landscapeChanged()),
             this, SLOT(enableExpandLandscape()));
+
+    // Choose root
+    ////////////////////////////////////////////////////////////////////////////
+
+    connect(this, SIGNAL(landscapeChanged()), 
+            this, SLOT(enableChooseRoot()));
+
+    connect(_mainwindow.pushButtonChooseRoot, SIGNAL(clicked()),
+            this, SLOT(chooseRoot()));
 }
 
 
@@ -209,13 +213,17 @@ void MainWindow::changeLandscapeRoot()
     if (!_landscape_context) return;
 
     size_t root_id;
-    if (_mainwindow.radioButtonRootMin->isChecked()) 
+    if (_choose_root_dialog->isMinimumNodeChecked()) 
     {
         root_id = _landscape_context->getMinNodeID();
     } 
-    else if (_mainwindow.radioButtonRootMax->isChecked()) 
+    else if (_choose_root_dialog->isMaximumNodeChecked()) 
     {
         root_id = _landscape_context->getMaxNodeID();
+    }
+    else
+    {
+        root_id = _choose_root_dialog->getOtherNode();
     }
 
     std::stringstream message;
@@ -816,4 +824,44 @@ void MainWindow::expandLandscape()
 
     // we need to rebuild the landscape
     changeLandscapeRoot();
+}
+
+
+void MainWindow::enableChooseRoot()
+{
+    _mainwindow.pushButtonChooseRoot->setEnabled(true);
+}
+
+
+void MainWindow::chooseRoot()
+{
+    if (_choose_root_dialog->exec() == QDialog::Accepted)
+    {
+        // if a root other than min or max is specified, we have to verify 
+        // that it exists
+        if (_choose_root_dialog->isOtherNodeChecked())
+        {
+            unsigned int other_root = _choose_root_dialog->getOtherNode();
+
+            if (!_landscape_context->isNodeValid(other_root))
+            {
+                QString message("The specified node is not in the landscape. Please choose another.");
+
+                QMessageBox msgbox;
+                msgbox.setIcon(QMessageBox::Warning);
+                msgbox.setText(message);
+                msgbox.exec();
+
+                chooseRoot();
+
+                // let the recursive call to chooseRoot actually change the 
+                // landscape root
+                return;
+            }
+        }
+
+        // actually change the landscape root
+        changeLandscapeRoot();
+    }
+
 }
