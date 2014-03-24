@@ -1,0 +1,63 @@
+TODO
+====
+
+- Fix LandscapeTree concept (concrete implementation is not being checked)
+- Add landscape weights concept
+
+A visualizer plugin system
+==========================
+
+In the base view, hovering over a component will show a popup of that
+component's information. Left click will control the camera. Right click will
+select a component of the landscape and display the full information in a
+special section.
+
+In the "Simplified View", we will want a button for simplification and
+desimplification. The user will select a component of the landscape, as per
+usual, and click the button to simplify or desimplify the landscape.
+
+In the "Resample View", we will have a button for resampling. The user will
+select a component of the landscape, and clicking the button will call the
+resampling callback, the contour tree will be rebuilt, the landscape recomputed,
+and the view redrawn.
+
+I want to implement a plugin system that will allow this functionality to be
+mixed and matched. We will add the `SimplifiedViewPlugin` and `ResamplePlugin`
+as necessary.
+
+As a first guess, it seems like I should make a `Visualizer` class that contains
+a list of `Plugins`. The plugins will derive from the `AbstractPlugin` base
+class.
+
+What does a plugin need to be able to do? What data structures does it need to
+have access to?
+
+ - The `SimplifiedView` needs to be able to access the simplification algorithms
+   and the simplified tree. It should call simplify or desimplify on the tree.
+   
+ - `ResampleView` needs to be able to invoke a callback function and recompute a
+   contour tree, which means having access to the simplicial complex that was
+   given as input. Or perhaps a better solution is to leave this responsibility
+   to the user: we give the callback a bounding box of the selection, and the
+   user supplies a new simplicial complex containing the old input plus whatever
+   new samples he or she generated.
+
+ - Both need to be able to redraw the landscape. 
+
+ - Both need to supply a list of buttons and actions that buttons will invoke.
+
+A plan
+======
+
+A visualizer will be constructed by passing it a landscape generator. We can
+register plugins with the visualizer. Calling the "visualize" method will open
+the render window and show the visualization.
+
+The landscape should be recomputed whenever the contour tree changes. Any plugin
+which requires changing the contour tree should call the visualizer's
+`visualize` method, which will recompute the landscape from whatever contour tree
+is passed as input, and display the result.
+
+So, we will have a `Visualizer<Landscape>` template class. It will be
+responsible for implementing the basic mouse controls and drawing the landscape
+itself.

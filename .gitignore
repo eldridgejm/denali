@@ -7,7 +7,7 @@ tags
 *.o
 *.pyc
 *.mexa64
-
-
 build/
-deps/
+extern/
+doc/html/
+doc/latex/
