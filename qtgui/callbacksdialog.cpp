@@ -113,14 +113,20 @@ bool CallbacksDialog::provideVoidSubtree() {
 
 void CallbacksDialog::clearInfoCallback() {
     _dialog.lineEditInfoCallback->clear();
+    _dialog.checkBoxRunInfoOnSelection->setChecked(false);
+    _dialog.checkBoxInfoSubtree->setChecked(false);
 }
 
 
 void CallbacksDialog::clearTreeCallback() {
     _dialog.lineEditTreeCallback->clear();
+    _dialog.checkBoxRunTreeOnSelection->setChecked(false);
+    _dialog.checkBoxTreeSubtree->setChecked(false);
 }
 
 
 void CallbacksDialog::clearVoidCallback() {
     _dialog.lineEditVoidCallback->clear();
+    _dialog.checkBoxRunVoidOnSelection->setChecked(false);
+    _dialog.checkBoxVoidSubtree->setChecked(false);
 }
