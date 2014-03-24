@@ -495,6 +495,22 @@ void MainWindow::configureColorMap()
                 reduction = boost::shared_ptr<Reduction>(new MaxReduction);
         }
 
+        // determine what parts of a component to include in the reduction
+        _landscape_context->setParentInReduction(
+                _color_map_dialog->isParentContributorChecked());
+
+        _landscape_context->setChildInReduction(
+                _color_map_dialog->isChildContributorChecked());
+
+        if (_color_map_dialog->isBothContributorChecked())
+        {
+            _landscape_context->setParentInReduction(true);
+            _landscape_context->setChildInReduction(true);
+        }
+
+        _landscape_context->setMembersInReduction(
+                _color_map_dialog->includeMembers());
+
         try 
         {
             _landscape_context->setColorMap(color_map);

@@ -359,7 +359,9 @@ class ConcreteLandscapeContext : public LandscapeContext
         return it->second;
     }
 
-    virtual double computeEdgeReduction(typename FoldedContourTree::Edge edge) const
+    virtual double computeEdgeReduction(
+            typename FoldedContourTree::Edge edge,
+            typename FoldedContourTree::Node parent) const
     {
         typedef typename FoldedContourTree::Members Members;
 
@@ -369,38 +371,79 @@ class ConcreteLandscapeContext : public LandscapeContext
         // get the edge's members
         const Members& edge_members = _folded_tree.getEdgeMembers(edge);
 
-        // insert each member into reduction
         _reduction->clear();
-        for (typename Members::const_iterator it = edge_members.begin();
-                it != edge_members.end(); ++it)
+
+        // insert each member into reduction (if we are supposed to)
+        if (_members_in_reduction)
         {
-            unsigned int member_id = (*it).getID();
+            for (typename Members::const_iterator it = edge_members.begin();
+                    it != edge_members.end(); ++it)
+            {
+                unsigned int member_id = (*it).getID();
 
-            // the reference value is the value of the contour tree node
-            double reference_value = (*it).getValue();
+                // the reference value is the value of the contour tree node
+                double reference_value = (*it).getValue();
 
-            // lookup the member in the color map
-            double color_value = getColorMapValue(member_id);
+                // lookup the member in the color map
+                double color_value = getColorMapValue(member_id);
 
-            // insert the unsigned int id of the member
-            _reduction->insert(reference_value, color_value);
+                // insert the unsigned int id of the member
+                _reduction->insert(reference_value, color_value);
+            }
         }
 
         // do the same for each of the edge's nodes
-        typename FoldedContourTree::Node u = _folded_tree.u(edge);
-        typename FoldedContourTree::Node v = _folded_tree.v(edge);
+        typename FoldedContourTree::Node child = _folded_tree.opposite(parent, edge);
 
-        unsigned int u_id = _folded_tree.getID(u);
-        unsigned int v_id = _folded_tree.getID(v);
+        if (_parent_in_reduction)
+        {
+            unsigned int parent_id = _folded_tree.getID(parent);
+            double parent_reference_value = _folded_tree.getValue(parent);
+            double parent_color_value = getColorMapValue(parent_id);
+            _reduction->insert(parent_reference_value, parent_color_value);
 
-        double u_reference_value = _folded_tree.getValue(u);
-        double v_reference_value = _folded_tree.getValue(v);
+            const Members& node_members = _folded_tree.getNodeMembers(parent);
 
-        double u_color_value = getColorMapValue(u_id);
-        double v_color_value = getColorMapValue(v_id);
+            for (typename Members::const_iterator it = node_members.begin();
+                    it != node_members.end(); ++it)
+            {
+                unsigned int member_id = (*it).getID();
 
-        _reduction->insert(u_reference_value, u_color_value);
-        _reduction->insert(v_reference_value, v_color_value);
+                // the reference value is the value of the contour tree node
+                double reference_value = (*it).getValue();
+
+                // lookup the member in the color map
+                double color_value = getColorMapValue(member_id);
+
+                // insert the unsigned int id of the member
+                _reduction->insert(reference_value, color_value);
+            }
+        }
+
+        if (_child_in_reduction)
+        {
+            unsigned int child_id = _folded_tree.getID(child);
+            double child_reference_value = _folded_tree.getValue(child);
+            double child_color_value = getColorMapValue(child_id);
+            _reduction->insert(child_reference_value, child_color_value);
+
+            const Members& node_members = _folded_tree.getNodeMembers(child);
+
+            for (typename Members::const_iterator it = node_members.begin();
+                    it != node_members.end(); ++it)
+            {
+                unsigned int member_id = (*it).getID();
+
+                // the reference value is the value of the contour tree node
+                double reference_value = (*it).getValue();
+
+                // lookup the member in the color map
+                double color_value = getColorMapValue(member_id);
+
+                // insert the unsigned int id of the member
+                _reduction->insert(reference_value, color_value);
+            }
+        }
         
         return _reduction->reduce();
     }    
@@ -409,11 +452,20 @@ class ConcreteLandscapeContext : public LandscapeContext
     {
         assert(_color_map && _reduction);
         bool first_iteration = true;
-        for (denali::EdgeIterator<FoldedContourTree> it(_folded_tree);
+        for (denali::ArcIterator<Landscape> it(*_landscape);
                 !it.done(); ++it) 
         {
-            double value = computeEdgeReduction(it.edge());            
-            (*_reduction_map)[it.edge()] = value;
+            // get the contour tree edge
+            typename FoldedContourTree::Edge edge = 
+                    _landscape->getContourTreeEdge(it.arc());
+
+            // get the parent of the arc
+            typename Landscape::Node landscape_parent = _landscape->source(it.arc());
+            typename FoldedContourTree::Node parent =
+                    _landscape->getContourTreeNode(landscape_parent);
+
+            double value = computeEdgeReduction(edge, parent);            
+            (*_reduction_map)[edge] = value;
 
             if (value > _max_reduction || first_iteration)
                 _max_reduction = value;
@@ -470,6 +522,8 @@ public:
         }
 
         _landscape = boost::shared_ptr<Landscape>(lscape);
+
+        if (_color_map && _reduction) computeReductions();
     }
 
     size_t getMinLeafID() const 
@@ -595,8 +649,6 @@ public:
         denali::PersistenceSimplifier simplifier(persistence); 
 
         simplifier.simplifySubtree(_folded_tree, parent_node, child_node);
-
-        if (_color_map && _reduction) computeReductions();
     }
 
     /// \brief Sets the weight map, assuming ownership of the memory.
