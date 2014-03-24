@@ -29,11 +29,13 @@ def build_cluster_tree(slc, height_function):
     return tree
 
 
-def exp_height_factory(alpha, beta, gamma=0.1):
+def exp_height(alpha, beta, gamma=0.1):
+    """An exponential height function. Points which are close in the input 
+    space are mapped to greater heights."""
     a = -_numpy.log(gamma)/(alpha - beta)
     
-    def exp_height(cluster):
+    def height_function(cluster):
         x = cluster[2]
         return _numpy.exp(-a*(x - beta))
 
-    return exp_height
+    return height_function
