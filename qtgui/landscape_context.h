@@ -304,6 +304,9 @@ public:
     virtual void setMaxReductionValue(double) = 0;
     virtual void setMinReductionValue(double) = 0;
     virtual bool hasReduction() const = 0;
+    virtual void setParentInReduction(bool) = 0;
+    virtual void setChildInReduction(bool) = 0;
+    virtual void setMembersInReduction(bool) = 0;
 
     virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id) = 0;
 
@@ -338,6 +341,10 @@ class ConcreteLandscapeContext : public LandscapeContext
     double _min_reduction;
 
     double _max_persistence;
+
+    bool _parent_in_reduction;
+    bool _child_in_reduction;
+    bool _members_in_reduction;
 
     virtual double getColorMapValue(unsigned int id) const
     {
@@ -426,7 +433,10 @@ public:
             _landscape_builder(boost::shared_ptr<LandscapeBuilder>(
                     new LandscapeBuilder)),
             _folded_tree(*_contour_tree),
-            _reduction_map(new ReductionMap(_folded_tree))
+            _reduction_map(new ReductionMap(_folded_tree)),
+            _parent_in_reduction(true),
+            _child_in_reduction(true),
+            _members_in_reduction(true)
     {
         _max_persistence = computeMaxPersistence(*_contour_tree);
         
@@ -657,6 +667,18 @@ public:
 
     virtual bool hasReduction() const {
         return _color_map && _reduction;
+    }
+
+    virtual void setParentInReduction(bool value) {
+        _parent_in_reduction = value;
+    }
+
+    virtual void setChildInReduction(bool value) {
+        _child_in_reduction = value;
+    }
+
+    virtual void setMembersInReduction(bool value) {
+        _members_in_reduction = value;
     }
 
     virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id)  
