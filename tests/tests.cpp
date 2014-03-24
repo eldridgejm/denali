@@ -587,7 +587,7 @@ SUITE(Simplify)
         denali::PersistenceSimplifier simplifier(10);
         simplifier.simplify(folded_tree);
 
-        CHECK_EQUAL(2, folded_tree.numberOfNodes());
+        CHECK_EQUAL((size_t) 2, folded_tree.numberOfNodes());
     }
 
 
@@ -628,7 +628,7 @@ SUITE(Simplify)
 
         simplifier.simplify(folded_tree);
 
-        CHECK_EQUAL(2, folded_tree.numberOfNodes());
+        CHECK_EQUAL((size_t) 2, folded_tree.numberOfNodes());
 
     }
 
