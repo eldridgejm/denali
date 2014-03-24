@@ -33,3 +33,23 @@ std::string ColorMapDialog::getColorMapPath() const {
 int ColorMapDialog::getReductionIndex() const {
     return _dialog.comboBoxReduction->currentIndex();
 }
+
+
+bool ColorMapDialog::isParentContributorChecked() const {
+    return _dialog.radioButtonParentContributor->isChecked();
+}
+
+
+bool ColorMapDialog::isChildContributorChecked() const {
+    return _dialog.radioButtonChildContributor->isChecked();
+}
+
+
+bool ColorMapDialog::isBothContributorChecked() const {
+    return _dialog.radioButtonBothContributor->isChecked();
+}
+
+
+bool ColorMapDialog::includeMembers() const {
+    return _dialog.checkBoxIncludeMembers->isChecked();
+}

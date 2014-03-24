@@ -50,21 +50,21 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QRadioButton" name="radioButton_2">
+       <widget class="QRadioButton" name="radioButtonChildContributor">
         <property name="text">
          <string>Child</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="radioButtonParentContributor">
         <property name="text">
          <string>Parent</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QRadioButton" name="radioButton">
+       <widget class="QRadioButton" name="radioButtonBothContributor">
         <property name="text">
          <string>Both</string>
         </property>
@@ -74,7 +74,7 @@
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBoxIncludeMembers">
         <property name="text">
          <string>Include members</string>
         </property>

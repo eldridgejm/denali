@@ -18,6 +18,11 @@ public:
     std::string getColorMapPath() const;
     int getReductionIndex() const;
 
+    bool isParentContributorChecked() const;
+    bool isChildContributorChecked() const;
+    bool isBothContributorChecked() const;
+    bool includeMembers() const;
+
 public slots:
     void openColorMapFile();
 
