@@ -449,7 +449,7 @@ public:
 
     void buildLandscape(size_t root_id)
     {
-        typename ContourTree::Node root = _folded_tree.getNode(root_id);
+        typename FoldedContourTree::Node root = _folded_tree.getNode(root_id);
         Landscape* lscape;
 
         if (_weight_map)
@@ -464,25 +464,25 @@ public:
 
     size_t getMinLeafID() const 
     {
-        typename ContourTree::Node node = denali::findMinLeaf(_folded_tree);
+        typename FoldedContourTree::Node node = denali::findMinLeaf(_folded_tree);
         return _folded_tree.getID(node);
     }
 
     size_t getMaxLeafID() const
     {
-        typename ContourTree::Node node = denali::findMaxLeaf(_folded_tree);
+        typename FoldedContourTree::Node node = denali::findMaxLeaf(_folded_tree);
         return _folded_tree.getID(node);
     }
 
     size_t getMinNodeID() const 
     {
-        typename ContourTree::Node node = denali::findMinNode(_folded_tree);
+        typename FoldedContourTree::Node node = denali::findMinNode(_folded_tree);
         return _folded_tree.getID(node);
     }
 
     size_t getMaxNodeID() const
     {
-        typename ContourTree::Node node = denali::findMaxNode(_folded_tree);
+        typename FoldedContourTree::Node node = denali::findMaxNode(_folded_tree);
         return _folded_tree.getID(node);
     }
 
@@ -536,10 +536,10 @@ public:
         typename Landscape::Node child_node  = _landscape->target(arc);
 
         // now map them to contour tree ids
-        typename ContourTree::Node parent_ct_node = 
+        typename FoldedContourTree::Node parent_ct_node = 
                 _landscape->getContourTreeNode(parent_node);
 
-        typename ContourTree::Node child_ct_node = 
+        typename FoldedContourTree::Node child_ct_node = 
                 _landscape->getContourTreeNode(child_node);
 
         parent = _folded_tree.getID(parent_ct_node);
