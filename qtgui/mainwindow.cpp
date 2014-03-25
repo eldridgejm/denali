@@ -139,7 +139,8 @@ void MainWindow::setContext(LandscapeContext* context)
     disableClearColorMap();
     disableClearWeightMap();
 
-    // choose the root of the landscape
+    // choose the root of the landscape to be the minimum, by default
+    _choose_root_dialog->setMinimumNodeChecked(true);
     this->changeLandscapeRoot();
 
     // update the persistence slider

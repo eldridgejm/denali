@@ -34,3 +34,13 @@ unsigned int ChooseRootDialog::getOtherNode() const {
     
     return _dialog.lineEditOtherNode->text().toInt();
 }
+
+
+void ChooseRootDialog::setMinimumNodeChecked(bool option) const {
+    _dialog.radioButtonMinimumNode->setChecked(option);
+}
+
+
+void ChooseRootDialog::setMaximumNodeChecked(bool option) const {
+    _dialog.radioButtonMaximumNode->setChecked(option);
+}
