@@ -38,15 +38,15 @@ def read_selection(fileobj):
 def write_tree(fileobj, tree):
     """Writes a tree in denali format."""
     # write the number of vertices
-    f.write("{}\n".format(len(tree)))
+    fileobj.write("{}\n".format(len(tree)))
 
     # now write each node to the file, along with its value
     for node in tree:
-        f.write("{}\t{}\n".format(node, tree.node[node]['value']))
+        fileobj.write("{}\t{}\n".format(node, tree.node[node]['value']))
 
     # and write each edge
     for u,v in tree.edges_iter():
-        f.write("{}\t{}\n".format(u,v))
+        fileobj.write("{}\t{}\n".format(u,v))
 
 
 def write_colors_from_arrays(fileobj, ids, values):
