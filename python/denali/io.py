@@ -57,3 +57,14 @@ def write_colors_from_arrays(fileobj, ids, values):
     array."""
     data = _numpy.column_stack((ids, values))
     _numpy.savetxt(fileobj, data, fmt="%d\t%f")
+
+
+def write_vertices(fileobj, vertex_values):
+    """Writes the contiguous vertex values to the file."""
+    fileobj.write("\n".join([str(x) for x in vertex_values]))
+
+
+def write_edges(fileobj, edges):
+    """Writes the edges to the file."""
+    for u,v in edges:
+        fileobj.write("{}\t{}\n".format(u,v))
