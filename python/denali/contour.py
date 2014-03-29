@@ -1,5 +1,6 @@
 from sklearn.neighbors import kneighbors_graph as _kneighbors_graph
 import networkx as _networkx
+import numpy as _numpy
 
 def kneighbors_complex(data, k):
     """
@@ -9,7 +10,7 @@ def kneighbors_complex(data, k):
     nn = _kneighbors_graph(data, k)
     
     # get an array of u indices and v indices
-    u,v = np.nonzero(nn)
+    u,v = _numpy.nonzero(nn)
     
     # and zip them together
     edges = zip(u.tolist(), v.tolist())
