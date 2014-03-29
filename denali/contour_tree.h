@@ -235,6 +235,7 @@ public:
         _nodes_plus_members++;
 
         // the convention: a node is in its own member set
+        _node_to_members[node].clear();
         _node_to_members[node].insert(Member(id, value));
         return node;
     }
@@ -243,6 +244,7 @@ public:
     Edge addEdge(Node u, Node v)
     {
         Edge edge = _graph.addEdge(u,v);
+        _edge_to_members[edge].clear();
         return edge;
     }
 
@@ -1207,7 +1209,8 @@ public:
         }
 
         // now, remove them
-        while (regular_nodes.size() > 0) {
+        while (regular_nodes.size() > 0) 
+        {
             Node v = regular_nodes.front();
             regular_nodes.pop();
 
