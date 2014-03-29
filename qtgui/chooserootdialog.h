@@ -22,6 +22,9 @@ public slots:
     bool isOtherNodeChecked() const;
     unsigned int getOtherNode() const;
 
+    void setMinimumNodeChecked(bool option = true) const;
+    void setMaximumNodeChecked(bool option = true) const;
+
 private:
 
     Ui::ChooseRootDialog _dialog;    
