@@ -68,3 +68,10 @@ def write_edges(fileobj, edges):
     """Writes the edges to the file."""
     for u,v in edges:
         fileobj.write("{}\t{}\n".format(u,v))
+
+
+def write_weights_from_arrays(fileobj, ids, weights):
+    """Writes a weight map from two arrays, one containing the ids, and 
+    another with their corresponding weights."""
+    data = _numpy.column_stack((ids, weights))
+    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
