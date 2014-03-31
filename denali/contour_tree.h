@@ -1106,11 +1106,20 @@ public:
 
             if (join_tree.outDegree(join_tree.getNode(vi)) == 0) {
                 // get the parent in the join tree
-                unsigned int vk =
-                    join_tree.getID(
-                        join_tree.source(
-                            join_tree.getFirstInArc(
-                                join_tree.getNode(vi))));
+
+                JoinSplitTree::Node vk_node = join_tree.source(
+                                              join_tree.getFirstInArc(
+                                              join_tree.getNode(vi)));
+
+                // if the input was invalid, vk_node may be invalid. We'll error
+                // check here:
+                if (!join_tree.isNodeValid(vk_node))
+                {
+                    throw std::runtime_error("While merging trees, invalid node encountered. "
+                            "Was the input simplicial complex connected?");
+                }
+
+                unsigned int vk = join_tree.getID(vk_node);
 
                 // add the edge to the merge tree
                 merge_tree.addEdge(merge_tree_nodes[vi], merge_tree_nodes[vk]);
