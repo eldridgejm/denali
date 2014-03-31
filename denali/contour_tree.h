@@ -1,10 +1,12 @@
 #ifndef DENALI_CONTOUR_TREE_H
 #define DENALI_CONTOUR_TREE_H
 
-#include <boost/shared_ptr.hpp>
 #include <map>
 #include <queue>
 #include <set>
+#include <stdexcept>
+
+#include <boost/shared_ptr.hpp>
 
 #include <denali/graph_iterators.h>
 #include <denali/graph_maps.h>
@@ -496,6 +498,13 @@ public:
     {
         boost::shared_ptr<Graph> old_graph = graph;
         graph = boost::shared_ptr<Graph>(new Graph);
+
+        if (old_graph->numberOfNodes() != old_graph->numberOfEdges() + 1)
+        {
+            throw std::runtime_error("The precomputed graph does not "
+                "appear to be a tree.");
+        }
+
         return ContourTree(old_graph);
     }
 

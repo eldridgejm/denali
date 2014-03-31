@@ -168,12 +168,30 @@ void MainWindow::openContourTreeFile()
     // if there was no file specified, do nothing
     if (filename.size() == 0) return;
 
+    // read the contour tree file
+    ContourTree* contour_tree = NULL;
+    try
+    {
+        contour_tree = new ContourTree(denali::readContourTreeFile(filename.c_str()));
+    }
+    catch (std::exception& e)
+    {
+        QString message = QString::fromStdString(
+                std::string("There was a problem reading the contour tree file: ") + 
+                e.what());
+
+        QMessageBox msgbox;
+        msgbox.setIcon(QMessageBox::Warning);
+        msgbox.setText(message);
+        msgbox.exec();
+
+        delete contour_tree;
+
+        return;
+    }
+
     // update the filename
     _filename = filename;
-
-    // read the contour tree file
-    ContourTree* contour_tree;
-    contour_tree = new ContourTree(denali::readContourTreeFile(filename.c_str()));
 
     // wrap them in a context
     Context* context = new Context(contour_tree);
