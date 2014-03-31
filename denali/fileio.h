@@ -85,13 +85,13 @@ public:
     {
         if (line.size() == 0) {
             std::stringstream msg;
-            msg << "Not enough values to read on line " << lineno;
+            msg << "While parsing vertices, not enough values to read on line " << lineno;
             throw std::runtime_error(msg.str());
         }
 
         if (line.size() > 1) {
             std::stringstream msg;
-            msg << "Too many values on line " << lineno;
+            msg << "While parsing vertices, too many values on line " << lineno;
             throw std::runtime_error(msg.str());
         }
 
@@ -148,7 +148,7 @@ public:
     {
         if (line.size() != 2) {
             std::stringstream msg;
-            msg << "More or less than 2 node ids on line " << lineno;
+            msg << "While parsing edges, more or less than 2 node ids on line " << lineno;
             throw std::runtime_error(msg.str());
         }
 
