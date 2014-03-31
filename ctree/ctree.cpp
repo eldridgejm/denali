@@ -72,6 +72,13 @@ int main(int argc, char ** argv) try
         denali::ContourTree contour_tree =
             denali::ContourTree::compute(plex, carrs_algorithm);
 
+        typedef denali::CarrsAlgorithm::JoinSplitTree JoinSplitTree;
+
+        const JoinSplitTree& join_tree = carrs_algorithm.getJoinTree();
+        const JoinSplitTree& split_tree = carrs_algorithm.getSplitTree();
+
+        std::cout << "The join tree has " << join_tree.numberOfNodes() << " nodes." << std::endl;
+
         // write it to disk
         denali::writeContourTreeFile(argv[3], contour_tree);
     }

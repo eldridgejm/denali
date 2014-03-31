@@ -929,11 +929,10 @@ public:
 
     /// \brief Compute a contour tree from a simplicial complex.
     template <typename ScalarSimplicialComplex, typename UndirectedScalarMemberIDGraph>
-    static void compute(
+    void compute(
         const ScalarSimplicialComplex& simplicial_complex,
         UndirectedScalarMemberIDGraph& graph)
     {
-
         // clear the output
         graph.clear();
 
@@ -952,13 +951,23 @@ public:
         // and compute the total order
         TotalOrder order = TotalOrder::compute(adapter, sorter);
 
-        JoinSplitTree join_tree = computeJoinTree(simplicial_complex, order);
-        JoinSplitTree split_tree = computeSplitTree(simplicial_complex, order);
+        _join_tree = boost::shared_ptr<JoinSplitTree>(new JoinSplitTree(
+                computeJoinTree(simplicial_complex, order)));
 
-        computeMergeTree(simplicial_complex, join_tree, split_tree, graph);
+        _split_tree = boost::shared_ptr<JoinSplitTree>(new JoinSplitTree(
+                computeSplitTree(simplicial_complex, order)));
+
+        computeMergeTree(simplicial_complex, *_join_tree, *_split_tree, graph);
         removeRegularNodes(graph, order);
     }
 
+    const JoinSplitTree& getJoinTree() const {
+        return *_join_tree;
+    }
+
+    const JoinSplitTree& getSplitTree() const {
+        return *_split_tree;
+    }
 
     /// \brief Compute the directed join tree.
     template <typename ScalarSimplicialComplex, typename TotalOrder>
@@ -1255,6 +1264,10 @@ public:
             tree.removeNode(v);
         }
     }
+
+private:
+    boost::shared_ptr<JoinSplitTree> _join_tree;
+    boost::shared_ptr<JoinSplitTree> _split_tree;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
