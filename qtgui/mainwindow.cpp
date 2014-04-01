@@ -10,6 +10,8 @@
 #include <cmath>
 #include <sstream>
 
+const int PROGRESS_WAIT_TIME = 300;
+
 MainWindow::MainWindow() :
     _max_persistence_slider_value(100),
     _color_map_dialog(new ColorMapDialog(this)),
@@ -152,6 +154,12 @@ void MainWindow::setContext(LandscapeContext* context)
 }
 
 
+denali::ContourTree* readAndAllocateContourTree(std::string filename)
+{
+    return new denali::ContourTree(denali::readContourTreeFile(filename.c_str()));
+}
+
+
 void MainWindow::openContourTreeFile()
 {
     typedef denali::ContourTree ContourTree;
@@ -172,13 +180,28 @@ void MainWindow::openContourTreeFile()
     ContourTree* contour_tree = NULL;
     try
     {
-        contour_tree = new ContourTree(denali::readContourTreeFile(filename.c_str()));
+        QProgressDialog progress;
+        progress.setLabelText("Reading contour tree...");
+        progress.setRange(0,0);
+        progress.setCancelButton(0);
+
+        // only show the progress bar if some time has passed
+        QTimer::singleShot(PROGRESS_WAIT_TIME, &progress, SLOT(show()));
+
+        QFuture<ContourTree*> tree_future = 
+                QtConcurrent::run(readAndAllocateContourTree, filename);
+
+        while (!tree_future.isFinished())
+        {
+            QApplication::processEvents();
+        }
+
+        contour_tree = tree_future.result();
+
     }
     catch (std::exception& e)
     {
-        QString message = QString::fromStdString(
-                std::string("There was a problem reading the contour tree file: ") + 
-                e.what());
+        QString message("There was a problem reading the contour tree file.");
 
         QMessageBox msgbox;
         msgbox.setIcon(QMessageBox::Warning);
@@ -249,7 +272,21 @@ void MainWindow::changeLandscapeRoot()
     message << "The landscape is now rooted at node " << root_id << ".";
     this->setStatus(message.str());
 
-    _landscape_context->buildLandscape(root_id);
+    QFuture<void> result = 
+            QtConcurrent::run(&*_landscape_context, &LandscapeContext::buildLandscape, root_id);
+
+    QProgressDialog progress;
+    progress.setLabelText("Building landscape...");
+    progress.setRange(0,0);
+    progress.setCancelButton(0);
+
+    // only show the progress bar if some time has passed
+    QTimer::singleShot(PROGRESS_WAIT_TIME, &progress, SLOT(show()));
+
+    while (!result.isFinished())
+    {
+        QApplication::processEvents();
+    }
 
     emit landscapeChanged();
 }
