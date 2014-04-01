@@ -1,14 +1,11 @@
-denali - a tool for visualizing scalar trees
+denali
+======
+A tool for visualizing scalar trees
 
-Table of Contents
-=================
-1. Installation
-    1.1 Linux
-
-1. Installation
+Installation
 ================================================================================
 
-1.1 Linux
+Linux
 --------------------------------------------------------------------------------
 The recommended method of installation on Linux is from source. The build
 process is managed by CMake. To build denali, create a build directory
