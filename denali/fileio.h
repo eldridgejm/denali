@@ -189,6 +189,8 @@ void readSimplicialEdgeFile(
 //
 ////////////////////////////////////////////////////////////////////////////
 
+/// \brief Write a contour tree to a file.
+/// \ingroup fileio
 template <typename ContourTree>
 void writeContourTreeFile(
     const char * filename,
@@ -362,6 +364,8 @@ public:
 };
 
 
+/// \brief Read a contour tree from a stream.
+/// \ingroup fileio
 inline ContourTree readContourTreeFromStream(
     std::istream& ctstream)
 {
@@ -382,6 +386,8 @@ inline ContourTree readContourTreeFromStream(
 }
 
 
+/// \brief Read a contour tree from a file.
+/// \ingroup fileio
 inline ContourTree readContourTreeFile(
     const char * filename)
 {
@@ -435,6 +441,8 @@ public:
 };
 
 
+/// \brief Read a weight map from a stream.
+/// \ingroup fileio
 inline void readWeightMapFromStream(
     std::istream& ctstream,
     WeightMap& weight_map)
@@ -453,6 +461,8 @@ inline void readWeightMapFromStream(
 }
 
 
+/// \brief Read a weight map from a file.
+/// \ingroup fileio
 inline void readWeightMapFile(
     const char * filename,
     WeightMap& weight_map)
@@ -509,6 +519,8 @@ public:
 };
 
 
+/// \brief Read a color map from a stream.
+/// \ingroup fileio
 inline void readColorMapFromStream(
     std::istream& ctstream,
     ColorMap& color_map)
@@ -527,6 +539,8 @@ inline void readColorMapFromStream(
 }
 
 
+/// \brief Read a color map from a file.
+/// \ingroup fileio
 inline void readColorMapFile(
     const char * filename,
     ColorMap& color_map)
@@ -544,6 +558,8 @@ inline void readColorMapFile(
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+/// \brief Write a join or split tree to a file.
+/// \ingroup fileio
 template <typename JoinSplitTree, typename ScalarSimplicialComplex>
 void writeJoinSplitTreeFile(
     const char * filename,

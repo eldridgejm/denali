@@ -908,62 +908,79 @@ public:
         buildLandscape();
     }
 
+    /// \brief Returns the number of points in the embedding.
     size_t numberOfPoints() const {
         return _embedding.numberOfPoints();
     }
 
+    /// \brief Gets the point at an index.
     Point getPoint(size_t index) const {
         return _embedding.getPoint(index);
     }
 
+    /// \brief Retrieves the point with the greatest z value.
     Point getMaxPoint() const {
         return _embedding.getMaxPoint();
     }
 
+    /// \brief Retrieves the point with the least z value.
     Point getMinPoint() const {
         return _embedding.getMinPoint();
     }
 
+    /// \brief Returns the number of triangles in the embedding.
     size_t numberOfTriangles() const {
         return _triangularization.numberOfTriangles();
     }
 
+    /// \brief Gets the triangle at the index.
     Triangle getTriangle(size_t index) const {
         return _triangularization.getTriangle(index);
     }
 
+    /// \brief Gets the arc (component) that a triangle represents.
     Arc getComponentFromTriangle(Triangle tri) const {
         return _triangularization.getArc(tri);
     }
 
+    /// \brief Retrieves the arc (component) from the arc's identifier.
     Arc getComponentFromIdentifier(unsigned int identifier) const {
         return this->getArcFromIdentifier(identifier);
     }
 
+    /// \brief Returns the weight of the component.
     double getComponentWeight(Arc arc) const {
         return _weights.getArcWeight(arc);
     }
 
+    /// \brief Returns the total weight of the component.
     double getTotalNodeWeight(Node node) const {
         return _weights.getTotalNodeWeight(node);
     }
 
+    /// \brief Returns the contour tree node that corresponds to this landscape node.
     typename ContourTree::Node getContourTreeNode(Node node) const {
         return _tree.getContourTreeNode(node);
     }
 
+    /// \brief Returns the edge in the contour tree that corresponds to this arc.
     typename ContourTree::Edge getContourTreeEdge(Arc arc) const {
         return _tree.getContourTreeEdge(arc);
     }
 
+    /// \brief Given a node in the contour tree, returns the corresponding node
+    /// from the landscape.
     Node getLandscapeTreeNode(typename ContourTree::Node node) const {
         return _tree.getLandscapeTreeNode(node);
     }
 
+    /// \brief Given an edge in the contour tree, returns the corresponding arc
+    /// from the landscape.
     Node getLandscapeTreeArc(typename ContourTree::Edge edge) const {
         return _tree.getLandscapeTreeArc(edge);
     }
 
+    /// \brief Returns the root of the landscape.
     Node getRoot() const {
         return _tree.getRoot();
     }
@@ -971,6 +988,7 @@ public:
 };
 
 
+/// \brief A builder of rectangular landscapes.
 template <typename ContourTree>
 class denali::RectangularLandscapeBuilder
 {
