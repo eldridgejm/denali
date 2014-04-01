@@ -9,6 +9,6 @@ tags
 *.mexa64
 build/
 extern/
-doc/html/
-doc/latex/
+doc/api/html/
+doc/api/latex/
 doxygen_warn.log
