@@ -880,6 +880,25 @@ public:
         }
     }
 
+    DirectedIDGraph(const DirectedIDGraph& other) : 
+            Mixin(_graph), _node_to_id(_graph)
+    {
+        // copy the nodes
+        for (size_t i=0; i<other.numberOfNodes(); ++i)
+        {
+            this->addNode();
+        }
+
+        for (ArcIterator<DirectedIDGraph> arc_it(other);
+                !arc_it.done(); ++arc_it)
+        {
+            Node parent = other.source(arc_it.arc());
+            Node child = other.target(arc_it.arc());
+
+            this->addArc(parent, child);
+        }
+    }
+
     Node addNode()
     {
         Node node = _graph.addNode();
@@ -923,7 +942,11 @@ public:
  */
 class CarrsAlgorithm
 {
+    bool _copy_join_split;
+
 public:
+
+    CarrsAlgorithm() : _copy_join_split(false) {}
 
     typedef DirectedIDGraph<DirectedGraph> JoinSplitTree;
 
@@ -957,8 +980,23 @@ public:
         _split_tree = boost::shared_ptr<JoinSplitTree>(new JoinSplitTree(
                 computeSplitTree(simplicial_complex, order)));
 
-        computeMergeTree(simplicial_complex, *_join_tree, *_split_tree, graph);
+        if (_copy_join_split)
+        {
+            JoinSplitTree join_tree_copy = *_join_tree;
+            JoinSplitTree split_tree_copy = *_split_tree;
+
+            computeMergeTree(simplicial_complex, join_tree_copy, split_tree_copy, graph);
+        } 
+        else
+        {
+            computeMergeTree(simplicial_complex, *_join_tree, *_split_tree, graph);
+        }
+
         removeRegularNodes(graph, order);
+    }
+
+    void setCopyJoinSplitTrees(bool value) {
+        _copy_join_split = value;
     }
 
     const JoinSplitTree& getJoinTree() const {
