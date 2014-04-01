@@ -17,3 +17,11 @@ run:
     make
 
 The built binaries will exist under `./build/qtgui` and `./build/ctree`.
+
+
+Building the documentation
+--------------------------------------------------------------------------------
+Documentation describing how to use denali and its associated tools is located 
+in the `./doc` subdirectory. The developer documentation can be generated
+by running `doxygen` in the `./doc/developer` directory.
+
