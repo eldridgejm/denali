@@ -29,10 +29,12 @@ int main(int argc, char ** argv) try
 {
     std::string usage =
         "usage: ctree <vertex value file> <edge file> <tree file>\n"
+        "             [--join <filename>] [--split <filename>]\n"
         "\n"
         "Given the 1-skeleton of a simplicial complex in the form of a list of vertex\n"
         "values and a list of edges, prints the edges of the contour tree to the tree file.\n"
         "\n"
+        "Required arguments:\n"
         "<vertex value file>\n"
         "\tA file containing the scalar values defined at the vertices of the simplicial\n"
         "\tcomplex, one per line.\n"
@@ -45,7 +47,14 @@ int main(int argc, char ** argv) try
         "\n"
         "<tree file>\n"
         "\tThe file in which to place the output. The file will be overwritten without\n"
-        "\twarning.";
+        "\twarning.\n"
+        "\n"
+        "Optional arguments:\n"
+        "--join <filename>\n"
+        "\tAlso output the join tree to the specified file.\n"
+        "\n"
+        "--split <filename>\n"
+        "\tAlso output the split tree to the specified file.\n";
 
     if (cmdOptionExists(argv, argv + argc, "-h") ||
             cmdOptionExists(argv, argv + argc, "--help")) {
@@ -53,11 +62,14 @@ int main(int argc, char ** argv) try
         return 0;
     }
 
-    if (argc != 4) {
+    if (argc < 4) {
         std::cerr << "Insufficient number of arguments provided." << std::endl;
         std::cerr << usage << std::endl;
         return 1;
     }
+
+    char* join_file = getCmdOption(argv, argv + argc, "--join");
+    char* split_file = getCmdOption(argv, argv + argc, "--split");
 
     try {
         // create a simplicial complex
@@ -69,15 +81,28 @@ int main(int argc, char ** argv) try
 
         // compute the contour tree
         denali::CarrsAlgorithm carrs_algorithm;
+
+        if (join_file || split_file)
+        {
+            carrs_algorithm.setCopyJoinSplitTrees(true);
+        }
+
         denali::ContourTree contour_tree =
             denali::ContourTree::compute(plex, carrs_algorithm);
 
         typedef denali::CarrsAlgorithm::JoinSplitTree JoinSplitTree;
 
-        const JoinSplitTree& join_tree = carrs_algorithm.getJoinTree();
-        const JoinSplitTree& split_tree = carrs_algorithm.getSplitTree();
+        if (join_file)
+        {
+            const JoinSplitTree& join_tree = carrs_algorithm.getJoinTree();
+            denali::writeJoinSplitTreeFile(join_file, join_tree, plex);
+        }
 
-        std::cout << "The join tree has " << join_tree.numberOfNodes() << " nodes." << std::endl;
+        if (split_file)
+        {
+            const JoinSplitTree& split_tree = carrs_algorithm.getSplitTree();
+            denali::writeJoinSplitTreeFile(split_file, split_tree, plex);
+        }
 
         // write it to disk
         denali::writeContourTreeFile(argv[3], contour_tree);

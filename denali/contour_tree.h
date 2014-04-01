@@ -922,12 +922,12 @@ public:
         _graph.removeArc(arc);
     }
 
-    Node getNode(unsigned int id)
+    Node getNode(unsigned int id) const
     {
         return _id_to_node[id];
     }
 
-    unsigned int getID(Node node)
+    unsigned int getID(Node node) const
     {
         return _node_to_id[node];
     }

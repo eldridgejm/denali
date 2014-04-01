@@ -538,6 +538,54 @@ inline void readColorMapFile(
     readColorMapFromStream(fh, color_map);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Join and Split Tree IO
+//
+////////////////////////////////////////////////////////////////////////////////
+
+template <typename JoinSplitTree, typename ScalarSimplicialComplex>
+void writeJoinSplitTreeFile(
+    const char * filename,
+    const JoinSplitTree& tree,
+    const ScalarSimplicialComplex& plex)
+{
+    std::ofstream fh;
+    fh.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try {
+        fh.open(filename);
+    }
+    catch (std::exception& e) {
+        std::stringstream message;
+        message << "Couldn't open file '" << filename << "'";
+        throw std::runtime_error(message.str());
+    }
+
+    // write the number of vertices
+    fh << tree.numberOfNodes() << std::endl;
+
+    // write each vertex (node and member alike) to the file
+    for (NodeIterator<JoinSplitTree> it(tree); !it.done(); ++it)
+    {
+        unsigned int id = tree.getID(it.node());
+        double value = plex.getValue(plex.getNode(id));
+
+        fh << id << "\t" 
+           << value << std::endl;
+    }
+
+    // write each edge to the file
+    for (ArcIterator<JoinSplitTree> it(tree);
+            !it.done(); ++it) 
+    {
+        fh << tree.getID(tree.source(it.arc()))
+           << "\t"
+           << tree.getID(tree.target(it.arc()))
+           << std::endl;
+    }
+
+    fh.close();
+}
 
 } // namespace denali
 
