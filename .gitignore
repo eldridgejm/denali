@@ -11,3 +11,4 @@ build/
 extern/
 doc/html/
 doc/latex/
+doxygen_warn.log
