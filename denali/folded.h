@@ -19,6 +19,11 @@ namespace denali {
 
 
 /// \brief Expands the subtree
+/// \ingroup fold_tree
+/*!
+ *  Given an edge, specified by the parent and child nodes, fully expands every
+ *  edge and node that is in the induced subtree. 
+ */
 template <typename FoldedTree>
 void expandSubtree(
         FoldedTree& tree,
@@ -497,7 +502,14 @@ private:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// ObservingNodeFoldMap
+//
+////////////////////////////////////////////////////////////////////////////////
 
+/// \brief Map which observes the node folds of a NodeFoldObservable tree.
+/// \ingroup fold_tree
 template <typename NodeFoldObservable, typename ValueType>
 class ObservingNodeFoldMap : public NodeFoldObservable::FoldObserver
 {
@@ -541,6 +553,8 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+/// \brief Map which observes the edge folds of a EdgeFoldObservable tree.
+/// \ingroup fold_tree
 template <typename EdgeFoldObservable, typename ValueType>
 class ObservingEdgeFoldMap : public EdgeFoldObservable::FoldObserver
 {
@@ -584,6 +598,8 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+/// \brief A contour tree whose nodes and edges can be folded out of view.
+/// \ingroup fold_tree
 template <typename ContourTree>
 class FoldedContourTree :
         public
@@ -595,9 +611,22 @@ class FoldedContourTree :
 public:
     typedef FoldTree::Node Node;
     typedef FoldTree::Edge Edge;
+
+    /// \brief Represents a folded node.
+    /*!
+     *  The folded tree consists of nodes, both hidden and visible. All nodes have
+     *  node folds, which describes the node and its status in the fully expanded tree.
+     */
     typedef FoldTree::NodeFold NodeFold;
+
+    /// \brief Represents a folded edge.
+    /*!
+     *  A folded edge represents the history of an edge at some point in the folding
+     *  of the tree.
+     */
     typedef FoldTree::EdgeFold EdgeFold;
 
+    /// \brief A set of node members.
     class Members
     {
         template <typename T> friend class FoldedContourTree;
@@ -934,48 +963,62 @@ public:
         return uw;
     }
 
-
+    /// \brief Returns the number of edges contained within the node.
     int numberOfCollapsedEdgeFolds(NodeFold node_fold) const {
         return _fold_tree.numberOfCollapsedEdgeFolds(node_fold);
     }
 
+    /// \brief Returns the ith edge fold contained within the node.
     EdgeFold getCollapsedEdgeFold(NodeFold nf, size_t i) const
     {
         return _fold_tree.getCollapsedEdgeFold(nf, i);
     }
 
+    /// \brief Returns the fold of the edge that connected the node to its
+    /// first neighbor / before it was reduced.
     EdgeFold uvFold(NodeFold nf) const {
         return _fold_tree.uvFold(nf);
     }
 
+    /// \brief Returns the fold of the edge that connected the node to its
+    /// second neighbor / before it was reduced.
     EdgeFold vwFold(NodeFold nf) const {
         return _fold_tree.vwFold(nf);
     }
 
+    /// \brief Given a node fold, returns the associated node.
     Node getNodeFromFold(NodeFold nf) const {
         return _fold_tree.getNodeFromFold(nf);
     }
 
+    /// \brief Returns the fold of the u node of the edge.
     NodeFold uFold(EdgeFold ef) const {
         return _fold_tree.uFold(ef);
     }
 
+    /// \brief Returns the fold of the v node of the edge.
     NodeFold vFold(EdgeFold ef) const {
          return _fold_tree.vFold(ef);
     }
 
+    /// \brief Returns the node that was reduced to form this edge, if any.
     NodeFold reducedFold(EdgeFold ef) const {
          return _fold_tree.reducedFold(ef);
     }
 
+    /// \brief Returns true if a reduced node is contained within the edge, 
+    /// false otherwise.
     bool hasReduced(EdgeFold ef) const {
          return _fold_tree.hasReduced(ef);
     }
 
+    /// \brief Returns the tree edge associated with the edge fold. Only
+    /// valid if the edge fold corresponds to an edge that is currently visible.
     Edge getEdgeFromFold(EdgeFold ef) const {
          return _fold_tree.getEdgeFromFold(ef);
     }
 
+    /// \brief Uncollapses the collapsed edge.
     Edge uncollapse(Node u, int index=-1) 
     {
         // recover the edge
@@ -999,32 +1042,31 @@ public:
         return edge;
     }
 
+    /// \brief Unreduces the edge.
     Node unreduce(Edge uw)
     {
         return _fold_tree.unreduce(uw); 
     }
 
+    /// \brief Retrieves the members contained within the node.
     const Members& getNodeMembers(Node node) const {
         return *_node_members[_fold_tree.getNodeFold(node)];
     }
 
+    /// \brief Retrieves the members contained within the edge.
     const Members& getEdgeMembers(Edge edge) const {
         return *_edge_members[_fold_tree.getEdgeFold(edge)];
     }
 
-    // HERE FOR COMPATIBILITY, REMOVE AFTER TESTS PASS: 
-
+    /// \brief Returns true if the edge has a reduced node within.
     bool hasReduced(Edge edge) const {
         return hasReduced(_fold_tree.getEdgeFold(edge));
     }
 
+    /// \brief Returns true if the node has collapsed edges within.
     bool hasCollapsed(Node node) const {
         return numberOfCollapsedEdgeFolds(_fold_tree.getNodeFold(node)) > 0;
     }
-
-
-
-
 
 };
 

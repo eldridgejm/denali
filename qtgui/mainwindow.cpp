@@ -10,14 +10,12 @@
 #include <cmath>
 #include <sstream>
 
-const int PROGRESS_WAIT_TIME = 300;
-
 MainWindow::MainWindow() :
     _max_persistence_slider_value(100),
     _color_map_dialog(new ColorMapDialog(this)),
     _callbacks_dialog(new CallbacksDialog(this)),
     _choose_root_dialog(new ChooseRootDialog(this)),
-    _use_color_map(false)
+    _use_color_map(false), _progress_wait_time(300)
 {
     // set up the user inteface
     _mainwindow.setupUi(this);
@@ -186,7 +184,7 @@ void MainWindow::openContourTreeFile()
         progress.setCancelButton(0);
 
         // only show the progress bar if some time has passed
-        QTimer::singleShot(PROGRESS_WAIT_TIME, &progress, SLOT(show()));
+        QTimer::singleShot(_progress_wait_time, &progress, SLOT(show()));
 
         QFuture<ContourTree*> tree_future = 
                 QtConcurrent::run(readAndAllocateContourTree, filename);
@@ -281,7 +279,7 @@ void MainWindow::changeLandscapeRoot()
     progress.setCancelButton(0);
 
     // only show the progress bar if some time has passed
-    QTimer::singleShot(PROGRESS_WAIT_TIME, &progress, SLOT(show()));
+    QTimer::singleShot(_progress_wait_time, &progress, SLOT(show()));
 
     while (!result.isFinished())
     {

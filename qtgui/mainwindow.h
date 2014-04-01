@@ -114,6 +114,8 @@ private:
         CORRELATION
     };
 
+    int _progress_wait_time;
+
 };
 
 
