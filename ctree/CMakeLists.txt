@@ -4,3 +4,5 @@ include_directories(
         )
 
 add_executable(ctree ctree.cpp)
+
+install(TARGETS ctree DESTINATION bin)

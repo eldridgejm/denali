@@ -4,6 +4,7 @@
 #include <vtkActor.h>
 #include <vtkAxesActor.h>
 #include <vtkCallbackCommand.h>
+#include <vtkCamera.h>
 #include <vtkCellArray.h>
 #include <vtkCellData.h>
 #include <vtkCellPicker.h>
@@ -38,6 +39,10 @@
 
 #include <map>
 
+#define STRINGIFY(X) #X
+#define TOSTRING(X) STRINGIFY(X)
+
+#define DENALI_LOGO_PATH TOSTRING(INSTALL_PREFIX) "/share/denali/startlogo.png"
 
 class ValueMapper
 {
@@ -333,13 +338,13 @@ public:
         vtkSmartPointer<vtkPNGReader> png_reader = 
                 vtkSmartPointer<vtkPNGReader>::New();
 
-        if (!png_reader->CanReadFile("logo.png"))
+        if (!png_reader->CanReadFile(DENALI_LOGO_PATH))
         {
-            std::cerr << "Cannot read logo." << std::endl;
+            std::cerr << "Error: Cannot read logo." << std::endl;
         }
         else
         {
-            png_reader->SetFileName("logo.png");
+            png_reader->SetFileName(DENALI_LOGO_PATH);
 
             vtkSmartPointer<vtkImageActor> image_actor =
                     vtkSmartPointer<vtkImageActor>::New();
@@ -362,6 +367,9 @@ public:
         _interactor_style->SetEventManager(&_event_manager);
         _interactor_style->SetRenderer(_renderer);
         render_window->GetInteractor()->SetInteractorStyle(_interactor_style);
+
+        // adjust the zoom: it's often to far in
+        _renderer->GetActiveCamera()->SetPosition(0,0,3);
 
     }
 

@@ -27,3 +27,6 @@ include_directories(
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 add_executable(denali ${SOURCES} ${HEADERS_MOC} ${UI_SRCS})
 target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES} QVTK)
+
+install(TARGETS denali DESTINATION bin)
+install(FILES startlogo.png DESTINATION share/denali)
