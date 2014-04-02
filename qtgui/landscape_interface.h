@@ -11,21 +11,23 @@
 #include <vtkDataObjectToTable.h>
 #include <vtkDataSetMapper.h>
 #include <vtkElevationFilter.h>
+#include <vtkImageActor.h>
 #include <vtkInteractorStyleTerrain.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkLookupTable.h>
 #include <vtkObjectFactory.h>
 #include <vtkOrientationMarkerWidget.h>
+#include <vtkPNGReader.h>
 #include <vtkPointData.h>
 #include <vtkPointPicker.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProgrammableSource.h>
 #include <vtkQtTableView.h>
-#include <vtkRenderer.h>
-#include <vtkRendererCollection.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkRendererCollection.h>
 #include <vtkSmartPointer.h>
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
@@ -306,6 +308,7 @@ class LandscapeInterface
     vtkSmartPointer<vtkPolyDataMapper> _mapper;
     vtkSmartPointer<vtkActor> _landscape_actor;
     vtkSmartPointer<vtkRenderer> _renderer;
+    vtkSmartPointer<vtkRenderer> _bg_renderer;
     vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
     vtkRenderWindow* _render_window;
 
@@ -315,6 +318,7 @@ public:
             _mapper(vtkSmartPointer<vtkPolyDataMapper>::New()),
             _landscape_actor(vtkSmartPointer<vtkActor>::New()),
             _renderer(vtkSmartPointer<vtkRenderer>::New()),
+            _bg_renderer(vtkSmartPointer<vtkRenderer>::New()),
             _interactor_style(vtkSmartPointer<LandscapeInteractorStyle>::New()),
             _render_window(render_window)
     {
@@ -324,13 +328,41 @@ public:
 
         //Add the actor to the scene
         _renderer->AddActor(_landscape_actor);
-        _renderer->SetBackground(.4, .5, .6); // Background color white
 
+        // display the logo
+        vtkSmartPointer<vtkPNGReader> png_reader = 
+                vtkSmartPointer<vtkPNGReader>::New();
+
+        if (!png_reader->CanReadFile("logo.png"))
+        {
+            std::cerr << "Cannot read logo." << std::endl;
+        }
+        else
+        {
+            png_reader->SetFileName("logo.png");
+
+            vtkSmartPointer<vtkImageActor> image_actor =
+                    vtkSmartPointer<vtkImageActor>::New();
+
+            image_actor->SetInput(png_reader->GetOutput());
+
+            _bg_renderer->AddActor(image_actor);
+        }
+
+        _bg_renderer->SetBackground(.4, .5, .6); // Background color white
+
+        _bg_renderer->SetLayer(0);
+        _renderer->SetLayer(1);
+
+        _render_window->SetNumberOfLayers(2);
+
+        _render_window->AddRenderer(_bg_renderer);
         _render_window->AddRenderer(_renderer);
 
         _interactor_style->SetEventManager(&_event_manager);
         _interactor_style->SetRenderer(_renderer);
         render_window->GetInteractor()->SetInteractorStyle(_interactor_style);
+
     }
 
     void registerEventObserver(LandscapeEventObserver* observer) {
@@ -363,8 +395,8 @@ public:
         }
 
         _render_window->Render();
-
     }
+
 
 };
 
