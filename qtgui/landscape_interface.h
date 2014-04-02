@@ -372,6 +372,9 @@ public:
     void renderLandscape(LandscapeContext& landscape_context,
                          bool use_color_map = false)
     {
+        // first, clear the logo from the background
+        clearBackground();
+
         typedef LandscapeMeshBuilderArguments<LandscapeContext> Args;;
         Args args;
         args.source = _landscape_source;
@@ -395,6 +398,17 @@ public:
         }
 
         _render_window->Render();
+    }
+
+    void clearBackground()
+    {
+        if (_render_window->HasRenderer(_bg_renderer))
+        {
+            _render_window->RemoveRenderer(_bg_renderer);
+            _renderer->SetLayer(0);
+            _render_window->SetNumberOfLayers(1);
+            _renderer->SetBackground(.4, .5, .6); // Background color white
+        }
     }
 
 
