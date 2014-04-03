@@ -1,21 +1,27 @@
 denali - a tool for visualizing scalar trees
 
-Table of Contents
-=================
-1. Installation
-    1.1 Linux
-
-1. Installation
+Installation
 ================================================================================
 
-1.1 Linux
+Linux
 --------------------------------------------------------------------------------
-The recommended method of installation on Linux is from source. The build
-process is managed by CMake. To build denali, create a build directory
-in this folder, for example, `build`. Then, in a shell, run:
 
+### From source
+The build process is managed by CMake. To build from source and install to the 
+default location under `/usr/local`, invoke from the project's root directory:
+
+    mkdir build
     cd build
     cmake ..
     make
+    sudo make install
 
-The built binaries will exist under `./build/qtgui` and `./build/ctree`.
+To install to a location other than the default, specify a prefix by using
+CMake's `CMAKE_INSTALL_PREFIX`. For example, to install to user `eldridge`'s
+home directory, run
+
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=/home/eldridge
+    make
+    make install
