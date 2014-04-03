@@ -25,3 +25,8 @@ home directory, run
     cmake .. -DCMAKE_INSTALL_PREFIX=/home/eldridge
     make
     make install
+
+`make install` creates the executables `denali` and `ctree` under
+`CMAKE_INSTALL_PREFIX/bin` and all files in the directory
+`CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
+simply delete these files.
