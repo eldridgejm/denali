@@ -263,6 +263,8 @@ public:
 
     virtual bool isNodeValid(unsigned int) const = 0;
 
+    virtual unsigned int getDegree(size_t) const = 0;
+
     virtual size_t numberOfPoints() const = 0;
     virtual Point getPoint(size_t) const = 0;
     virtual Point getMaxPoint() const = 0;
@@ -731,6 +733,14 @@ public:
 
     virtual void setMembersInReduction(bool value) {
         _members_in_reduction = value;
+    }
+
+    virtual unsigned int getDegree(size_t node_id) const
+    {
+        typename FoldedContourTree::Node node;
+        node = _folded_tree.getNode(node_id);
+
+        return _folded_tree.degree(node);
     }
 
     virtual LandscapeContext* rebaseLandscape(size_t parent_id, size_t child_id)  

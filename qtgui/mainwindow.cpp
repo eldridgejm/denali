@@ -868,6 +868,12 @@ void MainWindow::rebaseLandscape()
     size_t parent, child;
     _landscape_context->getComponentParentChild(_cell_selection, parent, child);
 
+    // we don't rebase if the selected component is a leaf.
+    if (_landscape_context->getDegree(child) == 1)
+    {
+        return;
+    }
+
     LandscapeContext* new_context = _landscape_context->rebaseLandscape(parent, child);
 
     this->setContext(new_context);

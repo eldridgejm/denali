@@ -6,7 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 message(STATUS "The install prefix is ${CMAKE_INSTALL_PREFIX}")
 add_definitions(-DINSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DDENALI_VERSION="v0.1")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -gdwarf-2")
 
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
