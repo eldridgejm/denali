@@ -1,0 +1,11 @@
+div#content {
+    width: 40%;
+    margin: 100pt auto;
+}
+
+img.screenshot {
+    margin: 20pt;
+    padding: 3pt;
+    border: 6px solid #eeeeee;
+
+}
