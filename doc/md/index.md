@@ -1,26 +1,18 @@
-## denali
-denali is a graphical interface for visualizing scalar trees.
+Welcome to the documentation for denali, ctree, and related tools.
 
-1. [Installation](pages/install.html)
-2. [File Formats](pages/formats.html)
-    - [`.tree`](pages/formats.html#tree)
-    - [`.weights`](pages/formats.html#weights)
-    - [`.colors`](pages/formats.html#colors)
+- [Introduction](pages/intro.html)
+- [What can be visualized with denali?](pages/intro.html#what-can-be-visualized-with-denali?)
+- [What is a landscape metaphor?](pages/intro.html#what-is-a-landscape-metaphor?)
+- [Installation](pages/install.html)
+
+## denali
+- [Tutorial](pages/denali-tutorial.html)
+- [File formats](pages/formats.html)
+    - [`.tree` format](pages/formats.html#tree)
+    - [`.weights` format](pages/formats.html#weights)
+    - [`.colors` format](pages/formats.html#colors)
 
 ## ctree
-ctree is a command line tool for generating contour trees from scalar
-functions defined on a simplicial complex. Its output can be visualized
-with denali.
-
-1. [Usage](pages/ctree.html#usage)
-0. [Input Formats](pages/ctree.html#input-formats)
-
-## python utilities
-denali comes with a suite of python utilities which support using the 
-software in domain-specific applications.
-
-## api documentation
-denali can also be used as a part of other software projects. For more on how to
-use denali as a library, see the [developer
-documentation](./dev/html/index.html) after running `doxygen` in the `./dev`
-directory.
+- [Intro](pages/ctree.html)
+- [Usage](pages/ctree.html#usage)
+- [Input formats](pages/ctree.html#input-formats)

@@ -47,7 +47,10 @@ def write_tree(fileobj, tree):
 
     # and write each edge
     for u,v in tree.edges_iter():
-        fileobj.write("{}\t{}\n".format(u,v))
+        fileobj.write("{}\t{}".format(u,v))
+
+        for member_id, member_value in tree.edge[u][v]['members'].iteritems():
+            fileobj.write("\t{}\t{}".format(member_id, member_value)
 
 
 def write_colors_from_arrays(fileobj, ids, values):
@@ -96,5 +99,11 @@ def read_tree(fileobj):
             # extract the endpoints of the edge
             u,v = [int(x) for x in split_line[:2]]
             tree.add_edge(u,v)
+
+            # extract the members
+            tree.edge[u][v]['members'] = {}
+            member_pairs = zip(*([iter(split_line[2:])]*2))
+            for member_id,member_value in member_pairs:
+                tree.edge[u][v]['members'][int(member_id)] = float(member_value)
 
     return tree

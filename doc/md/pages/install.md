@@ -1,5 +1,8 @@
 ## Installation
 
+- [Linux](#linux)
+    - [From source](#from-source)
+
 ### Linux
 
 #### From source
