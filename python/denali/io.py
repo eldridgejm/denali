@@ -1,5 +1,6 @@
 import numpy as _numpy
 import itertools as _itertools
+import networkx as _networkx
 from StringIO import StringIO as _StringIO
 
 def read_selection(fileobj):
@@ -75,3 +76,25 @@ def write_weights_from_arrays(fileobj, ids, weights):
     another with their corresponding weights."""
     data = _numpy.column_stack((ids, weights))
     _numpy.savetxt(fileobj, data, fmt="%d\t%f")
+
+
+def read_tree(fileobj):
+    """Reads in a .tree file to a networkx tree object."""
+    tree = _networkx.Graph()
+
+    for i,line in enumerate(fileobj):
+        if i == 0:
+            n_vertices = int(line)
+        elif i <= n_vertices:
+            split_line = line.split()
+            vertex_id = int(split_line[0])
+            vertex_value = float(split_line[1])
+            tree.add_node(vertex_id, value=vertex_value)
+        else:
+            split_line = line.split()
+
+            # extract the endpoints of the edge
+            u,v = [int(x) for x in split_line[:2]]
+            tree.add_edge(u,v)
+
+    return tree
