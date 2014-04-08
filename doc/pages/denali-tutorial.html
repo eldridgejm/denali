@@ -6,6 +6,25 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
   <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="../resources/main.css" type="text/css" />
 </head>
@@ -32,6 +51,7 @@
 <li><a href="#rebasing-the-landscape">Rebasing the landscape</a></li>
 <li><a href="#specifying-a-weight-map">Specifying a weight map</a></li>
 <li><a href="#specifying-a-color-map">Specifying a color map</a></li>
+<li><a href="#printing-special-information-about-a-selection">Printing special information about a selection</a></li>
 </ul>
 <hr />
 <h2 id="the-input-tree">The input tree</h2>
@@ -202,6 +222,43 @@ Child total weight: 10</code></pre>
 
 <p>What we've done is set the color of each component to be the scalar value assigned to the child node. The color map we've specified isn't very interesting, though: each node and member is mapped to the same scalar value it had in the original tree.</p>
 <p>Two of the reductions provided by <em>denali</em> are a bit different: the covariance and correlation reductions. These reductions compute the covariance and correlation between the color scalar function and the original scalar function, useful for comparing the two mappings.</p>
+<h2 id="printing-special-information-about-a-selection">Printing special information about a selection</h2>
+<p><em>Denali</em> includes a powerful and general callback system. It can be used to invoke external commands whenever a component of the landscape is selected. Communication with the invoked process is done via a simple flat file and STDIN/STDOUT, meaning that callbacks may be written in virtually any programming language without any dependencies on a message-passing library.</p>
+<p>There are three flavors of callbacks:</p>
+<ul>
+<li><p><em>Information</em> callbacks provide a string the <em>Denali</em>, which is then printed in the status box.</p></li>
+<li><p><em>Void</em> callbacks function just like information callbacks, but their output is ignored. They can still have side-effects, though, like opening a window containing a plot.</p></li>
+<li><p><em>Tree</em> callbacks provide as output a tree in <code>.tree</code> format. This tree replaces the one that was previously being visualized.</p></li>
+</ul>
+<p>A full treatment of the callback system is outside of the scope of this tutorial — for that, see the <a href="callback.html">callback system section</a>. For now, we'll cover the creation of a simple callback in Python. Whenever a component is selected, the callback will print some information about the selection to the status box. We'll therefore be implementing an <em>info</em> callback.</p>
+<p>When <em>denali</em> invokes a callback, it prints useful information about the selected component to a temporary file. The location of this file is provided as the first argument to the callback process. Detailed information about the structure of this &quot;selection file&quot; is in the <a href="callback.html">callback section</a>. For now, we don't need to understand exactly how this file is formatted, just know that it contains the ids of the nodes in the selected components.</p>
+<p>Included with <em>denali</em> is the <em>denali.py</em> Python module. Among other things, it contains useful functions for interacting with <em>denali</em> data formats. One such function is <code>denali.io.read_selection</code>. This function takes a file-like object representing a selection file and parses it into a dictionary.</p>
+<p>The dictionary contains a &quot;component&quot; key representing the selected component. Its value is a 2x2 numpy array whose first column has the ids of the two nodes at either end of the component, and whose second column has the corresponding scalar values of the node.</p>
+<p>This is all the information we'll need to write our simple callback. If you look at the <code>examples/tutorial/callback.py</code> file, you'll see:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> sys
+<span class="ch">import</span> denali
+
+<span class="kw">with</span> <span class="dt">open</span>(sys.argv[<span class="dv">1</span>]) <span class="ch">as</span> f:
+    selection = denali.io.read_selection(f)
+    u,v = selection[<span class="st">&#39;component&#39;</span>][:,<span class="dv">0</span>]
+    <span class="kw">print</span> <span class="st">&quot;The selection component was {} --&gt; {}.&quot;</span>.<span class="dt">format</span>(
+            <span class="dt">int</span>(u), <span class="dt">int</span>(v))</code></pre>
+<p>The callback gets the path of the selection file from its first argument. It then reads the selection and prints a simple message to the screen. The standard output of the callback is captured, however, and redirected to the status box in the <em>denali</em>. Therefore, printing information to <em>denali</em>'s status box is as simple as printing to the screen, no matter what language you choose to use.</p>
+<p>Now, let's try testing this callback. First thing is first: you'll need the <em>denali</em> python module in your path. There are several ways of doing this. You can pick your favorite, or simply add the line:</p>
+<pre class="sourceCode python"><code class="sourceCode python">sys.path.append(<span class="st">&quot;/path/to/denali/python&quot;</span>)</code></pre>
+<p>under <code>import sys</code> in the above script.</p>
+<p>Now we'll notify <em>denali</em> to use this script as a callback. Click on <strong>File → Configure Callbacks</strong>. You should see the following:</p>
+<center>
+<img class="screenshot" src="callbacks.png">
+</center>
+
+<p>There are three sections, one for each type of callback. Since we'll be specifying an info callback, we are interested in the first section. Click the <strong>Browse</strong> button and find the <code>examples/tutorial/callback.py</code> script. This will place the path to the callback script in the text box. Click inside the textbox and add <code>python2</code> in front of this path, so that the whole line reads something like:</p>
+<pre><code>python2 path/to/denali/examples/tutorial/callback.py</code></pre>
+<p>Note that under Unix you could just as well place <code>#!/usr/bin/env python2</code> or similar at the top of <code>callback.py</code> and made the file executable. Then you could omit <code>python2</code> from the text box.</p>
+<p>Below the text box are two options: <strong>Run on selection</strong> and <strong>Supply subtree</strong>. When the <strong>Run on selection</strong> box is marked, the callback will automatically be invoked when a selection is made. When the <strong>Supply subtree</strong> box is checked, the callback will be provided with a list of all of the nodes and members in the subtree induced by the selection. Check the <strong>Supply subtree</strong> box, and click <strong>Ok</strong>.</p>
+<p>Now, right click to select a component of the landscape, and in the status box in the lower left corner, you'll see the text: &quot;The selection component was: &quot;, followed by the ids of the nodes in your selection.</p>
+<p>After a selection is made, you can manually invoke the callback again by clicking the <strong>Info</strong> button in the <em>Callbacks</em> pane at the lower right of the interface.</p>
+<p>Note that we could have done <em>anything</em> in our Python callback, such as plotted relevant data in a new window, download information from the internet, or even spawn a new <em>denali</em> process. And while the included utility functions make parsing the selection information very easy, any other language is also capable of reading and interaction with <em>denali</em> in this way.</p>
 </div>
 </body>
 </html>

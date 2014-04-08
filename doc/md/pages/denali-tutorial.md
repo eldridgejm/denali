@@ -21,6 +21,8 @@ directory.
 - [Rebasing the landscape](#rebasing-the-landscape)
 - [Specifying a weight map](#specifying-a-weight-map)
 - [Specifying a color map](#specifying-a-color-map)
+- [Printing special information about a
+  selection](#printing-special-information-about-a-selection)
 
 ---
 
@@ -407,3 +409,119 @@ Two of the reductions provided by *denali* are a bit different: the covariance
 and correlation reductions. These reductions compute the covariance and
 correlation between the color scalar function and the original scalar function,
 useful for comparing the two mappings.
+
+
+## Printing special information about a selection 
+*Denali* includes a powerful and general callback system. It can be used to
+invoke external commands whenever a component of the landscape is selected.
+Communication with the invoked process is done via a simple flat file and
+STDIN/STDOUT, meaning that callbacks may be written in virtually any programming
+language without any dependencies on a message-passing library.
+
+There are three flavors of callbacks:
+
+- *Information* callbacks provide a string the *Denali*, which is then printed
+  in the status box.
+
+- *Void* callbacks function just like information callbacks, but their output is
+  ignored. They can still have side-effects, though, like opening a window
+  containing a plot.
+
+- *Tree* callbacks provide as output a tree in `.tree` format. This tree
+  replaces the one that was previously being visualized.
+
+A full treatment of the callback system is outside of the scope of this tutorial
+&mdash; for that, see the [callback system section](callback.html). For now,
+we'll cover the creation of a simple callback in Python. Whenever a component is
+selected, the callback will print some information about the selection to the
+status box. We'll therefore be implementing an *info* callback.
+
+When *denali* invokes a callback, it prints useful information about the
+selected component to a temporary file. The location of this file is provided as
+the first argument to the callback process. Detailed information about the
+structure of this "selection file" is in the [callback section](callback.html).
+For now, we don't need to understand exactly how this file is formatted, just
+know that it contains the ids of the nodes in the selected components.
+
+Included with *denali* is the *denali.py* Python module. Among other things, it
+contains useful functions for interacting with *denali* data formats. One such
+function is `denali.io.read_selection`. This function takes a file-like object
+representing a selection file and parses it into a dictionary.
+
+The dictionary contains a "component" key representing the selected component.
+Its value is a 2x2 numpy array whose first column has the ids of the two nodes
+at either end of the component, and whose second column has the corresponding
+scalar values of the node.
+
+This is all the information we'll need to write our simple callback. If you look
+at the `examples/tutorial/callback.py` file, you'll see:
+
+~~~~{.python}
+import sys
+import denali
+
+with open(sys.argv[1]) as f:
+    selection = denali.io.read_selection(f)
+    u,v = selection['component'][:,0]
+    print "The selection component was {} --> {}.".format(
+            int(u), int(v))
+~~~~
+
+The callback gets the path of the selection file from its first argument. It
+then reads the selection and prints a simple message to the screen. The standard
+output of the callback is captured, however, and redirected to the status box in
+the *denali*. Therefore, printing information to *denali*'s status box is as simple as
+printing to the screen, no matter what language you choose to use.
+
+Now, let's try testing this callback. First thing is first: you'll need the
+*denali* python module in your path. There are several ways of doing this. You
+can pick your favorite, or simply add the line:
+
+~~~~{.python}
+sys.path.append("/path/to/denali/python")
+~~~~
+
+under `import sys` in the above script.
+
+Now we'll notify *denali* to use this script as a callback. Click on **File →
+Configure Callbacks**. You should see the following:
+
+<center>
+<img class="screenshot" src="callbacks.png">
+</center>
+
+There are three sections, one for each type of callback. Since we'll be
+specifying an info callback, we are interested in the first section. Click the
+**Browse** button and find the `examples/tutorial/callback.py` script. This will
+place the path to the callback script in the text box. Click inside the textbox
+and add `python2` in front of this path, so that the whole line reads something
+like:
+
+~~~~
+python2 path/to/denali/examples/tutorial/callback.py
+~~~~
+
+Note that under Unix you could just as well place `#!/usr/bin/env python2` or similar at
+the top of `callback.py` and made the file executable. Then you could omit
+`python2` from the text box. 
+
+Below the text box are two options: **Run on selection** and **Supply subtree**.
+When the **Run on selection** box is marked, the callback will automatically be
+invoked when a selection is made. When the **Supply subtree** box is checked,
+the callback will be provided with a list of all of the nodes and members in the
+subtree induced by the selection. Check the **Supply subtree** box, and click
+**Ok**.
+
+Now, right click to select a component of the landscape, and in the status box
+in the lower left corner, you'll see the text: "The selection component was: ",
+followed by the ids of the nodes in your selection.
+
+After a selection is made, you can manually invoke the callback again by
+clicking the **Info** button in the *Callbacks* pane at the lower right of the
+interface.
+
+Note that we could have done *anything* in our Python callback, such as plotted
+relevant data in a new window, download information from the internet, or even
+spawn a new *denali* process. And while the included utility functions make
+parsing the selection information very easy, any other language is also capable
+of reading and interaction with *denali* in this way.

@@ -1,18 +1,31 @@
 Welcome to the documentation for denali, ctree, and related tools.
 
+----
+
 - [Introduction](pages/intro.html)
 - [What can be visualized with denali?](pages/intro.html#what-can-be-visualized-with-denali?)
 - [What is a landscape metaphor?](pages/intro.html#what-is-a-landscape-metaphor?)
 - [Installation](pages/install.html)
 
+----
+
 ## denali
+*Denali* is the graphical interface for visualizing landscapes.
+We'd recommend that new users start with the
+
 - [Tutorial](pages/denali-tutorial.html)
-- [File formats](pages/formats.html)
-    - [`.tree` format](pages/formats.html#tree)
-    - [`.weights` format](pages/formats.html#weights)
-    - [`.colors` format](pages/formats.html#colors)
+
+More in-depth description of usage:
+
+- [File format specifications](pages/formats.html)
+- [Callback system](pages/callback.html)
+
+
+----
 
 ## ctree
+*Ctree* is a command line interface for creating contour trees from graph input.
+
 - [Intro](pages/ctree.html)
 - [Usage](pages/ctree.html#usage)
 - [Input formats](pages/ctree.html#input-formats)

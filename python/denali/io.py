@@ -50,7 +50,7 @@ def write_tree(fileobj, tree):
         fileobj.write("{}\t{}".format(u,v))
 
         for member_id, member_value in tree.edge[u][v]['members'].iteritems():
-            fileobj.write("\t{}\t{}".format(member_id, member_value)
+            fileobj.write("\t{}\t{}".format(member_id, member_value))
 
 
 def write_colors_from_arrays(fileobj, ids, values):
