@@ -1,0 +1,22 @@
+
+body {
+    font-family: "droid sans";
+}
+
+
+div#content {
+    width: 50%;
+    margin: 100pt auto;
+}
+
+img.screenshot {
+    margin: 20pt;
+    padding: 3pt;
+    border: 6px solid #eeeeee;
+
+}
+
+div#desc-head {
+    font-size: 16pt;
+    text-align: center;
+}
