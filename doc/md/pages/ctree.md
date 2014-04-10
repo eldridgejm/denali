@@ -8,8 +8,8 @@ defined on a simplicial complex.
 ### Usage
 
 ~~~~
-ctree <vertex value file> <edge file> <tree file> [--join <filename>] 
-      [--split <filename>]
+ctree <vertex value file> <edge file> <tree file> 
+      [--join <filename>] [--split <filename>]
 ~~~~
 
 ctree is called from the command line. It takes three required arguments:
@@ -19,9 +19,10 @@ of the input files are described below, while the format of the output
 file is described in the [`.tree` format](./formats.html#tree) page.
 
 By default, ctree outputs only the contour tree. The join and split trees are
-computed in the process, but not output. To output the join or split tree,
-provide the `--join` or `--split` tag, followed by the output file. For example,
-to output both the contour tree and the split tree, invoke:
+computed in the process, but not output in order to save memory. To output the
+join or split tree, provide the `--join` or `--split` tag, followed by the
+output file. For example, to output both the contour tree and the join tree,
+invoke:
 
     ctree vertex_file edge_file contour.tree --join join.tree
 

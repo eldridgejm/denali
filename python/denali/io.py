@@ -4,7 +4,56 @@ import networkx as _networkx
 from StringIO import StringIO as _StringIO
 
 def read_selection(fileobj):
-    """Read the selection information from a file-like object."""
+    """Read the selection information from a file-like object.
+
+    :param fileobj: A file-like object containing the selection file.
+    :type fileobj: File-like
+    :returns: A dictionary containing information about the selection.
+
+    This function is used to parse a selection file into a python dict. 
+    The input is a file-like object, like that returned by the `open()`
+    function.
+
+    The returned dictionary has the following entries:
+
+    **file**
+        A string containing the full path to the file from which the
+        visualization was generated.
+
+    **component**
+        A 2x2 numpy array representing the nodes in the selection.
+
+    **members**
+        A nx2 numpy array representing the members in the selection.
+
+    **subtree**
+        (Optional) Contains the members and nodes in the selected subtree.
+
+    Each of *component*, *members*, and *subtree* is a numpy array with two
+    columns. Each row represents a single node or member. The first column
+    contains the ids of the node or member, and the second contains the scalar
+    value.
+
+    *Example*:
+
+    >>> denali.io.read_selection(open("selection_file"))
+    {'component': array([[  4.,  16.],
+            [  5.,  32.]]),
+     'file': '/home/eldridge/tree.tree',
+     'members': array([[  0.,  25.],
+            [  4.,  16.],
+            [  5.,  32.]]),
+     'subtree': array([[  1.,  62.],
+            [  2.,  45.],
+            [  3.,  66.],
+            [  6.,  64.],
+            [  7.,  39.],
+            [  8.,  58.],
+            [  9.,  51.],
+            [ 10.,  53.],
+            [ 11.,  30.]])}
+
+    """
 
     def _process_filename(data):
         return list(data)[0].strip()
@@ -36,53 +85,18 @@ def read_selection(fileobj):
     return selection_information
 
 
-def write_tree(fileobj, tree):
-    """Writes a tree in denali format."""
-    # write the number of vertices
-    fileobj.write("{}\n".format(len(tree)))
-
-    # now write each node to the file, along with its value
-    for node in tree:
-        fileobj.write("{}\t{}\n".format(node, tree.node[node]['value']))
-
-    # and write each edge
-    for u,v in tree.edges_iter():
-        fileobj.write("{}\t{}".format(u,v))
-
-        for member_id, member_value in tree.edge[u][v]['members'].iteritems():
-            fileobj.write("\t{}\t{}".format(member_id, member_value))
-
-
-def write_colors_from_arrays(fileobj, ids, values):
-    """Writes a color map in denali format. 
-    
-    Input is specified as two arrays: the first being the list of IDs, the
-    second being the scalar values corresponding to the IDs in the first
-    array."""
-    data = _numpy.column_stack((ids, values))
-    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
-
-
-def write_vertices(fileobj, vertex_values):
-    """Writes the contiguous vertex values to the file."""
-    fileobj.write("\n".join([str(x) for x in vertex_values]))
-
-
-def write_edges(fileobj, edges):
-    """Writes the edges to the file."""
-    for u,v in edges:
-        fileobj.write("{}\t{}\n".format(u,v))
-
-
-def write_weights_from_arrays(fileobj, ids, weights):
-    """Writes a weight map from two arrays, one containing the ids, and 
-    another with their corresponding weights."""
-    data = _numpy.column_stack((ids, weights))
-    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
-
-
 def read_tree(fileobj):
-    """Reads in a .tree file to a networkx tree object."""
+    """Reads in a .tree file to a networkx tree object.
+
+    :param fileobj: A file-like object representing a tree in 
+        ``.tree`` file format
+    :type fileobj: File-like
+    :returns: A networkx undirected graph.
+
+    The returned graph's nodes have a `value` attribute that corresponds
+    to the scalar value of the node in the tree. The edges have a `members`
+    attribute which is a dictionary mapping member ids to their values.
+    """
     tree = _networkx.Graph()
 
     for i,line in enumerate(fileobj):
@@ -107,3 +121,101 @@ def read_tree(fileobj):
                 tree.edge[u][v]['members'][int(member_id)] = float(member_value)
 
     return tree
+
+
+def write_tree(fileobj, tree):
+    """Writes a tree in denali format.
+
+    :param fileobj: A file-like object that will be written to.
+    :type fileobj: File-like
+
+    :param tree: The tree to be written.
+    :type tree: Networkx graph
+
+    The ``tree`` must have the same attributes as described in `read_tree()`.
+    That is, its nodes must have a `value` attribute, and the edges must
+    have a `members` attribute.
+    """
+    # write the number of vertices
+    fileobj.write("{}\n".format(len(tree)))
+
+    # now write each node to the file, along with its value
+    for node in tree:
+        fileobj.write("{}\t{}\n".format(node, tree.node[node]['value']))
+
+    # and write each edge
+    for u,v in tree.edges_iter():
+        fileobj.write("{}\t{}".format(u,v))
+
+        for member_id, member_value in tree.edge[u][v]['members'].iteritems():
+            fileobj.write("\t{}\t{}".format(member_id, member_value))
+
+
+def write_weights(fileobj, ids, weights):
+    """Writes a weight map from two arrays, one containing the ids, and 
+    another with their corresponding weights.
+
+    :param fileobj: The file-like object where the output will be written.
+    :type fileobj: File-like
+
+    :param ids: A list of the ids in the map.
+    :type ids: List-like
+
+    :param weights: A list of the weights in the map.
+    :type weights: List-like
+    """
+
+    data = _numpy.column_stack((ids, weights))
+    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
+
+
+def write_colors(fileobj, ids, values):
+    """Writes a color map in denali ``.colors`` format. 
+
+    :param fileobj: A file-like object that will be written to.
+    :type fileobj: File-like
+
+    :param ids: A list of the integer ids in the color map.
+    :type ids: List-like
+
+    :param values: A list of the scalar values associated with each id.
+    :type values: List-like
+
+    Input is specified as two arrays or python lists: the first being the list
+    of IDs, the second being the scalar values corresponding to the IDs in the
+    first array.""" 
+    
+    data = _numpy.column_stack((ids, values))
+    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
+
+
+def write_vertices(fileobj, vertex_values):
+    """Writes the contiguous vertex values to the file.
+
+    :param fileobj: The file-like object where the output will be written.
+    :type fileobj: File-like
+
+    :param vertex_values: The values of the vertices.
+    :type vertex_values: List-like
+
+    The ``vertex_values`` list of vertices implicitly defines the id of the
+    vertex so that ``vertex_values[i]`` represents the value of the vertex
+    with id ``i``.
+    """
+    fileobj.write("\n".join([str(x) for x in vertex_values]))
+
+
+def write_edges(fileobj, edges):
+    """Writes the edges to the file.
+
+    :param fileobj: The file-like object where the output will be written.
+    :type fileobj: File-like
+
+    :param edges: The edges as pairs of vertex ids.
+    :type edges: List-like
+
+    ``edges`` can be a python list of 2-tuples or 2-lists, or a numpy array
+    with 2 columns.
+    """
+    for u,v in edges:
+        fileobj.write("{}\t{}\n".format(u,v))

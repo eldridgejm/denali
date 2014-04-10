@@ -26,6 +26,4 @@ More in-depth description of usage:
 ## ctree
 *Ctree* is a command line interface for creating contour trees from graph input.
 
-- [Intro](pages/ctree.html)
-- [Usage](pages/ctree.html#usage)
-- [Input formats](pages/ctree.html#input-formats)
+- [ctree documentation](pages/ctree.html)

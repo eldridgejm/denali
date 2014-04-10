@@ -23,10 +23,10 @@
 <li><a href="#input-formats">Input Formats</a></li>
 </ol>
 <h3 id="usage">Usage</h3>
-<pre><code>ctree &lt;vertex value file&gt; &lt;edge file&gt; &lt;tree file&gt; [--join &lt;filename&gt;] 
-      [--split &lt;filename&gt;]</code></pre>
+<pre><code>ctree &lt;vertex value file&gt; &lt;edge file&gt; &lt;tree file&gt; 
+      [--join &lt;filename&gt;] [--split &lt;filename&gt;]</code></pre>
 <p>ctree is called from the command line. It takes three required arguments: a vertex value file, an edge file, and a tree file. The vertex value and edge files are used as input, and the tree file is used as output. The format of the input files are described below, while the format of the output file is described in the <a href="./formats.html#tree"><code>.tree</code> format</a> page.</p>
-<p>By default, ctree outputs only the contour tree. The join and split trees are computed in the process, but not output. To output the join or split tree, provide the <code>--join</code> or <code>--split</code> tag, followed by the output file. For example, to output both the contour tree and the split tree, invoke:</p>
+<p>By default, ctree outputs only the contour tree. The join and split trees are computed in the process, but not output in order to save memory. To output the join or split tree, provide the <code>--join</code> or <code>--split</code> tag, followed by the output file. For example, to output both the contour tree and the join tree, invoke:</p>
 <pre><code>ctree vertex_file edge_file contour.tree --join join.tree</code></pre>
 <p>This will place the contour tree in <code>contour.tree</code> and the join tree in <code>join.tree</code>.</p>
 <h3 id="input-formats">Input Formats</h3>
