@@ -5,6 +5,10 @@
 
 Welcome to denali.py's documentation!
 =====================================
+ 
+*denali.py* is a Python module containing useful utility functions for
+interacting with *denali* and *ctree*. These functions help read files in
+*denali* formats, create callbacks, and generate contour trees.
 
 Contents:
 

@@ -27,3 +27,14 @@ More in-depth description of usage:
 *Ctree* is a command line interface for creating contour trees from graph input.
 
 - [ctree documentation](pages/ctree.html)
+
+----
+
+## denali.py
+
+*denali.py* is a Python module containing useful utility functions for
+interacting with *denali* and *ctree*. These functions help read files in
+*denali* formats, create callbacks, and generate contour trees. Read the full
+documentation here:
+
+- [denali.py documentation](pydoc/_build/html/index.html)
