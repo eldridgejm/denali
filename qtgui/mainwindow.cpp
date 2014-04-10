@@ -677,8 +677,8 @@ std::string MainWindow::runCallback(
 
     tempfile.write("# component\n");
     std::stringstream component_str;
-    component_str << parent << " " << parent_value << std::endl;
-    component_str << child << " " << child_value << std::endl;
+    component_str << parent << "\t" << parent_value << std::endl;
+    component_str << child << "\t" << child_value << std::endl;
     tempfile.write(component_str.str().c_str());
 
     LandscapeContext::Members members;
@@ -704,7 +704,7 @@ std::string MainWindow::runCallback(
         double value = it->second;
 
         std::stringstream member_line;
-        member_line << id << " " << value << std::endl;
+        member_line << id << "\t" << value << std::endl;
         tempfile.write(member_line.str().c_str());
     }
 
@@ -721,7 +721,7 @@ std::string MainWindow::runCallback(
             double value = it->second;
 
             std::stringstream member_line;
-            member_line << id << " " << value << std::endl;
+            member_line << id << "\t" << value << std::endl;
             tempfile.write(member_line.str().c_str());
         }
     } 
