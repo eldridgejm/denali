@@ -4,7 +4,7 @@ import fnmatch
 import os
 import subprocess
 
-PANDOC_OPTS = ["--template", "template.html"]
+PANDOC_OPTS = ["--template", "template.html", "--webtex"]
 CSS_FILES = ["bootstrap.css", "main.css"]
 RESOURCE_DIR = "../resources"
 

@@ -3,19 +3,17 @@ Welcome to the documentation for denali, ctree, and related tools.
 ----
 
 - [Introduction](pages/intro.html)
-- [What can be visualized with denali?](pages/intro.html#what-can-be-visualized-with-denali?)
-- [What is a landscape metaphor?](pages/intro.html#what-is-a-landscape-metaphor?)
 - [Installation](pages/install.html)
+- [Tutorial](pages/tutorial.html)
+- [Interpreting Landscapes](pages/landscape.html)
+- [Cookbook](pages/cookbook.html)
 
 ----
 
 ## denali
-*Denali* is the graphical interface for visualizing landscapes.
-We'd recommend that new users start with the
-
-- [Tutorial](pages/denali-tutorial.html)
-
-More in-depth description of usage:
+*Denali* is the graphical interface for visualizing landscapes. For a general
+information on how to use *denali*, see the [tutorial](pages/tutorial).
+For detailed information about supplying input to *denali*, see:
 
 - [File format specifications](pages/formats.html)
 - [Callback system](pages/callback.html)
@@ -38,3 +36,13 @@ interacting with *denali* and *ctree*. These functions help read files in
 documentation here:
 
 - [denali.py documentation](pydoc/_build/html/index.html)
+
+----
+
+## developer documentation
+
+The developer documentation is useful for those who are interested in modifying
+or extending *denali*.
+The documentation is managed by Doxygen. To create it, run `doxygen`
+in the `doc/dev` directory. Once generated, it can be found
+[here](dev/html/index.html).

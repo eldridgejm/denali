@@ -25,7 +25,7 @@ system include:
   being visualized.
 
 See the [Printing special information about a
-selection](denali-tutorial.html#printing-special-information-about-a-selection)
+selection](tutorial.html#printing-special-information-about-a-selection)
 section of the tutorial for a step-by-step introduction to creating a callback
 script. 
 
