@@ -1,7 +1,33 @@
-import numpy as _numpy
 import itertools as _itertools
-import networkx as _networkx
 from StringIO import StringIO as _StringIO
+
+try:
+    import networkx as _networkx
+except ImportError:
+    _has_networkx = False
+else:
+    _has_networkx = True
+
+
+def _read_vertex_definitions(string):
+    """Reads vertex definitions from a string.
+
+    Vertex definitions have the following form:
+
+        <vertex id> <vertex value>
+
+    This function reads them into a list of 2-lists, where the first entry in 
+    each sublist is an integer id, and the second is a float value.
+    """
+    defs = []
+    split = string.strip().split()
+    pairs = zip(*([iter(split)] * 2))
+
+    for str_id, str_value in pairs:
+        defs.append([int(str_id), float(str_value)])
+
+    return defs
+
 
 def read_selection(fileobj):
     """Read the selection information from a file-like object.
@@ -60,7 +86,7 @@ def read_selection(fileobj):
 
     def _process_array(lines):
         data_string = "".join(lines)
-        return _numpy.loadtxt(_StringIO(data_string))
+        return _read_vertex_definitions(data_string)
 
     process_map = {
             "file": _process_filename,
@@ -97,6 +123,9 @@ def read_tree(fileobj):
     to the scalar value of the node in the tree. The edges have a `members`
     attribute which is a dictionary mapping member ids to their values.
     """
+    if not _has_networkx:
+        raise RuntimeError("The networkx package is required to read a tree.")
+
     tree = _networkx.Graph()
 
     for i,line in enumerate(fileobj):
@@ -136,6 +165,9 @@ def write_tree(fileobj, tree):
     That is, its nodes must have a `value` attribute, and the edges must
     have a `members` attribute.
     """
+    if not _has_networkx:
+        raise RuntimeError("The networkx package is required to read a tree.")
+
     # write the number of vertices
     fileobj.write("{}\n".format(len(tree)))
 
@@ -165,6 +197,7 @@ def write_weights(fileobj, ids, weights):
     :type weights: List-like
     """
 
+
     data = _numpy.column_stack((ids, weights))
     _numpy.savetxt(fileobj, data, fmt="%d\t%f")
 
@@ -184,10 +217,8 @@ def write_colors(fileobj, ids, values):
     Input is specified as two arrays or python lists: the first being the list
     of IDs, the second being the scalar values corresponding to the IDs in the
     first array.""" 
-    
-    data = _numpy.column_stack((ids, values))
-    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
-
+    for vertex_id, vertex_value in zip(ids, values):
+        fileobj.write("{}\t{}\n".format(vertex_id, vertex_value))
 
 def write_vertices(fileobj, vertex_values):
     """Writes the contiguous vertex values to the file.

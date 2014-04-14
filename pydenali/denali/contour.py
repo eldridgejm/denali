@@ -1,6 +1,23 @@
-from sklearn.neighbors import kneighbors_graph as _kneighbors_graph
-import networkx as _networkx
-import numpy as _numpy
+try:
+    from sklearn.neighbors import kneighbors_graph as _kneighbors_graph
+except ImportError:
+    _has_sklearn = False
+else:
+    _has_sklearn = True
+
+try:
+    import networkx as _networkx
+except ImportError:
+    _has_networkx = False
+else:
+    _has_networkx = True
+
+try:
+    import numpy as _numpy
+except ImportError:
+    _has_numpy = False
+else:
+    _has_numpy = True
 
 def kneighbors_complex(data, k):
     """
@@ -26,6 +43,15 @@ def kneighbors_complex(data, k):
     what is best for your application -- the only requirement is that the
     resulting graph is connected.
     """
+    if not _has_sklearn:
+        raise ImportError("sklearn is required to build a complex.")
+
+    if not _has_numpy:
+        raise ImportError("numpy is required to build a complex.")
+
+    if not _has_networkx:
+        raise ImportError("networkx is required to build a complex.")
+
     nn = _kneighbors_graph(data, k)
     
     # get an array of u indices and v indices
