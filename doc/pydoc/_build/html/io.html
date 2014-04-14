@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>I/O Utilities &mdash; denali.py 1.0 documentation</title>
+    <title>I/O Utilities &mdash; pydenali 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,9 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="denali.py 1.0 documentation" href="index.html" />
+    <link rel="top" title="pydenali 1.0 documentation" href="index.html" />
     <link rel="next" title="Contour tree utilities" href="contour.html" />
-    <link rel="prev" title="Welcome to denali.py’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Installation" href="install.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,9 +38,9 @@
           <a href="contour.html" title="Contour tree utilities"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to denali.py’s documentation!"
+          <a href="install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">denali.py 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,7 +51,7 @@
             
   <div class="section" id="i-o-utilities">
 <h1><a class="toc-backref" href="#id1">I/O Utilities</a><a class="headerlink" href="#i-o-utilities" title="Permalink to this headline">¶</a></h1>
-<p><cite>denali.py</cite> includes several functions useful for reading and writing output
+<p><cite>pydenali</cite> includes several functions useful for reading and writing output
 in <em>denali</em> formats.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
@@ -90,33 +90,30 @@ function.</p>
 <dd>A string containing the full path to the file from which the
 visualization was generated.</dd>
 <dt><strong>component</strong></dt>
-<dd>A 2x2 numpy array representing the nodes in the selection.</dd>
+<dd>A 2x2 nested list representing the nodes in the selection.</dd>
 <dt><strong>members</strong></dt>
-<dd>A nx2 numpy array representing the members in the selection.</dd>
+<dd>A nx2 nested list representing the members in the selection.</dd>
 <dt><strong>subtree</strong></dt>
 <dd>(Optional) Contains the members and nodes in the selected subtree.</dd>
 </dl>
-<p>Each of <em>component</em>, <em>members</em>, and <em>subtree</em> is a numpy array with two
+<p>Each of <em>component</em>, <em>members</em>, and <em>subtree</em> is a nested list with two
 columns. Each row represents a single node or member. The first column
 contains the ids of the node or member, and the second contains the scalar
 value.</p>
 <p><em>Example</em>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">denali</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_selection</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;selection_file&quot;</span><span class="p">))</span>
-<span class="go">{&#39;component&#39;: array([[  4.,  16.],</span>
-<span class="go">        [  5.,  32.]]),</span>
-<span class="go"> &#39;file&#39;: &#39;/home/eldridge/tree.tree&#39;,</span>
-<span class="go"> &#39;members&#39;: array([[  0.,  25.],</span>
-<span class="go">        [  4.,  16.],</span>
-<span class="go">        [  5.,  32.]]),</span>
-<span class="go"> &#39;subtree&#39;: array([[  1.,  62.],</span>
-<span class="go">        [  2.,  45.],</span>
-<span class="go">        [  3.,  66.],</span>
-<span class="go">        [  6.,  64.],</span>
-<span class="go">        [  7.,  39.],</span>
-<span class="go">        [  8.,  58.],</span>
-<span class="go">        [  9.,  51.],</span>
-<span class="go">        [ 10.,  53.],</span>
-<span class="go">        [ 11.,  30.]])}</span>
+<span class="go">{&#39;component&#39;: [[4, 16.0], [5, 32.0]],</span>
+<span class="go"> &#39;file&#39;: &#39;/path/to/denali/examples/tutorial/tree.tree&#39;,</span>
+<span class="go"> &#39;members&#39;: [[0, 25.0], [4, 16.0], [5, 32.0]],</span>
+<span class="go"> &#39;subtree&#39;: [[1, 62.0],</span>
+<span class="go">  [2, 45.0],</span>
+<span class="go">  [3, 66.0],</span>
+<span class="go">  [6, 64.0],</span>
+<span class="go">  [7, 39.0],</span>
+<span class="go">  [8, 58.0],</span>
+<span class="go">  [9, 51.0],</span>
+<span class="go">  [10, 53.0],</span>
+<span class="go">  [11, 30.0]]}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -128,6 +125,7 @@ value.</p>
 <dt id="denali.io.read_tree">
 <tt class="descclassname">denali.io.</tt><tt class="descname">read_tree</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#denali.io.read_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a .tree file to a networkx tree object.</p>
+<p><strong>Note</strong>: This function requires that the <cite>networkx</cite> package is installed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -135,7 +133,7 @@ value.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fileobj</strong> (<em>File-like</em>) &#8211; A file-like object representing a tree in 
 <tt class="docutils literal"><span class="pre">.tree</span></tt> file format</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A networkx undirected graph.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <cite>networkx</cite> undirected graph.</td>
 </tr>
 </tbody>
 </table>
@@ -148,13 +146,14 @@ attribute which is a dictionary mapping member ids to their values.</p>
 <dt id="denali.io.write_tree">
 <tt class="descclassname">denali.io.</tt><tt class="descname">write_tree</tt><big>(</big><em>fileobj</em>, <em>tree</em><big>)</big><a class="headerlink" href="#denali.io.write_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a tree in denali format.</p>
+<p><strong>Note</strong>: This function requires that the <cite>networkx</cite> package is installed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>fileobj</strong> (<em>File-like</em>) &#8211; A file-like object that will be written to.</li>
-<li><strong>tree</strong> (<em>Networkx graph</em>) &#8211; The tree to be written.</li>
+<li><strong>tree</strong> (<cite>networkx</cite> graph) &#8211; The tree to be written.</li>
 </ul>
 </td>
 </tr>
@@ -276,8 +275,8 @@ with 2 columns.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to denali.py&#8217;s documentation!</a></p>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="contour.html"
                         title="next chapter">Contour tree utilities</a></p>
@@ -313,9 +312,9 @@ with 2 columns.</p>
           <a href="contour.html" title="Contour tree utilities"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to denali.py’s documentation!"
+          <a href="install.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">denali.py 1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

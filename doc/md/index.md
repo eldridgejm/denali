@@ -28,14 +28,14 @@ For detailed information about supplying input to *denali*, see:
 
 ----
 
-## denali.py
+## pydenali
 
-*denali.py* is a Python module containing useful utility functions for
+*pydenali* is a Python package containing useful utility functions for
 interacting with *denali* and *ctree*. These functions help read files in
 *denali* formats, create callbacks, and generate contour trees. Read the full
 documentation here:
 
-- [denali.py documentation](pydoc/_build/html/index.html)
+- [pydenali documentation](pydoc/_build/html/index.html)
 
 ----
 

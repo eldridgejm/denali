@@ -24,6 +24,9 @@ def kneighbors_complex(data, k):
     Builds a complex from the data by connecting each point to the k nearest
     neighbors. Returns a list of edges.
 
+    **Note**: To use this function, the `numpy`, `scikit-learn`, and `networkx`
+    packages must be installed.
+
     :param data: An array of *d*-dimensional data.
     :type data: Numpy array
 

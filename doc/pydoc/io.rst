@@ -1,7 +1,7 @@
 I/O Utilities
 =============
 
-`denali.py` includes several functions useful for reading and writing output 
+`pydenali` includes several functions useful for reading and writing output 
 in *denali* formats.
 
 .. contents::

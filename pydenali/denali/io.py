@@ -47,15 +47,15 @@ def read_selection(fileobj):
         visualization was generated.
 
     **component**
-        A 2x2 numpy array representing the nodes in the selection.
+        A 2x2 nested list representing the nodes in the selection.
 
     **members**
-        A nx2 numpy array representing the members in the selection.
+        A nx2 nested list representing the members in the selection.
 
     **subtree**
         (Optional) Contains the members and nodes in the selected subtree.
 
-    Each of *component*, *members*, and *subtree* is a numpy array with two
+    Each of *component*, *members*, and *subtree* is a nested list with two
     columns. Each row represents a single node or member. The first column
     contains the ids of the node or member, and the second contains the scalar
     value.
@@ -63,22 +63,18 @@ def read_selection(fileobj):
     *Example*:
 
     >>> denali.io.read_selection(open("selection_file"))
-    {'component': array([[  4.,  16.],
-            [  5.,  32.]]),
-     'file': '/home/eldridge/tree.tree',
-     'members': array([[  0.,  25.],
-            [  4.,  16.],
-            [  5.,  32.]]),
-     'subtree': array([[  1.,  62.],
-            [  2.,  45.],
-            [  3.,  66.],
-            [  6.,  64.],
-            [  7.,  39.],
-            [  8.,  58.],
-            [  9.,  51.],
-            [ 10.,  53.],
-            [ 11.,  30.]])}
-
+    {'component': [[4, 16.0], [5, 32.0]],
+     'file': '/path/to/denali/examples/tutorial/tree.tree',
+     'members': [[0, 25.0], [4, 16.0], [5, 32.0]],
+     'subtree': [[1, 62.0],
+      [2, 45.0],
+      [3, 66.0],
+      [6, 64.0],
+      [7, 39.0],
+      [8, 58.0],
+      [9, 51.0],
+      [10, 53.0],
+      [11, 30.0]]}
     """
 
     def _process_filename(data):
@@ -114,10 +110,12 @@ def read_selection(fileobj):
 def read_tree(fileobj):
     """Reads in a .tree file to a networkx tree object.
 
+    **Note**: This function requires that the `networkx` package is installed.
+
     :param fileobj: A file-like object representing a tree in 
         ``.tree`` file format
     :type fileobj: File-like
-    :returns: A networkx undirected graph.
+    :returns: A `networkx` undirected graph.
 
     The returned graph's nodes have a `value` attribute that corresponds
     to the scalar value of the node in the tree. The edges have a `members`
@@ -155,11 +153,13 @@ def read_tree(fileobj):
 def write_tree(fileobj, tree):
     """Writes a tree in denali format.
 
+    **Note**: This function requires that the `networkx` package is installed.
+
     :param fileobj: A file-like object that will be written to.
     :type fileobj: File-like
 
     :param tree: The tree to be written.
-    :type tree: Networkx graph
+    :type tree: `networkx` graph
 
     The ``tree`` must have the same attributes as described in `read_tree()`.
     That is, its nodes must have a `value` attribute, and the edges must
@@ -196,10 +196,8 @@ def write_weights(fileobj, ids, weights):
     :param weights: A list of the weights in the map.
     :type weights: List-like
     """
-
-
-    data = _numpy.column_stack((ids, weights))
-    _numpy.savetxt(fileobj, data, fmt="%d\t%f")
+    for vertex_id, vertex_value in zip(ids, weights):
+        fileobj.write("{}\t{}\n".format(vertex_id, vertex_value))
 
 
 def write_colors(fileobj, ids, values):

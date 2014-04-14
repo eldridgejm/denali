@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# denali.py documentation build configuration file, created by
+# pydenali documentation build configuration file, created by
 # sphinx-quickstart on Thu Apr 10 14:11:29 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'denali.py'
+project = 'pydenali'
 copyright = '2014, Justin Eldridge'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -202,7 +202,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'denalipy.tex', 'denali.py Documentation',
+  ('index', 'pydenali.tex', 'pydenali Documentation',
    'Justin Eldridge', 'manual'),
 ]
 
@@ -232,7 +232,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'denalipy', 'denali.py Documentation',
+    ('index', 'pydenali', 'pydenali Documentation',
      ['Justin Eldridge'], 1)
 ]
 
@@ -246,8 +246,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'denalipy', 'denali.py Documentation',
-   'Justin Eldridge', 'denalipy', 'One line description of project.',
+  ('index', 'pydenali', 'pydenali Documentation',
+   'Justin Eldridge', 'pydenali', 'One line description of project.',
    'Miscellaneous'),
 ]
 
