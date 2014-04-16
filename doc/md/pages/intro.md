@@ -1,4 +1,4 @@
-## Introduction
+# Introduction
 
 *Denali* is a tool for visualizing complex and possibly high-dimensional data
 intuitively and efficiently. The central concept used by *denali* is that of the
@@ -8,7 +8,7 @@ intuitive fashion. This software package includes tools for computing,
 visualizing, and manipulating landscape metaphors.
 
 
-### Can I use *denali* to visualize my data?
+## Can I use *denali* to visualize my data?
 
 Broadly-speaking, there are two pre-requisites for visualizing your data with
 *denali*:
@@ -36,7 +36,7 @@ is met, and we *can* visualize the probability distribution using *denali*.
 it simply and straightforward to visualize many different types of data as
 landscape metaphors.
 
-### What is included with *denali*?
+## What is included with *denali*?
 
 Included in this package are:
 
@@ -46,7 +46,7 @@ Included in this package are:
 
 The main page lists the important documentation for each of these tools.
 
-### Using this documentation
+## Using this documentation
 
 The suggested method of using this documentation is as follows: 
 

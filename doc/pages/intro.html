@@ -13,12 +13,14 @@
 <div id="content">
 
 <div id="header">
-<a href="../index.html"><h1 id="docstitle">Denali Documentation</h1></a>
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
 </div>
 
-<h2 id="introduction">Introduction</h2>
+<hr>
+
+<h1 id="introduction">Introduction</h1>
 <p><em>Denali</em> is a tool for visualizing complex and possibly high-dimensional data intuitively and efficiently. The central concept used by <em>denali</em> is that of the <em>landscape metaphor</em>: a 2-d &quot;mountainous terrain&quot; embedded in 3-d which preserves important features of the data and presents them to the user in an intuitive fashion. This software package includes tools for computing, visualizing, and manipulating landscape metaphors.</p>
-<h3 id="can-i-use-denali-to-visualize-my-data">Can I use <em>denali</em> to visualize my data?</h3>
+<h2 id="can-i-use-denali-to-visualize-my-data">Can I use <em>denali</em> to visualize my data?</h2>
 <p>Broadly-speaking, there are two pre-requisites for visualizing your data with <em>denali</em>:</p>
 <ol style="list-style-type: decimal">
 <li>Each data point must have an associated scalar value, such as a probability, score, or cost.</li>
@@ -27,7 +29,7 @@
 <p>Included with <em>denali</em> are tools for satisfying the second prerequisite for many types of data that may not appear, at first glance, to exhibit tree-like structure.</p>
 <p>For example, suppose we have drawn many samples from a probability distribution. Can we attempt to understand the structure of the distribution by visualizing the samples with <em>denali</em>? For each sample we have an associated probability, so the first prerequisite is clearly met. However our data is in the form of a point cloud, not a tree, and so it appears that the second requirement is not satisfied. In fact, we <em>can</em> extract tree-like structure from this point cloud in a very natural way using the concept of the <em>contour tree</em>. The contour tree captures the important topological characteristics of a scalar function, and, as its name implies, it exhibits tree-like structure. Hence our second requirement is met, and we <em>can</em> visualize the probability distribution using <em>denali</em>.</p>
 <p><em>Denali</em> includes tools for quickly and easily computing contour trees, making it simply and straightforward to visualize many different types of data as landscape metaphors.</p>
-<h3 id="what-is-included-with-denali">What is included with <em>denali</em>?</h3>
+<h2 id="what-is-included-with-denali">What is included with <em>denali</em>?</h2>
 <p>Included in this package are:</p>
 <ul>
 <li><em>denali</em>: A graphical interface for visualizing landscape metaphors</li>
@@ -35,7 +37,7 @@
 <li><em>pydenali</em>: Python utilities for interacting with <em>denali</em> and <em>ctree</em>.</li>
 </ul>
 <p>The main page lists the important documentation for each of these tools.</p>
-<h3 id="using-this-documentation">Using this documentation</h3>
+<h2 id="using-this-documentation">Using this documentation</h2>
 <p>The suggested method of using this documentation is as follows:</p>
 <ul>
 <li><p>First, if you have yet to install <em>denali</em>, see the <a href="install.html">installation instructions</a>.</p></li>

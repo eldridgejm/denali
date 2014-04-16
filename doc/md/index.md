@@ -1,7 +1,5 @@
 Welcome to the documentation for denali, ctree, and related tools.
 
-----
-
 - [Introduction](pages/intro.html)
 - [Installation](pages/install.html)
 - [Tutorial](pages/tutorial.html)
@@ -11,7 +9,7 @@ Welcome to the documentation for denali, ctree, and related tools.
 
 ## denali
 *Denali* is the graphical interface for visualizing landscapes. For a general
-information on how to use *denali*, see the [tutorial](pages/tutorial).
+information on how to use *denali*, see the [tutorial](pages/tutorial.html).
 For detailed information about supplying input to *denali*, see:
 
 - [File format specifications](pages/formats.html)

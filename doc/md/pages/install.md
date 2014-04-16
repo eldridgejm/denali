@@ -1,11 +1,11 @@
-## Installation
+# Installation
 
 - [Linux](#linux)
     - [From source](#from-source)
 
-### Linux
+## Linux
 
-#### From source
+### From source
 The build process is managed by CMake. To build from source and install to the 
 default location under `/usr/local`, invoke from the project's root directory:
 
@@ -33,3 +33,11 @@ make install
 `CMAKE_INSTALL_PREFIX/bin` and all files in the directory
 `CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
 simply delete these files.
+
+## pydenali
+
+*pydenali*, the Python package of utilities included with *denali*, is included
+with *denali*, but not installed by the above steps. *pydenali* is an optional
+component for working with files in *denali* format, among other things. If
+you'd like to install it, see the [installation
+section](../pydoc/_build/html/install.html) of the *pydenali* documentation. 

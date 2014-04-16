@@ -1,4 +1,4 @@
-## Tutorial
+# Tutorial
 
 This tutorial serves as an in-depth first introduction to denali. Along the way,
 you will gain an understanding for how to interpret the visualization produced
@@ -21,7 +21,6 @@ directory.
     - [Loading the tree](#loading-the-tree)
     - [Exploring the landscape](#exploring-the-landscape)
     - [Selecting a component](#selecting-a-component)
-    - [Interpreting the landscape](#interpreting-the-landscape)
     - [Simplifying the visualization](#simplifying-the-visualization)
     - [Choosing a root](#choosing-a-root)
     - [Rebasing the landscape](#rebasing-the-landscape)
@@ -39,7 +38,7 @@ directory.
 
 ---
 
-# Introduction to landscape metaphors
+## Introduction to landscape metaphors
 
 As described in the [introduction](intro.html), *denali* is a tool for
 visualizing data that meets two prerequisites. First, each data point must have
@@ -50,96 +49,154 @@ to extract tree-like structure from such things as scalar functions defined on
 point clouds. For now, we'll assume that our data is already in tree-like
 form.
 
-## Scalar trees
+### Scalar trees
 
 The fundamental unit of input in *denali* is the *scalar tree*. A scalar tree is
 a tree for which every node has an associated integer ID and scalar value. An
-example of a scalar tree is shown below.
+example of a (directed) scalar tree is shown below.
 
 <center>
 <img style="margin:20pt 20pt" width=400 src="../resources/tree.png">
 </center>
 
-Here, we see that each node has an integer ID and an associated real number as a
-value. The edges of scalar trees may also have zero or more "member" vertices.
-These are vertices which exist within the edges of a tree. Like ordinary
-vertices, members must have an associated ID and scalar value. 
+Note that while the above tree is directed, in general, input to *denali* is an
+undirected scalar graph. A direction is imposed whenever a root node is chosen.
+This can be done using *denali*'s interface.
+
+A **node** is a vertex of the scalar tree. It has an integer ID and a scalar
+value.
+
+A **member** is like a node, but it is contained in the edges of the tree. It
+also has an integer ID and a scalar value.
+
+In the above image, nodes are contained within the ellipses, and members are
+printed next to the edges in which they are contained. 
+
+Each node and member can be assigned a positive real number as a **weight**. By
+default, this weight is simply one. Later, we'll see how to specify a weight map.
+
+Each arc of a directed scalar tree may also be referred to as a **component** of
+the tree. Since each component may have members, we can define the **component
+weight** to be the sum of all member weights. Since each member by default has
+unit weight, this usually means that the default component weight is simply the
+number of members it contains. For example, in the above scalar tree, the 4 → 5
+component has weight 1, while the 5 → 7 component has weight zero.
+
+We'll also want to define the notion of a **total weight** on the nodes of the
+directed tree.  If no custom weight map is specified, meaning that each node and
+member has unit weight, the total weight of a node *v* is simply the number of
+nodes and members in the subtree rooted at *v*, including *v* itself.  
+
+More specifically, the total weight of a node is defined to be the sum of:
+
+- the total weights of the node's children,
+- the weight of the node itself,
+- and the weights of all outgoing arcs.
+
+Assuming that the weight of each node and member is one, as it is by default,
+the total weight of node 3 in the above directed tree is simply one. The total
+weight of node 10 is 4. To see this, note that each of its two children have
+unit weight.  It has two outgoing arcs, but only one of these arcs has nonzero
+weight: the one that contains member 6. Node 10 itself has weight 1, bringing
+the total weight to 4. Lastly, the total weight of the root of the tree, node 4,
+is 12. This is equal to the total number of nodes and members in the tree as a
+whole.
 
 
-## Interpreting landscapes
+### Interpreting landscapes
 
 *Denal* visualizes scalar trees like those described above as landscape
-metaphors. To understand a landscape metaphor, let's build one from a simple
-scalar tree:
+metaphors. To understand a landscape metaphor, let's build one from the simple
+scalar tree show below:
 
 <center>
 <img style="margin:20pt 20pt" width=300 src="../resources/interpret_tree.png">
 </center>
 
-The tree we'll use is shown above. The exact scalar values associated with each
-edge aren't important, but note that the tree is laid out so that the scalar
-value increases from top to bottom. That is, the scalar value associated with
-node 0, denoted by *f(0)*, is less than the scalar value associated with node 1.
-Node 7 has the highest scalar value.
+The exact scalar values associated with each node aren't important, but note
+that the tree is laid out so that the scalar values increase from bottom to top.
+That is, the scalar value associated with node 0, denoted by *f(0)*, is less
+than the scalar value associated with node 1.  Node 7 has the highest scalar
+value.
 
-To build a landscape visualization, we first choose a node to be the root. The
-node with the minimum scalar value is often a natural choice. Let's make 0 the
-root node of our tree.
+Also note that each edge has zero or more members, denoted by the black dots
+placed on the lines between nodes. We'll assume that all nodes and members have
+the default weight of one.
 
-Next, we draw a rectangular tree map, shown below:
+The first step in drawing this tree as a landscape is to pick a root node. Much
+of the time, the node with the minimum scalar value is the natural choice to be
+the root node. Let's make node 0 the root of our landscape.
+
+Next, we draw the rectangular treemap representing the tree. The figure below
+shows what this looks like:
 
 <center>
 <img style="margin:20pt 20pt" width=300 src="../resources/interpret_map.png">
 </center>
 
-Each node in the tree is mapped to either a rectangle or a point in the treemap.
-The root node and all branch nodes are represented as rectangles, while leaf
-nodes are represented as points. 
+You'll notice that each node in the tree has been mapped to a shape in the
+treemap. Branch nodes (and the root node) have been mapped to rectangles. Leaf
+nodes have been mapped to points. In what follows, the 2-d shape to which a node
+is mapped to is referred to as its **contour**.
 
-If a node is a branch, its corresponding rectangle in the treemap is split into
-several pieces: one piece for every child it has in the tree. For example, node
-2 has two children: 3 and 4. The rectangle for node 2 is therefore split into
-two pieces. The points representing 3 and 4 are placed in their respective
-divisions of node 2's rectangle.
+The nested relationship of the contours is important. If a contour *u* contains
+another contour *v*, then *v* is in the subtree rooted at node *u*. If *v*'s
+contour is directly nested within *u*'s, then *v* is a child of *u*. For
+example, node 0's contour is the outermost contour, which is to be expected
+because every node in the tree is in the subtree rooted at node 0. Node 1 is the
+child of node 0, and so its contour is nested directly within node 0's.
 
-Nesting represents the subtree property. That is, if a point or rectangle
-representing node *x* is nested within the rectangle representing node *y*,
-then node *x* is a successor of node *y* in the directed tree. If *x*'s
-rectangle or point is nested *directly* within *y*'s rectangle, then *x* is a
-child of *y*.
+A branch node's contour is split into several pieces: one for each of its
+children. The contour of each child is embedded within its corresponding piece.
+Consider, for example, branch contour 2. It is split into two pieces: one for
+node 3, and another for node 4. The region between the boundary of a split piece
+and the inner nested contour represents an arc. The following figure makes this
+clear:
 
-Note that there is a gap between, for instance, node 1's rectangle and node 5's
-rectangle. The area of this gap encodes the *weight* of the members in the edge
-from 1 to 5. By default, an edge's weight is simply one plus the number of
-members contained in the edge. Later we will see how to change the weight of
-specific member vertices so that the weight of an edge becomes a weighted sum of
-the weights of its members.
+<center>
+<img style="margin:20pt 20pt" width=600 src="../resources/interpret_correspondence.png">
+</center>
 
-The area of a node's rectangle represents its *total weight*: the sum of all
-edge weights and node weights in the subtree rooted at the node, less the node
-itself. Simply speaking, the larger a rectangle, the more nodes and members in
-the subtree rooted at that node. From this, we can conclude that since rectangle
-5 is larger than rectangle 2, the edges from 5 to 6 and 7 contain more members
-than the edges from 2 to 3 and 4.
+Some of the arcs of the tree and their corresponding regions in the map have
+been colored. Note, for example, the orange region between contour 1 and contour
+2. This corresponds to the orange arc in the tree between node 1 and node 2.
 
-The last step is to "lift" each rectangle and point to a height corresponding to
-the node's scalar value. By connecting the rectangles and points in the natural
-way, a surface is produced. The landscape surface for the example tree is shown
-below:
+Since arcs in the tree correspond to regions in the map, it makes sense to
+choose the areas of these regions so that they reflect the **component weights**
+of their corresponding arcs. For example, look at the arcs 2 → 3 and 2 → 4. Arc
+2 → 3 has two members, and therefore has component weight 2. Arc 2 → 4, on the
+other hand, has no members, and so it has weight 0. This is reflected in the
+treemap: the region corresponding to arc 2 → 3 is larger than the region
+corresponding to 2 → 4. In general, the area between two contours is a function
+of the weight of the arc connecting the corresponding nodes in the tree.
+
+Likewise, the area of a contour itself encodes information about the **total
+weight** of the corresponding node. Notice, for example, that the area of
+contour 5 is larger than that of contour 2. This implies that the total weight
+of node 5 is larger than that of node 2, which is in fact the case: node 5 has
+total weight of 8, while node 2 has total weight 5. In general, the area of
+contour 5 is greater than the area of contour 2 by a ratio that will be
+(approximately) 8:5.
+
+The last step in creating the landscape metaphor is to "lift" each contour to a
+height in the third dimension that corresponds to it's nodes scalar value. This
+looks like the following:
 
 <center>
 <img style="margin:20pt 20pt" width=400 src="../resources/interpret_landscape.png">
 </center>
 
-If we were to look at the landscape from above, we'd see the treemap as shown
-before. But from the side, we have access to additional information: the height
-of points on the landscape encodes the scalar value of nodes in the tree.
+Viewed from above, the landscape metaphor is exactly the treemap described
+above. From the side, however, the height of points on the landscape convey
+information about the scalar function defined on the tree. Node 7, for example,
+has the highest scalar value in our tree, and it is therefore the tallest point
+in our landscape metaphor.
 
-Next, we'll see how to use denali's interface to visualize a simple scalar tree.
+Next we will see how to use the software to build and visualize a simple tree.
 
-# Basic usage
+## Basic usage
 
-## The input tree
+### The input tree
 The tree we will be visualizing is shown below:
 
 <center>
@@ -194,19 +251,21 @@ id, the second number is the member's value.
 For more detailed information on the `.tree` format, see the [format
 specification](formats.html#tree).
 
-## Loading the tree
+### Loading the tree
 With *denali* running, click **File→Open Tree** and select the `tree.tree` file
-in `examples/tutorial`. You'll see the following:
+in `examples/tutorial`. You'll see the following (*click to enlarge*):
 
 <center>
-<img class="screenshot" src="../resources/tut-open.png">
+<a href="../resources/scrot_open.png">
+<img class="screenshot" src="../resources/scrot_open.png">
+</a>
 </center>
 
 *Denali* opens with with a birds-eye view of the landscape. By default, the node
 in the tree with the minimum scalar value is used as the base of the landscape.
 We'll see how to change this shortly.
 
-## Exploring the landscape
+### Exploring the landscape
 To explore the visualization, use the mouse:
 
 - **Hold left mouse**: Click and drag to rotate the landscape
@@ -214,7 +273,7 @@ To explore the visualization, use the mouse:
 - **Hold mouse wheel**: Translate the landscape
 - **Click right mouse**: Select a component
 
-## Selecting a component
+### Selecting a component
 
 Right clicking selects a component of the landscape. Each component of the
 landscape is mapped to an arc of the tree. When a component is selected, general
@@ -234,7 +293,8 @@ Parent total weight: 12
 Child total weight: 10
 ~~~~
 
-The meaning of each item is as follows:
+For a refresher on what some of these terms mean, see the above section on
+[scalar trees](#scalar-trees). In summary:
 
 - **Component selected**: The ids of the nodes in the selected component are shown
   here. When the file was opened, the node with the minimum scalar value was
@@ -267,39 +327,7 @@ The meaning of each item is as follows:
 - **Child total weight**: The weight of the child node, plus the weight of all
   nodes and members in the subtree rooted at the child node.
 
-## Interpreting the landscape
-The landscape faithfully represents the structure of the tree used as input
-while intuitively displaying additional information.
-
-A *component* of the landscape is a single, pyramid-like structure within the
-terrain. Components are in one-to-one correspondence with the arcs of the tree.
-Components can be selected by right clicking them, as we learned above.
-Therefore, selecting a component can be interpreted as selecting an arc in the
-tree.
-
-Components always have a rectangular base. The top of the component is either a
-smaller rectangle, or a point; either are nested within the base rectangle when
-viewed from above or below. These rectangles or points are referred to as
-*contours*. Each contour &mdash; that is, each bottom and top of a component
-&mdash; corresponds to a node in the tree, as you might expect.
-
-In *denali*, we've used a rectangular treemap algorithm to map each node in the
-tree to either a rectangular contour or a point. A branch (degree-2-or-higher)
-node in the tree is represented as a rectangular contour in the landscape, while
-leaf nodes are represented by points. The root node is also represented by a
-rectangular contour: namely the contour at the base of the landscape.
-
-The nesting of the contours is important: a contour is nested in another if it
-is in the outer rectangle's subtree. If a rectangle or point is nested directly
-within a larger rectangle, the larger rectangle is the parent of the contour in
-the tree.
-
-The height of a contour is determined by the associated node's scalar value. The
-volume of a contour is determined by the total volume of the associated node.
-The area between two contours when seen from above is determined by the
-component's weight.
-
-## Simplifying the visualization
+### Simplifying the visualization
 The tree we are visualizing now isn't very complicated, but sometimes,
 especially with noisy data, the tree may have many spurious features. These
 present as small, spiky features in the landscape, and can be distracting.
@@ -321,7 +349,9 @@ simplify the entire tree:
 Your landscape should look like the following:
 
 <center>
-<img class="screenshot" src="tut-simplified1.png">
+<a href="../resources/scrot_simplify.png">
+<img class="screenshot" src="../resources/scrot_simplify.png">
+</a>
 </center>
 
 *Denali* has iteratively collapsed leafy arcs with persistence less than the
@@ -349,7 +379,9 @@ simplified 7 → 3 component in more detail.
 You'll see the following:
 
 <center>
-<img class="screenshot" src="tut-simplified2.png">
+<a href="../resources/scrot_simplify2.png">
+<img class="screenshot" src="../resources/scrot_simplify2.png">
+</a>
 </center>
 
 The 7 → 3 component was completely expanded, and the subtree was then simplified
@@ -360,7 +392,7 @@ Lastly, we may wish to start over and view the entire, unsimplified tree. To do
 this, select the **Expand** button in the simplification pane.
 
 
-## Choosing a root
+### Choosing a root
 When a new landscape is opened in *denali* the node with the minimum scalar
 value is used as the base of the landscape. Depending on what the tree
 represents, however, it may be useful to select a different node as the root.
@@ -378,7 +410,7 @@ minimum nodes are the best choices.
 Before we continue, set the root of the landscape to be the minimum node.
 
 
-## Rebasing the landscape
+### Rebasing the landscape
 Suppose we are interested in a particular subtree or section of the landscape.
 We can visualize this section alone by *rebasing* the tree.
 
@@ -394,9 +426,9 @@ visualizing the full landscape, you'll need to open the tree again by selecting
 **File → Open Tree**. Before proceeding with the tutorial, make sure that you've
 done so.
 
-# Specifying Custom Behavior
+## Specifying Custom Behavior
 
-## Specifying a weight map
+### Specifying a weight map
 
 **Important**: Before continuing, make sure that the full tree is being
 visualized by selecting **File → Open Tree** and choosing
@@ -431,10 +463,12 @@ Now we will load the weight map:
 This is what you'll see:
 
 <center>
-<img class="screenshot" src="tut-simplified2.png">
+<a href="../resources/scrot_weight.png">
+<img class="screenshot" src="../resources/scrot_weight.png">
+</a>
 </center>
 
-Node 8 is a leaf node at the top of the landscape. If we select component 7 → 8,
+Node 8 is a leaf node at the center of the landscape. If we select component 7 → 8,
 we see that the child total weight is 40.
 
 Member 0 is a member of the 4 → 5 arc. If we select this component, we see that
@@ -446,7 +480,7 @@ file by following the steps above. If you'd like to go back to visualizing the
 unweighted landscape, click **File → Clear Weight Map**.
 
 
-## Specifying a color map
+### Specifying a color map
 By default, the color of the landscape is a function of the height (i.e, the
 scalar value of the vertices). It is possible, however, to choose a custom color
 function. This is useful, for example, to visualize a second scalar function on
@@ -511,7 +545,9 @@ To use this color map:
 This is what you'll see:
 
 <center>
-<img class="screenshot" src="tut-simplified2.png">
+<a href="../resources/scrot_color.png">
+<img class="screenshot" src="../resources/scrot_color.png">
+</a>
 </center>
 
 What we've done is set the color of each component to be the scalar value
@@ -525,7 +561,7 @@ correlation between the color scalar function and the original scalar function,
 useful for comparing the two mappings.
 
 
-## Printing special information about a selection 
+### Printing special information about a selection 
 *Denali* includes a powerful and general callback system. It can be used to
 invoke external commands whenever a component of the landscape is selected.
 Communication with the invoked process is done via a simple flat file and
@@ -601,7 +637,9 @@ Now we'll notify *denali* to use this script as a callback. Click on **File →
 Configure Callbacks**. You should see the following:
 
 <center>
-<img class="screenshot" src="callbacks.png">
+<a href="../resources/scrot_callback.png">
+<img class="screenshot" src="../resources/scrot_callback.png">
+</a>
 </center>
 
 There are three sections, one for each type of callback. Since we'll be
@@ -641,9 +679,9 @@ parsing the selection information very easy, any other language is also capable
 of reading and interaction with *denali* in this way.
 
 
-# Visualizing Functions on Point Clouds
+## Visualizing Functions on Point Clouds
 
-## Introduction to contour trees
+### Introduction to contour trees
 As we have seen, *denali*'s input is a scalar tree: an undirected graph whose
 nodes each have an associated real number. We can use the concept of a *contour
 tree* to visualize scalar functions defined on other structures, including point
@@ -674,7 +712,7 @@ the following strategy:
 3. Visualize with *denali*.
 
 
-## Building a neighbor graph
+### Building a neighbor graph
 
 First, we need some data to visualize. Included in `examples/tutorial/data.txt`
 are 10000 samples of a probability density in 4 dimensions. If you'd like
@@ -725,7 +763,7 @@ Running the above script will output two files: `vertices.txt` and `edges.txt`.
 We've included them in `examples/tutorial`, so you don't have to run the script
 above to proceed to the next step.
 
-## Computing the contour tree
+### Computing the contour tree
 
 *ctree* is a command-line tool for computing contour trees. It should have been
 installed alongside *denali*.

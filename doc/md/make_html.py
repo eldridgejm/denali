@@ -25,7 +25,8 @@ for root, dirnames, filenames in os.walk("."):
             outdir = os.path.dirname(outpath)
             command += ["-c", os.path.relpath(css_path, outdir)]
 
-        to_home = os.path.relpath("../index.html", os.path.dirname(outpath))
+        to_home = os.path.relpath("../", os.path.dirname(outpath))
+
         command += ["-V", "rootpath={}".format(to_home)]
 
         print(" ".join(command))
