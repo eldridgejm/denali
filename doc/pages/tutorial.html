@@ -36,12 +36,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 
 <h2 id="tutorial">Tutorial</h2>
-<p>In this tutorial, we will visualize a simple scalar tree with <em>denali</em>. We will see how to explore the landscape, provide a weight map, and visualize a second scalar function on the tree.</p>
-<p>This tutorial will focus on the technical usage of <em>denali</em>. To gain an intuition of how to interpret the visualizations produced by <em>denali</em>, see the <a href="pages/landscape.html">Interpreting Landscapes</a> section of the documentation.</p>
+<p>This tutorial serves as an in-depth first introduction to denali. Along the way, you will gain an understanding for how to interpret the visualization produced by <em>denali</em>, how to use the graphical interface, and how to use <em>denali</em>'s tools to visualize other sources of data, such as a scalar functions defined on point clouds.</p>
 <p>The files we will use in this tutorial are located in the <code>examples/tutorial</code> directory.</p>
 <hr />
 <p><strong>Table of contents</strong>:</p>
 <ul>
+<li><a href="#introduction-to-landscape-metaphors">Introduction to landscape metaphors</a>
+<ul>
+<li><a href="#scalar-trees">Scalar trees</a></li>
+<li><a href="#interpreting-landscapes">Interpreting landscapes</a></li>
+</ul></li>
 <li><a href="#basic-usage">Basic usage</a>
 <ul>
 <li><a href="#the-input-tree">The input tree</a></li>
@@ -67,7 +71,41 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul>
 <hr />
-<h1 id="basic-usage">Basic Usage</h1>
+<h1 id="introduction-to-landscape-metaphors">Introduction to landscape metaphors</h1>
+<p>As described in the <a href="intro.html">introduction</a>, <em>denali</em> is a tool for visualizing data that meets two prerequisites. First, each data point must have an associate scalar value, whether it be a probability, score, cost, etc. Second, it must be possible to extract some tree-like structure from the data. <a href="#visualizing-functions-on-point-clouds">Later</a> in this tutorial, we'll see how to extract tree-like structure from such things as scalar functions defined on point clouds. For now, we'll assume that our data is already in tree-like form.</p>
+<h2 id="scalar-trees">Scalar trees</h2>
+<p>The fundamental unit of input in <em>denali</em> is the <em>scalar tree</em>. A scalar tree is a tree for which every node has an associated integer ID and scalar value. An example of a scalar tree is shown below.</p>
+<center>
+<img style="margin:20pt 20pt" width=400 src="../resources/tree.png">
+</center>
+
+<p>Here, we see that each node has an integer ID and an associated real number as a value. The edges of scalar trees may also have zero or more &quot;member&quot; vertices. These are vertices which exist within the edges of a tree. Like ordinary vertices, members must have an associated ID and scalar value.</p>
+<h2 id="interpreting-landscapes">Interpreting landscapes</h2>
+<p><em>Denal</em> visualizes scalar trees like those described above as landscape metaphors. To understand a landscape metaphor, let's build one from a simple scalar tree:</p>
+<center>
+<img style="margin:20pt 20pt" width=300 src="../resources/interpret_tree.png">
+</center>
+
+<p>The tree we'll use is shown above. The exact scalar values associated with each edge aren't important, but note that the tree is laid out so that the scalar value increases from top to bottom. That is, the scalar value associated with node 0, denoted by <em>f(0)</em>, is less than the scalar value associated with node 1. Node 7 has the highest scalar value.</p>
+<p>To build a landscape visualization, we first choose a node to be the root. The node with the minimum scalar value is often a natural choice. Let's make 0 the root node of our tree.</p>
+<p>Next, we draw a rectangular tree map, shown below:</p>
+<center>
+<img style="margin:20pt 20pt" width=300 src="../resources/interpret_map.png">
+</center>
+
+<p>Each node in the tree is mapped to either a rectangle or a point in the treemap. The root node and all branch nodes are represented as rectangles, while leaf nodes are represented as points.</p>
+<p>If a node is a branch, its corresponding rectangle in the treemap is split into several pieces: one piece for every child it has in the tree. For example, node 2 has two children: 3 and 4. The rectangle for node 2 is therefore split into two pieces. The points representing 3 and 4 are placed in their respective divisions of node 2's rectangle.</p>
+<p>Nesting represents the subtree property. That is, if a point or rectangle representing node <em>x</em> is nested within the rectangle representing node <em>y</em>, then node <em>x</em> is a successor of node <em>y</em> in the directed tree. If <em>x</em>'s rectangle or point is nested <em>directly</em> within <em>y</em>'s rectangle, then <em>x</em> is a child of <em>y</em>.</p>
+<p>Note that there is a gap between, for instance, node 1's rectangle and node 5's rectangle. The area of this gap encodes the <em>weight</em> of the members in the edge from 1 to 5. By default, an edge's weight is simply one plus the number of members contained in the edge. Later we will see how to change the weight of specific member vertices so that the weight of an edge becomes a weighted sum of the weights of its members.</p>
+<p>The area of a node's rectangle represents its <em>total weight</em>: the sum of all edge weights and node weights in the subtree rooted at the node, less the node itself. Simply speaking, the larger a rectangle, the more nodes and members in the subtree rooted at that node. From this, we can conclude that since rectangle 5 is larger than rectangle 2, the edges from 5 to 6 and 7 contain more members than the edges from 2 to 3 and 4.</p>
+<p>The last step is to &quot;lift&quot; each rectangle and point to a height corresponding to the node's scalar value. By connecting the rectangles and points in the natural way, a surface is produced. The landscape surface for the example tree is shown below:</p>
+<center>
+<img style="margin:20pt 20pt" width=400 src="../resources/interpret_landscape.png">
+</center>
+
+<p>If we were to look at the landscape from above, we'd see the treemap as shown before. But from the side, we have access to additional information: the height of points on the landscape encodes the scalar value of nodes in the tree.</p>
+<p>Next, we'll see how to use denali's interface to visualize a simple scalar tree.</p>
+<h1 id="basic-usage">Basic usage</h1>
 <h2 id="the-input-tree">The input tree</h2>
 <p>The tree we will be visualizing is shown below:</p>
 <center>

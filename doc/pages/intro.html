@@ -17,20 +17,31 @@
 </div>
 
 <h2 id="introduction">Introduction</h2>
-<p><em>Denali</em> is a graphical interface for visualizing scalar functions as mountainous terrains. Included alongside <em>denali</em> are several tools which aid in the creation, manipulation, and interpretation of such landscapes: <em>ctree</em> is a command-line tool for computing contour trees, and <em>denali.py</em> is a python module with many diverse utility functions.</p>
-<h2 id="what-can-be-visualized-with-denali">What can be visualized with <em>denali</em>?</h2>
-<p>Strictly-speaking, <em>denali</em> requires as input a tree whose nodes are mapped to scalar values. However, by using the included tools, scalar functions defined on point clouds and graphs are also able to be visualized.</p>
-<p>Some examples of things we have visualized with <em>denali</em>:</p>
+<p><em>Denali</em> is a tool for visualizing complex and possibly high-dimensional data intuitively and efficiently. The central concept used by <em>denali</em> is that of the <em>landscape metaphor</em>: a 2-d &quot;mountainous terrain&quot; embedded in 3-d which preserves important features of the data and presents them to the user in an intuitive fashion. This software package includes tools for computing, visualizing, and manipulating landscape metaphors.</p>
+<h3 id="can-i-use-denali-to-visualize-my-data">Can I use <em>denali</em> to visualize my data?</h3>
+<p>Broadly-speaking, there are two pre-requisites for visualizing your data with <em>denali</em>:</p>
+<ol style="list-style-type: decimal">
+<li>Each data point must have an associated scalar value, such as a probability, score, or cost.</li>
+<li>You must have some method of extracting tree-like structure from your data.</li>
+</ol>
+<p>Included with <em>denali</em> are tools for satisfying the second prerequisite for many types of data that may not appear, at first glance, to exhibit tree-like structure.</p>
+<p>For example, suppose we have drawn many samples from a probability distribution. Can we attempt to understand the structure of the distribution by visualizing the samples with <em>denali</em>? For each sample we have an associated probability, so the first prerequisite is clearly met. However our data is in the form of a point cloud, not a tree, and so it appears that the second requirement is not satisfied. In fact, we <em>can</em> extract tree-like structure from this point cloud in a very natural way using the concept of the <em>contour tree</em>. The contour tree captures the important topological characteristics of a scalar function, and, as its name implies, it exhibits tree-like structure. Hence our second requirement is met, and we <em>can</em> visualize the probability distribution using <em>denali</em>.</p>
+<p><em>Denali</em> includes tools for quickly and easily computing contour trees, making it simply and straightforward to visualize many different types of data as landscape metaphors.</p>
+<h3 id="what-is-included-with-denali">What is included with <em>denali</em>?</h3>
+<p>Included in this package are:</p>
 <ul>
-<li>The parameter space of a neural network model</li>
-<li>A hierarchical clustering</li>
-<li>High dimensional probability distributions</li>
-<li>Comment threads on internet forums</li>
-<li>Decision trees</li>
-<li>Protein interaction networks</li>
+<li><em>denali</em>: A graphical interface for visualizing landscape metaphors</li>
+<li><em>ctree</em>: A tool for computing contour trees</li>
+<li><em>pydenali</em>: Python utilities for interacting with <em>denali</em> and <em>ctree</em>.</li>
 </ul>
-<h2 id="what-is-a-landscape-metaphor">What is a landscape metaphor?</h2>
-<p>A landscape metaphor is a representation of a scalar tree as a 2-d surface embedded in 3-d. The height of points on the landscape corresponds to values of the function on the tree. The volume of components in the landscape corresponds to the number of vertices in the associated part of the tree.</p>
+<p>The main page lists the important documentation for each of these tools.</p>
+<h3 id="using-this-documentation">Using this documentation</h3>
+<p>The suggested method of using this documentation is as follows:</p>
+<ul>
+<li><p>First, if you have yet to install <em>denali</em>, see the <a href="install.html">installation instructions</a>.</p></li>
+<li><p>After installation, jump right into the <a href="tutorial.html">tutorial</a>. The tutorial is an in-depth practical discussion of how to use <em>denali</em>, including how to interpret the visualization, provide input, and use some of <em>denali</em>'s advanced features.</p></li>
+<li><p>For tips on how to use <em>denali</em> to visualize several different types of data, see the <a href="cookbook.html">cookbook</a>.</p></li>
+</ul>
 </div>
 </body>
 </html>

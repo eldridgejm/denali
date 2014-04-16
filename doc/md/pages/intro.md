@@ -1,27 +1,62 @@
 ## Introduction
-*Denali* is a graphical interface for visualizing scalar functions as 
-mountainous terrains. Included alongside *denali* are several tools which aid in
-the creation, manipulation, and interpretation of such landscapes: *ctree* is a
-command-line tool for computing contour trees, and *denali.py* is a python
-module with many diverse utility functions.
 
-## What can be visualized with *denali*?
-Strictly-speaking, *denali* requires as input a tree whose nodes are mapped to
-scalar values. However, by using the included tools, scalar functions defined on
-point clouds and graphs are also able to be visualized.
+*Denali* is a tool for visualizing complex and possibly high-dimensional data
+intuitively and efficiently. The central concept used by *denali* is that of the
+*landscape metaphor*: a 2-d "mountainous terrain" embedded in 3-d which
+preserves important features of the data and presents them to the user in an
+intuitive fashion. This software package includes tools for computing,
+visualizing, and manipulating landscape metaphors.
 
-Some examples of things we have visualized with *denali*:
 
-- The parameter space of a neural network model
-- A hierarchical clustering
-- High dimensional probability distributions
-- Comment threads on internet forums
-- Decision trees
-- Protein interaction networks
+### Can I use *denali* to visualize my data?
 
-## What is a landscape metaphor?
-A landscape metaphor is a representation of a scalar tree as a 2-d surface
-embedded in 3-d. The height of points on the landscape corresponds to values of
-the function on the tree. The volume of components in the landscape corresponds
-to the number of vertices in the associated part of the tree.
+Broadly-speaking, there are two pre-requisites for visualizing your data with
+*denali*:
 
+1. Each data point must have an associated scalar value, such as a probability,
+   score, or cost.
+2. You must have some method of extracting tree-like structure from your data.
+
+Included with *denali* are tools for satisfying the second prerequisite for many
+types of data that may not appear, at first glance, to exhibit tree-like
+structure.
+
+For example, suppose we have drawn many samples from a probability distribution.
+Can we attempt to understand the structure of the distribution by visualizing the
+samples with *denali*?  For each sample we have an associated probability, so
+the first prerequisite is clearly met. However our data is in the form of a
+point cloud, not a tree, and so it appears that the second requirement is not
+satisfied. In fact, we *can* extract tree-like structure from this point cloud
+in a very natural way using the concept of the *contour tree*. The contour tree
+captures the important topological characteristics of a scalar function, and, as
+its name implies, it exhibits tree-like structure. Hence our second requirement
+is met, and we *can* visualize the probability distribution using *denali*.
+
+*Denali* includes tools for quickly and easily computing contour trees, making
+it simply and straightforward to visualize many different types of data as
+landscape metaphors.
+
+### What is included with *denali*?
+
+Included in this package are:
+
+- *denali*: A graphical interface for visualizing landscape metaphors
+- *ctree*: A tool for computing contour trees
+- *pydenali*: Python utilities for interacting with *denali* and *ctree*.
+
+The main page lists the important documentation for each of these tools.
+
+### Using this documentation
+
+The suggested method of using this documentation is as follows: 
+
+- First, if you have yet to install *denali*, see the [installation
+  instructions](install.html).
+
+- After installation, jump right into the [tutorial](tutorial.html). The
+  tutorial is an in-depth practical discussion of how to use *denali*, including
+  how to interpret the visualization, provide input, and use some of *denali*'s
+  advanced features.
+
+- For tips on how to use *denali* to visualize several different types of data,
+  see the [cookbook](cookbook.html).
