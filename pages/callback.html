@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../resources/main.css" type="text/css" />
+</head>
+<body>
+<div id="content">
+
+<div id="header">
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
+</div>
+
+<hr>
+
+<h1 id="the-callback-system">The Callback System</h1>
+<hr />
+<ul>
+<li><a href="#callback-system-overview">Callback system overview</a></li>
+<li><a href="#the-selection-file">The selection file</a>
+<ul>
+<li><a href="#file-section"><code>file</code> section</a></li>
+<li><a href="#component-section"><code>component</code> section</a></li>
+<li><a href="#members-section"><code>members</code> section</a></li>
+<li><a href="#subtree-section"><code>subtree</code> section</a></li>
+<li><a href="#an-example-selection-file">An example selection file</a></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="callback-system-overview">Callback system overview</h2>
+<p><em>Denali</em> provides a flexible and powerful callback system for invoking processes upon the user selecting a component of the landscape. Some features of the system include:</p>
+<ul>
+<li>Callbacks may be written in any language</li>
+<li>Interprocess communication is done via flat file — there is no dependency on a 3rd party messaging library</li>
+<li>Callbacks can print to the status box, and even change the landscape that is being visualized.</li>
+</ul>
+<p>See the <a href="tutorial.html#printing-special-information-about-a-selection">Printing special information about a selection</a> section of the tutorial for a step-by-step introduction to creating a callback script.</p>
+<p>The callback system works as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>When the callback is invoked, either by the user selecting a component or manually invoking the callback by pressing the callback button, a text file containing information about the selection is written to disk. This file will be referred to as the &quot;selection file&quot;.</p></li>
+<li><p>The callback command is run as a blocking subprocess (<em>denali</em>'s interface will be frozen until the script returns). The process is given as its first argument the path to the selection file.</p></li>
+<li><p>The callback script runs. The output it prints to STDOUT is used in different ways, depending on the type of the callback:</p></li>
+</ol>
+<ul>
+<li><em>Info</em>: the output is printed to the status box</li>
+<li><em>Tree</em>: the output is interpreted as if it were the content of a <code>.tree</code> file, and the visualization is updated to represent this tree</li>
+<li><p><em>Void</em>: the output is ignored</p>
+<p>Any other output of the callback that isn't on STDOUT, such as that printed to STDERR, is not handled by <em>denali</em>.</p></li>
+</ul>
+<p>Because the system communicates via files and STDOUT, callbacks may be written in virtually any language.</p>
+<h2 id="the-selection-file">The selection file</h2>
+<p><em>Denali</em> prints information about the selection to a temporary file. Information contained in the file includes the selected component, the members contained within the component, the path to the file being visualized, and (optionally) a list of all of the nodes and members present in the subtree induced by the selection.</p>
+<p>Note that if you are writing a callback in Python, you <em>do not</em> need to know how to parse the selection file: utilities are included in the <em>denali.py</em> module which read selection files. This section is useful only to users who would like to write their own callbacks in another language.</p>
+<p>The selection file is broken into sections. Each section begins with a line containing <code>#</code> followed by the section name, i.e:</p>
+<pre><code># &lt;section 1 name&gt;
+...
+# &lt;section 2 name&gt;
+...</code></pre>
+<p>Possible section names are: <code>file</code>, <code>component</code>, <code>members</code> and <code>subtree</code>. The format of each of these sections is described in detail below:</p>
+<h3 id="file-section"><code>file</code> section</h3>
+<p><strong>Description</strong>: Contains the full, absolute file path of the tree currently being visualized. This path is <em>not</em> changed by running a tree callback. In other words, if we open <code>/path/to/foo.tree</code> and run the tree callback, subsequent selections will still have <code>/path/to/foo.tree</code> in the file section even though the tree being visualized is not the same as the tree described by this file.</p>
+<p><strong>Format</strong>: A single line containing the full file path to the tree file.</p>
+<p><strong>Example</strong>:</p>
+<pre><code># file
+/path/to/file.tree</code></pre>
+<h3 id="component-section"><code>component</code> section</h3>
+<p><strong>Description</strong>: Contains the ids and scalar values of the two nodes which define the selected component.</p>
+<p><strong>Format</strong>: Two lines, each with two tab-separated numerical values. The first value on a line is an integer node id, the second value is a floating-point scalar value. The first line corresponds to the parent node of the component. The second corresponds to the child node. For example:</p>
+<pre><code># component
+&lt;parent id&gt; &lt;parent value&gt;
+&lt;child id&gt;  &lt;child value&gt;</code></pre>
+<p><strong>Example</strong>:</p>
+<pre><code># component
+0   42.3
+20  -21.1</code></pre>
+<h3 id="members-section"><code>members</code> section</h3>
+<p><strong>Description</strong>: Contains a list of all of the members in a selected component and their associated scalar values. Note that the nodes defining the component are themselves members of the component by convention. In other words, if the component 0 → 20 is selected, then 0 and 20 will appear in the <code>members</code> section as well as the <code>component</code> section.</p>
+<p><strong>Format</strong>: Same as the <code>component</code> section, but with two or more lines (since at least the nodes defining the component are present). The order of the members is not important:</p>
+<pre><code># members
+&lt;node id&gt;   &lt;node value&gt;
+&lt;node id&gt;   &lt;node value&gt;
+&lt;node id&gt;   &lt;node value&gt;
+...</code></pre>
+<p><strong>Example</strong>:</p>
+<pre><code># members
+1   42.3
+10  77.2
+42  -4.3
+11  99</code></pre>
+<h3 id="subtree-section"><code>subtree</code> section</h3>
+<p><strong>Description</strong>: A list of all of the nodes and members in the subtree induced by the selection. This is only printed to the selection file if the <strong>Supply subtree</strong> option is checked for the callback in the <strong>File → Configure Callbacks</strong> dialog. Otherwise, the section header is not present. By convention, the selected component is <em>not</em> included in the subtree.</p>
+<p><strong>Format</strong>: Same as the <code>members</code> section.</p>
+<p><strong>Example</strong>:</p>
+<pre><code># subtree
+1   42.3
+10  77.2
+42  -4.3
+11  99</code></pre>
+<h3 id="an-example-selection-file">An example selection file</h3>
+<p>The following selection file was generated by selecting the base component (the component representing arc 4 → 5) of the tree file located at <code>examples/tutorial/tree.tree</code>. Note that the file is <strong>tab-delimited</strong>.</p>
+<pre><code># file
+/path/to/denali/examples/tutorial/tree.tree
+# component
+4   16
+5   32
+# members
+0   25
+4   16
+5   32
+# subtree
+1   62
+2   45
+3   66
+6   64
+7   39
+8   58
+9   51
+10  53
+11  30</code></pre>
+</div>
+</body>
+</html>
