@@ -9,7 +9,7 @@
   <style type="text/css">
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
+table.sourceCode { width: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
 code > span.kw { color: #007020; font-weight: bold; }
@@ -112,7 +112,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>The nested relationship of the contours is important. If a contour <em>u</em> contains another contour <em>v</em>, then <em>v</em> is in the subtree rooted at node <em>u</em>. If <em>v</em>'s contour is directly nested within <em>u</em>'s, then <em>v</em> is a child of <em>u</em>. For example, node 0's contour is the outermost contour, which is to be expected because every node in the tree is in the subtree rooted at node 0. Node 1 is the child of node 0, and so its contour is nested directly within node 0's.</p>
 <p>A branch node's contour is split into several pieces: one for each of its children. The contour of each child is embedded within its corresponding piece. Consider, for example, branch contour 2. It is split into two pieces: one for node 3, and another for node 4. The region between the boundary of a split piece and the inner nested contour represents an arc. The following figure makes this clear:</p>
 <center>
-<img style="margin:20pt 20pt" width=600 src="../resources/interpret_correspondence.png">
+<img style="margin:20pt 20pt" width=450 src="../resources/interpret_correspondence.png">
 </center>
 
 <p>Some of the arcs of the tree and their corresponding regions in the map have been colored. Note, for example, the orange region between contour 1 and contour 2. This corresponds to the orange arc in the tree between node 1 and node 2.</p>
