@@ -181,6 +181,7 @@ def write_tree(fileobj, tree):
 
         for member_id, member_value in tree.edge[u][v]['members'].iteritems():
             fileobj.write("\t{}\t{}".format(member_id, member_value))
+        fileobj.write("\n")
 
 
 def write_weights(fileobj, ids, weights):
