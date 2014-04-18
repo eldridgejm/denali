@@ -8,7 +8,9 @@
 #include <denali/rectangular_landscape.h>
 
 #include <boost/shared_ptr.hpp>
+
 #include <cmath>
+#include <stack>
 #include <stdexcept>
 #include <vector>
 
@@ -25,10 +27,10 @@ class VerticalRectangleSplit;
 
 template <typename LandscapeTree> class Embedding;
 template <typename LandscapeTree> class Embedder;
+template <typename LandscapeTree> struct EmbeddingParameters;
 
 template <typename LandscapeTree> class Triangularization;
 template <typename LandscapeTree> class Triangularizer;
-
 
 }
 
@@ -565,6 +567,21 @@ public:
 };
 
 
+/// \brief The arguments kept in a stack to unroll recursion.
+template <typename LandscapeTree>
+struct denali::rectangular::EmbeddingParameters
+{
+    typedef typename LandscapeTree::Arc Arc;
+    Arc arc;
+    Rectangle parent_rectangle;
+    bool parent_orientation;
+
+    EmbeddingParameters(Arc arc, Rectangle parent_rectangle, bool parent_orientation)
+        : arc(arc), parent_rectangle(parent_rectangle), parent_orientation(parent_orientation)
+    {}
+};
+
+
 template <typename LandscapeTree>
 class denali::rectangular::Embedder
 {
@@ -574,6 +591,7 @@ class denali::rectangular::Embedder
 
     typedef typename LandscapeTree::Node Node;
     typedef typename LandscapeTree::Arc Arc;
+    typedef EmbeddingParameters<LandscapeTree> Parameters;
 
 public:
     Embedder(
@@ -603,24 +621,39 @@ public:
         _embedding.insertSplit(split, _tree.getRoot());
 
         // recursively embed the subtree
+        std::stack<Parameters> embedding_stack;
+
         size_t i = 0;;
         for (ChildIterator<LandscapeTree> it(_tree, _tree.getRoot());
                 !it.done(); ++it)
         {
-            if (_tree.outDegree(it.child()) == 0) 
-            {
+            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), false));
+            ++i;
+        }
+
+        while (!embedding_stack.empty())
+        {
+            Parameters params = embedding_stack.top();
+            embedding_stack.pop();
+
+            Node node = _tree.target(params.arc);
+
+            if (_tree.outDegree(node) == 0) {
                 // the child is a leaf
-                embedLeaf(it.child(), split.getRectangle(i));
+                embedLeaf(node, params.parent_rectangle);
             } else {
                 // the child is a branch
-                embedBranch(it.arc(), split.getRectangle(i), true);
+                embedBranch(embedding_stack, 
+                            params.arc, 
+                            params.parent_rectangle, 
+                            !params.parent_orientation);
             }
-            ++i;
         }
     }
 
 private:
     void embedBranch(
+        std::stack<Parameters>& embedding_stack,
         Arc arc,
         Rectangle parent_rectangle,
         bool split_vertically)
@@ -658,14 +691,9 @@ private:
         // recursively embed the subtree
         size_t i = 0;;
         for (ChildIterator<LandscapeTree> it(_tree, current);
-                !it.done(); ++it) {
-            if (_tree.outDegree(it.child()) == 0) {
-                // the child is a leaf
-                embedLeaf(it.child(), split.getRectangle(i));
-            } else {
-                // the child is a branch
-                embedBranch(it.arc(), split.getRectangle(i), !split_vertically);
-            }
+                !it.done(); ++it)
+        {
+            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), false));
             ++i;
         }
     }
@@ -770,30 +798,46 @@ public:
     void triangularize()
     {
 
+        // simulate recursion with a stack
+        std::stack<Arc> triangularization_stack;
+
         // now recurse
         for (ChildIterator<LandscapeTree> it(_tree, _tree.getRoot());
-                !it.done(); ++it) {
-            if (_tree.outDegree(it.child()) == 0) {
-                triangularizeLeafArc(it.arc());
-            } else {
-                triangularizeBranchArc(it.arc());
+                !it.done(); ++it)
+        {
+            triangularization_stack.push(it.arc());
+        }
+
+        while (!triangularization_stack.empty())
+        {
+            Arc arc = triangularization_stack.top();
+            triangularization_stack.pop();
+
+            Node node = _tree.target(arc);
+
+            if (_tree.outDegree(node) == 0)
+            {
+                triangularizeLeafArc(arc);
+            } 
+            else 
+            {
+                triangularizeBranchArc(triangularization_stack, arc);
             }
         }
     }
 
 private:
 
-    void triangularizeBranchArc(Arc arc)
+    void triangularizeBranchArc(
+            std::stack<Arc>& triangularization_stack, 
+            Arc arc)
     {
         triangulateNestedRectangle(arc);
 
         for (ChildIterator<LandscapeTree> it(_tree, _tree.target(arc));
-                !it.done(); ++it) {
-            if (_tree.outDegree(it.child()) == 0) {
-                triangularizeLeafArc(it.arc());
-            } else {
-                triangularizeBranchArc(it.arc());
-            }
+                !it.done(); ++it) 
+        {
+            triangularization_stack.push(it.arc());
         }
     }
 
