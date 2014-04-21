@@ -745,8 +745,8 @@ WARN_LOGFILE           = "doxygen_warn.log"
 
 INPUT                  =    "modules.dox" \
                             "pages.dox" \
-                            "../denali" \
-                            "../denali/concepts"
+                            "../../denali" \
+                            "../../denali/concepts"
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

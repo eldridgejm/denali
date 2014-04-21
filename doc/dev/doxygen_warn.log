@@ -1,2 +1,825 @@
-warning: source ../denali is not a readable file or directory... skipping.
-warning: source ../denali/concepts is not a readable file or directory... skipping.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:95: warning: Compound denali::concepts::ArcIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:152: warning: Compound denali::VectorDirectedGraphImplementation::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:131: warning: Compound denali::concepts::EdgeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:146: warning: Compound denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:295: warning: Compound denali::concepts::DirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:105: warning: Compound denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:222: warning: Compound denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:148: warning: Compound denali::FoldTree::EdgeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:743: warning: Compound denali::concepts::ReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:302: warning: Compound denali::rectangular::RectangleSplitter is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:177: warning: Compound denali::rectangular::HorizontalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:186: warning: Compound denali::concepts::ParentIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:439: warning: Compound denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:144: warning: Compound denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:58: warning: Compound denali::concepts::ScalarSimplicialComplex::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:513: warning: Compound denali::concepts::BaseObservable::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:68: warning: Compound denali::concepts::ObservingArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:240: warning: Compound denali::concepts::ChildIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:18: warning: Compound denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:140: warning: Compound denali::concepts::StaticNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:28: warning: Compound denali::concepts::ObservingNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:587: warning: Compound denali::rectangular::Embedder is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:29: warning: Compound denali::rectangular::Embedder is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:1014: warning: Compound denali::concepts::WritableReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:250: warning: Compound denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:733: warning: Compound denali::UndirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:158: warning: Compound denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:719: warning: Compound denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:204: warning: Compound denali::concepts::StaticEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:486: warning: Compound denali::ColorMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:605: warning: Compound denali::concepts::ArcObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:37: warning: Compound denali::concepts::NodeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:405: warning: Compound denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:645: warning: Compound denali::FoldedContourTree::Members::const_iterator is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:342: warning: Compound denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:23: warning: Compound denali::Priority is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:716: warning: Compound denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:32: warning: Compound denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:594: warning: Compound denali::concepts::ArcObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:780: warning: Compound denali::rectangular::Triangularizer is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:33: warning: Compound denali::rectangular::Triangularizer is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:107: warning: Compound denali::concepts::ObservingEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:434: warning: Compound denali::concepts::RandomAccessComparisonFunctor is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:121: warning: Compound denali::FoldTree::FoldObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:218: warning: Compound denali::rectangular::VerticalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:413: warning: Compound denali::WritableReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:78: warning: Compound denali::concepts::Edge::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:350: warning: Compound denali::concepts::UndirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:46: warning: Compound denali::concepts::Node::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:57: warning: Compound denali::concepts::NodeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:137: warning: Compound denali::EdgeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:167: warning: Compound denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:757: warning: Compound denali::UndirectedGraphImplementation::Edge is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:164: warning: Compound denali::ObservableMappableListMixin::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:46: warning: Compound denali::NullProtector is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:28: warning: Compound denali::concepts::Point::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:185: warning: Compound denali::concepts::ParentIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:653: warning: Compound denali::concepts::EdgeObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:444: warning: Compound denali::concepts::RandomAccessComparisonFunctor::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:60: warning: Compound denali::concepts::Triangle::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:557: warning: Compound denali::concepts::NodeObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:391: warning: Compound denali::concepts::NodeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:286: warning: Compound denali::concepts::DirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:48: warning: Compound denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:138: warning: Compound denali::concepts::EdgeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:336: warning: Compound denali::concepts::UndirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:413: warning: Compound denali::concepts::ContourTreeAlgorithm::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:52: warning: Compound denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:56: warning: Compound denali::rectangular::Rectangle::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:876: warning: Compound denali::concepts::ReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:440: warning: Compound denali::concepts::ArcMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:84: warning: Compound denali::concepts::ArcIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:75: warning: Compound denali::VertexValueFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:416: warning: Compound denali::concepts::UndirectedBFSIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:409: warning: Compound denali::WeightMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:144: warning: Compound denali::concepts::Members::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:259: warning: Compound denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:62: warning: Compound denali::concepts::Arc::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:104: warning: Compound denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:491: warning: Compound denali::concepts::TotalOrder::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:127: warning: Compound denali::FoldTree::NodeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:546: warning: Compound denali::concepts::NodeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:128: warning: Compound denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:488: warning: Compound denali::concepts::EdgeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:642: warning: Compound denali::concepts::EdgeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:105: warning: Compound denali::concepts::Member::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:236: warning: Compound denali::concepts::ChildIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:958: warning: Compound denali::concepts::WritableReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:172: warning: Compound denali::concepts::StaticArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/check.h:10: warning: Member ignore_unused_variable_warning(const T &) (function) of namespace denali::concepts is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/check.h:24: warning: Member checkConcept() (function) of namespace denali::concepts is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/check.h:35: warning: Member checkConcept() (function) of namespace denali::concepts is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:42: warning: Member Node (typedef) of class denali::ScalarSimplicialComplexBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:43: warning: Member Edge (typedef) of class denali::ScalarSimplicialComplexBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:86: warning: Member getNode(unsigned int index) const  (function) of class denali::ScalarSimplicialComplexBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:91: warning: Member getID(Node node) const  (function) of class denali::ScalarSimplicialComplexBase is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:111: warning: Member Node (typedef) of class denali::ScalarSimplicialComplex is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:112: warning: Member Edge (typedef) of class denali::ScalarSimplicialComplex is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:86: warning: Member getNode(unsigned int index) const (function) of class ScalarSimplicialComplexBase< UndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:91: warning: Member getID(Node node) const (function) of class ScalarSimplicialComplexBase< UndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedGraph, BaseGraphMixin< UndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:125: warning: Member ScalarSimplicialComplexRandomAccessAdapter(const ScalarSimplicialComplex &plex) (function) of class denali::ScalarSimplicialComplexRandomAccessAdapter is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:128: warning: Member operator[](unsigned int index) const  (function) of class denali::ScalarSimplicialComplexRandomAccessAdapter is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:133: warning: Member size() const  (function) of class denali::ScalarSimplicialComplexRandomAccessAdapter is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:191: warning: Member Members (typedef) of class denali::UndirectedScalarMemberIDGraphBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:216: warning: Member Node (typedef) of class denali::UndirectedScalarMemberIDGraphBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:217: warning: Member Edge (typedef) of class denali::UndirectedScalarMemberIDGraphBase is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:543: warning: Member Observer (typedef) of class EdgeObservableMixin< GraphType, NodeObservableMixin< GraphType, ReadableUndirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:347: warning: Member numberNodesPlusMembers() const  (function) of class denali::UndirectedScalarMemberIDGraphBase is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:171: warning: Member Member(unsigned int id, double value) (function) of class denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:174: warning: Member operator==(const Member &rhs) const  (function) of class denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:178: warning: Member operator<(const Member &rhs) const  (function) of class denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:182: warning: Member getID() const  (function) of class denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:186: warning: Member getValue() const  (function) of class denali::UndirectedScalarMemberIDGraphBase::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:366: warning: Member Node (typedef) of class denali::UndirectedScalarMemberIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:367: warning: Member Edge (typedef) of class denali::UndirectedScalarMemberIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:368: warning: Member Members (typedef) of class denali::UndirectedScalarMemberIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:543: warning: Member Observer (typedef) of class EdgeObservableMixin< UndirectedGraph, NodeObservableMixin< UndirectedGraph, ReadableUndirectedGraphMixin< UndirectedGraph, BaseGraphMixin< UndirectedGraph > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:347: warning: Member numberNodesPlusMembers() const (function) of class UndirectedScalarMemberIDGraphBase< UndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedGraph, BaseGraphMixin< UndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:390: warning: Member Node (typedef) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:391: warning: Member Edge (typedef) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:392: warning: Member Members (typedef) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:393: warning: Member Member (typedef) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:395: warning: Member ContourTreeMixin(GraphType &graph) (function) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:428: warning: Member numberNodesPlusMembers() const  (function) of class denali::ContourTreeMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< GraphType, Super > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:455: warning: Member Node (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:456: warning: Member Edge (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:457: warning: Member Members (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:393: warning: Member Member (typedef) of class ContourTreeMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:428: warning: Member numberNodesPlusMembers() const (function) of class ContourTreeMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:450: warning: Member ContourTreeBase(boost::shared_ptr< Graph > graph) (function) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:472: warning: Member Graph (typedef) of class denali::ContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:455: warning: Member Node (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:456: warning: Member Edge (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:457: warning: Member Members (typedef) of class denali::ContourTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:393: warning: Member Member (typedef) of class ContourTreeMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:428: warning: Member numberNodesPlusMembers() const (function) of class ContourTreeMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedScalarMemberIDGraph, BaseGraphMixin< UndirectedScalarMemberIDGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:476: warning: Member compute(const ScalarSimplicialComplex &simplicial_complex, ContourTreeAlgorithm &algorithm) (function) of class denali::ContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:660: warning: Member DisjointSetForest(const TotalOrder &order) (function) of class denali::DisjointSetForest is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:677: warning: Member findSet(unsigned int x) (function) of class denali::DisjointSetForest is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:687: warning: Member findMax(unsigned int x) (function) of class denali::DisjointSetForest is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:694: warning: Member findMin(unsigned int x) (function) of class denali::DisjointSetForest is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:701: warning: Member setUnion(unsigned int x, unsigned int y) (function) of class denali::DisjointSetForest is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:757: warning: Member ElementToPosition (typedef) of class denali::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:758: warning: Member PositionToElement (typedef) of class denali::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:769: warning: Member elementToPosition(unsigned int element) const  (function) of class denali::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:774: warning: Member positionToElement(unsigned int position) const  (function) of class denali::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:779: warning: Member size() const  (function) of class denali::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:840: warning: Member RandomAccessValueSorter(const Values &values) (function) of class denali::RandomAccessValueSorter is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:841: warning: Member operator()(unsigned int u, unsigned int v) (function) of class denali::RandomAccessValueSorter is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:872: warning: Member Node (typedef) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:873: warning: Member Arc (typedef) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:876: warning: Member DirectedIDGraph(size_t n) (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:883: warning: Member DirectedIDGraph(const DirectedIDGraph &other) (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:902: warning: Member addNode() (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:910: warning: Member addArc(Node u, Node v) (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:915: warning: Member removeNode(Node node) (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:920: warning: Member removeArc(Arc arc) (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:925: warning: Member getNode(unsigned int id) const  (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:930: warning: Member getID(Node node) const  (function) of class denali::DirectedIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:951: warning: Member JoinSplitTree (typedef) of class denali::CarrsAlgorithm is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:998: warning: Member setCopyJoinSplitTrees(bool value) (function) of class denali::CarrsAlgorithm is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:1002: warning: Member getJoinTree() const  (function) of class denali::CarrsAlgorithm is not documented.
+/home/eldridge/workbench/denali/code/denali/contour_tree.h:1006: warning: Member getSplitTree() const  (function) of class denali::CarrsAlgorithm is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:37: warning: Member parse(std::istream &tabstream, FormatParser &parser) (function) of class denali::TabularFileParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:81: warning: Member VertexValueFormatParser(ScalarSimplicialComplex &plex) (function) of class denali::VertexValueFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:84: warning: Member insert(std::vector< std::string > &line) (function) of class denali::VertexValueFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:143: warning: Member EdgeFormatParser(ScalarSimplicialComplex &plex) (function) of class denali::EdgeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:147: warning: Member insert(std::vector< std::string > &line) (function) of class denali::EdgeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:264: warning: Member ContourTreeFormatParser(GraphType &graph) (function) of class denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:267: warning: Member insert(const Line &line) (function) of class denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:279: warning: Member readNumberOfVertices(const Line &line) (function) of class denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:300: warning: Member readVertexLine(const Line &line) (function) of class denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:323: warning: Member readEdgeLine(const Line &line) (function) of class denali::ContourTreeFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:415: warning: Member WeightMapFormatParser(WeightMap &weight_map) (function) of class denali::WeightMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:419: warning: Member insert(std::vector< std::string > &line) (function) of class denali::WeightMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:492: warning: Member ColorMapFormatParser(ColorMap &color_map) (function) of class denali::ColorMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/fileio.h:496: warning: Member insert(std::vector< std::string > &line) (function) of class denali::ColorMapFormatParser is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:117: warning: Member Node (typedef) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:118: warning: Member Edge (typedef) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:543: warning: Member Observer (typedef) of class EdgeObservableMixin< UndirectedGraph, NodeObservableMixin< UndirectedGraph, ReadableUndirectedGraphMixin< UndirectedGraph, BaseGraphMixin< UndirectedGraph > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:201: warning: Member addEdge(Node u, Node v) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:222: warning: Member getNodeFold(Node node) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:226: warning: Member getEdgeFold(Edge edge) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:230: warning: Member numberOfNodeFolds() const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:234: warning: Member numberOfEdgeFolds() const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:238: warning: Member collapse(Edge edge) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:256: warning: Member reduce(Node v) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:286: warning: Member uncollapse(Node u, int index=-1) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:313: warning: Member unreduce(Edge uw) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:341: warning: Member numberOfCollapsedEdgeFolds(NodeFold nf) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:345: warning: Member getCollapsedEdgeFold(NodeFold nf, size_t i) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:351: warning: Member uvFold(NodeFold nf) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:355: warning: Member vwFold(NodeFold nf) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:359: warning: Member getNodeFromFold(NodeFold nf) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:363: warning: Member uFold(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:367: warning: Member vFold(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:371: warning: Member reducedFold(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:375: warning: Member hasReduced(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:379: warning: Member getEdgeFromFold(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:383: warning: Member getNodeFoldIdentifier(NodeFold nf) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:387: warning: Member getMaxNodeFoldIdentifier() const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:391: warning: Member getEdgeFoldIdentifier(EdgeFold ef) const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:395: warning: Member getMaxEdgeFoldIdentifier() const  (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:399: warning: Member attachNodeFoldObserver(FoldObserver &observer) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:403: warning: Member detachNodeFoldObserver(FoldObserver &observer) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:407: warning: Member attachEdgeFoldObserver(FoldObserver &observer) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:411: warning: Member detachEdgeFoldObserver(FoldObserver &observer) (function) of class denali::FoldTree is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedGraph, BaseGraphMixin< UndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:157: warning: Member operator==(const EdgeFold &edge_fold) const  (function) of class denali::FoldTree::EdgeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:161: warning: Member operator!=(const EdgeFold &edge_fold) const  (function) of class denali::FoldTree::EdgeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:165: warning: Member operator<(const EdgeFold &edge_fold) const  (function) of class denali::FoldTree::EdgeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:123: warning: Member notify()=0 (function) of class denali::FoldTree::FoldObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:134: warning: Member operator==(const NodeFold &node_fold) const  (function) of class denali::FoldTree::NodeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:138: warning: Member operator!=(const NodeFold &node_fold) const  (function) of class denali::FoldTree::NodeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:142: warning: Member operator<(const NodeFold &node_fold) const  (function) of class denali::FoldTree::NodeFold is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:520: warning: Member ObservingNodeFoldMap(NodeFoldObservable &graph) (function) of class denali::ObservingNodeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:531: warning: Member notify() (function) of class denali::ObservingNodeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:537: warning: Member operator[](typename NodeFoldObservable::NodeFold node_fold) (function) of class denali::ObservingNodeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:543: warning: Member operator[](typename NodeFoldObservable::NodeFold node_fold) const  (function) of class denali::ObservingNodeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:565: warning: Member ObservingEdgeFoldMap(EdgeFoldObservable &graph) (function) of class denali::ObservingEdgeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:576: warning: Member notify() (function) of class denali::ObservingEdgeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:582: warning: Member operator[](typename EdgeFoldObservable::EdgeFold edge_fold) (function) of class denali::ObservingEdgeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:588: warning: Member operator[](typename EdgeFoldObservable::EdgeFold edge_fold) const  (function) of class denali::ObservingEdgeFoldMap is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:612: warning: Member Node (typedef) of class denali::FoldedContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:613: warning: Member Edge (typedef) of class denali::FoldedContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:820: warning: Member Member (typedef) of class denali::FoldedContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:469: warning: Member Observer (typedef) of class NodeObservableMixin< FoldTree, EdgeObservableMixin< FoldTree, ReadableUndirectedGraphMixin< FoldTree, BaseGraphMixin< FoldTree > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:822: warning: Member FoldedContourTree(const ContourTree &contour_tree) (function) of class denali::FoldedContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< FoldTree, BaseGraphMixin< FoldTree > > is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:745: warning: Member size() const  (function) of class denali::FoldedContourTree::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:749: warning: Member begin() const  (function) of class denali::FoldedContourTree::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:767: warning: Member end() const  (function) of class denali::FoldedContourTree::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:674: warning: Member operator==(const const_iterator &rhs) const  (function) of class denali::FoldedContourTree::Members::const_iterator is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:700: warning: Member operator!=(const const_iterator rhs) const  (function) of class denali::FoldedContourTree::Members::const_iterator is not documented.
+/home/eldridge/workbench/denali/code/denali/folded.h:725: warning: Member operator*() const  (function) of class denali::FoldedContourTree::Members::const_iterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:63: warning: Member _arc (variable) of class denali::ArcIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:357: warning: Member done() const  (function) of class denali::UndirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:361: warning: Member operator++() (function) of class denali::UndirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:369: warning: Member parent() const  (function) of class denali::UndirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:372: warning: Member child() const  (function) of class denali::UndirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:375: warning: Member edge() const  (function) of class denali::UndirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:395: warning: Member DirectedBFSIterator(const GraphType &graph, Node root) (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:403: warning: Member done() const  (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:407: warning: Member operator++() (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:417: warning: Member parent() const  (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:420: warning: Member child() const  (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_iterators.h:423: warning: Member arc() const  (function) of class denali::DirectedBFSIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:23: warning: Member ObservingNodeMap(NodeObservable &graph) (function) of class denali::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:34: warning: Member notify() (function) of class denali::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:40: warning: Member operator[](typename NodeObservable::Node node) (function) of class denali::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:46: warning: Member operator[](typename NodeObservable::Node node) const  (function) of class denali::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:69: warning: Member ObservingArcMap(ArcObservable &graph) (function) of class denali::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:80: warning: Member notify() (function) of class denali::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:86: warning: Member operator[](typename ArcObservable::Arc arc) (function) of class denali::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:92: warning: Member operator[](typename ArcObservable::Arc arc) const  (function) of class denali::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:115: warning: Member ObservingEdgeMap(EdgeObservable &graph) (function) of class denali::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:126: warning: Member notify() (function) of class denali::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:132: warning: Member operator[](typename EdgeObservable::Edge edge) (function) of class denali::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:138: warning: Member operator[](typename EdgeObservable::Edge edge) const  (function) of class denali::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:158: warning: Member StaticNodeMap(const NodeMappable &graph) (function) of class denali::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:162: warning: Member operator[](typename NodeMappable::Node node) (function) of class denali::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:168: warning: Member operator[](typename NodeMappable::Node node) const  (function) of class denali::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:187: warning: Member StaticArcMap(const ArcMappable &graph) (function) of class denali::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:191: warning: Member operator[](typename ArcMappable::Arc arc) (function) of class denali::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:197: warning: Member operator[](typename ArcMappable::Arc arc) const  (function) of class denali::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:216: warning: Member StaticEdgeMap(const EdgeMappable &graph) (function) of class denali::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:220: warning: Member operator[](typename EdgeMappable::Edge edge) (function) of class denali::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_maps.h:226: warning: Member operator[](typename EdgeMappable::Edge edge) const  (function) of class denali::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:12: warning: Member BaseGraphMixin(const Anything &) (function) of class denali::BaseGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const  (function) of class denali::ReadableDirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:216: warning: Member ReadableUndirectedGraphMixin(const ReadableUndirectedGraph &graph) (function) of class denali::ReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const  (function) of class denali::ReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:375: warning: Member Node (typedef) of class denali::WritableReadableDirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:376: warning: Member Arc (typedef) of class denali::WritableReadableDirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:372: warning: Member WritableReadableDirectedGraphMixin(WritableReadableDirectedGraph &graph) (function) of class denali::WritableReadableDirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< WritableReadableDirectedGraph, Super > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:421: warning: Member Node (typedef) of class denali::WritableReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:422: warning: Member Edge (typedef) of class denali::WritableReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:418: warning: Member WritableReadableUndirectedGraphMixin(WritableReadableUndirectedGraph &graph) (function) of class denali::WritableReadableUndirectedGraphMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< WritableReadableUndirectedGraph, Super > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:469: warning: Member Observer (typedef) of class denali::NodeObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:466: warning: Member NodeObservableMixin(NodeObservable &graph) (function) of class denali::NodeObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:506: warning: Member Observer (typedef) of class denali::ArcObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:503: warning: Member ArcObservableMixin(ArcObservable &graph) (function) of class denali::ArcObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:543: warning: Member Observer (typedef) of class denali::EdgeObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:540: warning: Member EdgeObservableMixin(EdgeObservable &graph) (function) of class denali::EdgeObservableMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:159: warning: Member notifyNodeObservers() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:168: warning: Member notifyArcObservers() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:177: warning: Member addNode() (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:220: warning: Member addArc(const Node u, const Node v) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:276: warning: Member numberOfNodes() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:279: warning: Member numberOfArcs() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:283: warning: Member eraseNode(const Node node) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:321: warning: Member eraseArc(const Arc arc) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:371: warning: Member removeNode(const Node node) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:403: warning: Member removeArc(const Arc arc) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:416: warning: Member degree(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:421: warning: Member inDegree(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:426: warning: Member outDegree(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:431: warning: Member firstOutArc(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:437: warning: Member firstInArc(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:443: warning: Member isNodeValid(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:449: warning: Member isArcValid(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:455: warning: Member getFirstNode() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:460: warning: Member getNextNode(Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:465: warning: Member source(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:470: warning: Member target(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:475: warning: Member opposite(const Node node, const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:481: warning: Member getFirstArc() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:497: warning: Member getNextArc(Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:515: warning: Member getFirstOutArc(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:520: warning: Member getNextOutArc(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:525: warning: Member getFirstInArc(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:530: warning: Member getNextInArc(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:535: warning: Member getFirstNeighborArc(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:545: warning: Member getNextNeighborArc(const Node node, const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:558: warning: Member getNodeIdentifier(const Node node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:563: warning: Member getNodeFromIdentifier(unsigned int identifier) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:567: warning: Member getArcIdentifier(const Arc arc) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:572: warning: Member getArcFromIdentifier(unsigned int identifier) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:576: warning: Member getMaxNodeIdentifier() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:581: warning: Member getMaxArcIdentifier() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:586: warning: Member attachNodeObserver(Observer &ob) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:591: warning: Member detachNodeObserver(Observer &ob) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:596: warning: Member attachArcObserver(Observer &ob) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:601: warning: Member detachArcObserver(Observer &ob) (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:606: warning: Member findArc(const Node source_node, const Node target_node) const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:626: warning: Member getInvalidNode() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:631: warning: Member getInvalidArc() const  (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:636: warning: Member clear() (function) of class denali::VectorDirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:137: warning: Member operator==(const Arc &arc) const  (function) of class denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:141: warning: Member operator!=(const Arc &arc) const  (function) of class denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:145: warning: Member operator<(const Arc &arc) const  (function) of class denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:133: warning: Member Arc(int index) (function) of class denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:132: warning: Member index (variable) of class denali::VectorDirectedGraphImplementation::Arc is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:113: warning: Member operator==(const Node &node) const  (function) of class denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:117: warning: Member operator!=(const Node &node) const  (function) of class denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:121: warning: Member operator<(const Node &node) const  (function) of class denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:109: warning: Member Node(int index) (function) of class denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:108: warning: Member index (variable) of class denali::VectorDirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:154: warning: Member notify()=0 (function) of class denali::VectorDirectedGraphImplementation::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:469: warning: Member Observer (typedef) of class NodeObservableMixin< Implementation, ArcObservableMixin< Implementation, WritableReadableDirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:375: warning: Member Node (typedef) of class WritableReadableDirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:376: warning: Member Arc (typedef) of class WritableReadableDirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:702: warning: Member Node (typedef) of class denali::DirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:703: warning: Member Arc (typedef) of class denali::DirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:704: warning: Member Observer (typedef) of class denali::DirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< VectorDirectedGraphImplementation, BaseGraphMixin< VectorDirectedGraphImplementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:780: warning: Member Observer (typedef) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:783: warning: Member isNodeValid(Node node) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:786: warning: Member isEdgeValid(Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:789: warning: Member getFirstNode() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:792: warning: Member getNextNode(Node node) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:795: warning: Member getFirstEdge() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:798: warning: Member getNextEdge(Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:802: warning: Member getFirstNeighborEdge(Node node) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:807: warning: Member getNextNeighborEdge(Node node, Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:812: warning: Member opposite(Node node, Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:817: warning: Member degree(Node node) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:820: warning: Member u(Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:823: warning: Member v(Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:827: warning: Member numberOfNodes() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:830: warning: Member numberOfEdges() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:834: warning: Member getMaxNodeIdentifier() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:838: warning: Member getNodeIdentifier(Node node) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:843: warning: Member getNodeFromIdentifier(unsigned int identifier) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:847: warning: Member getMaxEdgeIdentifier() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:852: warning: Member getEdgeIdentifier(Edge edge) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:857: warning: Member getEdgeFromIdentifier(unsigned int identifier) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:861: warning: Member addNode() (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:864: warning: Member addEdge(Node u, Node v) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:869: warning: Member removeNode(Node node) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:872: warning: Member removeEdge(Edge edge) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:876: warning: Member clear() (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:880: warning: Member attachNodeObserver(Observer &ob) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:883: warning: Member detachNodeObserver(Observer &ob) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:886: warning: Member attachEdgeObserver(Observer &ob) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:889: warning: Member detachEdgeObserver(Observer &ob) (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:893: warning: Member findEdge(Node u, Node v) const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:916: warning: Member getInvalidNode() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:919: warning: Member getInvalidEdge() const  (function) of class denali::UndirectedGraphImplementation is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:767: warning: Member operator==(const Edge &edge) const  (function) of class denali::UndirectedGraphImplementation::Edge is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:771: warning: Member operator!=(const Edge &edge) const  (function) of class denali::UndirectedGraphImplementation::Edge is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:775: warning: Member operator<(const Edge &edge) const  (function) of class denali::UndirectedGraphImplementation::Edge is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:743: warning: Member operator==(const Node &node) const  (function) of class denali::UndirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:747: warning: Member operator!=(const Node &node) const  (function) of class denali::UndirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:751: warning: Member operator<(const Node &node) const  (function) of class denali::UndirectedGraphImplementation::Node is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:543: warning: Member Observer (typedef) of class EdgeObservableMixin< Implementation, NodeObservableMixin< Implementation, WritableReadableUndirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:421: warning: Member Node (typedef) of class WritableReadableUndirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:422: warning: Member Edge (typedef) of class WritableReadableUndirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< Implementation, BaseGraphMixin< Implementation > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:985: warning: Member Node (typedef) of class denali::UndirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:986: warning: Member Edge (typedef) of class denali::UndirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_structures.h:987: warning: Member Observer (typedef) of class denali::UndirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:304: warning: Member getEdgeFromIdentifier(unsigned int id) const (function) of class ReadableUndirectedGraphMixin< UndirectedGraphImplementation< DirectedGraph >, BaseGraphMixin< UndirectedGraphImplementation< DirectedGraph > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:38: warning: Member Node (typedef) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:39: warning: Member Arc (typedef) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:40: warning: Member Members (typedef) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:506: warning: Member Observer (typedef) of class ArcObservableMixin< GraphType, NodeObservableMixin< GraphType, ReadableDirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:42: warning: Member LandscapeTreeBase(const ContourTree &contour_tree, typename ContourTree::Node root) (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:52: warning: Member addNode(typename ContourTree::Node ct_node) (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:61: warning: Member addArc(Node parent, Node child, typename ContourTree::Edge ct_edge) (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:70: warning: Member getContourTreeNode(Node node) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:75: warning: Member getContourTreeEdge(Arc arc) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:80: warning: Member getLandscapeTreeNode(typename ContourTree::Node node) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:85: warning: Member getLandscapeTreeArc(typename ContourTree::Edge edge) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:90: warning: Member getRoot() const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:94: warning: Member getValue(Node node) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:99: warning: Member getID(Node node) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:104: warning: Member getNodeMembers(Node node) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:109: warning: Member getNode(unsigned int id) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:114: warning: Member getArcMembers(Arc arc) const  (function) of class denali::LandscapeTreeBase is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< GraphType, BaseGraphMixin< GraphType > > is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:149: warning: Member Node (typedef) of class denali::LandscapeTree is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:150: warning: Member Arc (typedef) of class denali::LandscapeTree is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:151: warning: Member Members (typedef) of class denali::LandscapeTree is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:506: warning: Member Observer (typedef) of class ArcObservableMixin< LandscapeTreeBase< ContourTree, DirectedGraph >, NodeObservableMixin< LandscapeTreeBase< ContourTree, DirectedGraph >, ReadableDirectedGraphMixin< LandscapeTreeBase< ContourTree, DirectedGraph >, BaseGraphMixin< LandscapeTreeBase< ContourTree, DirectedGraph > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< LandscapeTreeBase< ContourTree, DirectedGraph >, BaseGraphMixin< LandscapeTreeBase< ContourTree, DirectedGraph > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:346: warning: Member LandscapeWeights(const LandscapeTree &tree) (function) of class denali::LandscapeWeights is not documented.
+/home/eldridge/workbench/denali/code/denali/landscape.h:353: warning: Member LandscapeWeights(const LandscapeTree &tree, WeightMap *weight_map) (function) of class denali::LandscapeWeights is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:31: warning: Member ValueType (typedef) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:37: warning: Member operator[](int n) (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:41: warning: Member operator[](int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:45: warning: Member size() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:103: warning: Member isValid(int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:107: warning: Member getFirst() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:111: warning: Member getNext(int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:115: warning: Member getMaxIdentifier() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:131: warning: Member ValueType (typedef) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:133: warning: Member MappableListIterator(MappableList &mlist) (function) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:137: warning: Member done() const  (function) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:141: warning: Member operator++() (function) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:145: warning: Member operator*() (function) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:149: warning: Member operator*() const  (function) of class denali::MappableListIterator is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:161: warning: Member ValueType (typedef) of class denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:170: warning: Member insert(const ValueType &value) (function) of class denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:176: warning: Member remove(int id) (function) of class denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:181: warning: Member attachObserver(Observer &observer) (function) of class denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:185: warning: Member detachObserver(Observer &observer) (function) of class denali::ObservableMappableListMixin is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:166: warning: Member notify() const =0 (function) of class denali::ObservableMappableListMixin::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:161: warning: Member ValueType (typedef) of class ObservableMappableListMixin< MappableListBase< Value > > is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:170: warning: Member insert(const ValueType &value) (function) of class ObservableMappableListMixin< MappableListBase< Value > > is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:176: warning: Member remove(int id) (function) of class ObservableMappableListMixin< MappableListBase< Value > > is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:181: warning: Member attachObserver(Observer &observer) (function) of class ObservableMappableListMixin< MappableListBase< Value > > is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:185: warning: Member detachObserver(Observer &observer) (function) of class ObservableMappableListMixin< MappableListBase< Value > > is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:37: warning: Member operator[](int n) (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:41: warning: Member operator[](int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:45: warning: Member size() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:103: warning: Member isValid(int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:107: warning: Member getFirst() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:111: warning: Member getNext(int n) const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/mappable_list.h:115: warning: Member getMaxIdentifier() const  (function) of class denali::MappableListBase is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:932: warning: Member Node (typedef) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:933: warning: Member Arc (typedef) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:935: warning: Member Point (typedef) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:936: warning: Member Triangle (typedef) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:938: warning: Member RectangularLandscape(const ContourTree &tree, typename ContourTree::Node root) (function) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:946: warning: Member RectangularLandscape(const ContourTree &tree, typename ContourTree::Node root, WeightMap *weight_map) (function) of class denali::RectangularLandscape is not documented.
+/home/eldridge/workbench/denali/code/denali/graph_mixins.h:178: warning: Member getArcFromIdentifier(unsigned int id) const (function) of class ReadableDirectedGraphMixin< LandscapeTree< ContourTree >, BaseGraphMixin< LandscapeTree< ContourTree > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:1041: warning: Member LandscapeType (typedef) of class denali::RectangularLandscapeBuilder is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:1043: warning: Member build(const ContourTree &contour_tree, typename ContourTree::Node root) (function) of class denali::RectangularLandscapeBuilder is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:1054: warning: Member build(const ContourTree &contour_tree, typename ContourTree::Node root, WeightMap *weight_map) (function) of class denali::RectangularLandscapeBuilder is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:27: warning: Member Priority(double priority) (function) of class denali::Priority is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:29: warning: Member priority() const  (function) of class denali::Priority is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:47: warning: Member operator[](const typename Context::Node &) const  (function) of class denali::NullProtector is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:219: warning: Member PersistenceSimplifier(double threshold) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:223: warning: Member getThreshold() const  (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:227: warning: Member setThreshold(double threshold) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:235: warning: Member computePersistence(const Tree &tree, typename Tree::Edge edge) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:269: warning: Member upDegree(const Tree &tree, typename Tree::Node node) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:283: warning: Member downDegree(const Tree &tree, typename Tree::Node node) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:297: warning: Member preserveForReduction(const Tree &tree, typename Tree::Edge edge) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/simplify.h:319: warning: Member isRegular(const Tree &tree, typename Tree::Node node) (function) of class denali::PersistenceSimplifier is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:30: warning: Member Node (typedef) of class denali::concepts::ScalarSimplicialComplex is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:31: warning: Member Edge (typedef) of class denali::concepts::ScalarSimplicialComplex is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:59: warning: Member _Node (typedef) of class denali::concepts::ScalarSimplicialComplex::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:60: warning: Member _Edge (typedef) of class denali::concepts::ScalarSimplicialComplex::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:62: warning: Member constraints() (function) of class denali::concepts::ScalarSimplicialComplex::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:81: warning: Member _plex (variable) of class denali::concepts::ScalarSimplicialComplex::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:92: warning: Member Member(unsigned int, double) (function) of class denali::concepts::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:94: warning: Member getID() const  (function) of class denali::concepts::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:98: warning: Member getValue() const  (function) of class denali::concepts::Member is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:106: warning: Member constraints() (function) of class denali::concepts::Member::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:115: warning: Member _m (variable) of class denali::concepts::Member::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:124: warning: Member MemberType (typedef) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:126: warning: Member iterator (typedef) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:127: warning: Member const_iterator (typedef) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:129: warning: Member begin() (function) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:132: warning: Member end() (function) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:135: warning: Member size() const  (function) of class denali::concepts::Members is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:145: warning: Member constraints() (function) of class denali::concepts::Members::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:165: warning: Member _members (variable) of class denali::concepts::Members::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:191: warning: Member Members (typedef) of class denali::concepts::ContourTree is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:469: warning: Member Edge (typedef) of class EdgeMappable< BaseUndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:244: warning: Member _Node (typedef) of class denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:245: warning: Member _Edge (typedef) of class denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:246: warning: Member _Members (typedef) of class denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:223: warning: Member constraints() (function) of class denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:243: warning: Member _tree (variable) of class denali::concepts::ContourTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:277: warning: Member Members (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:278: warning: Member Member (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:627: warning: Member Observer (typedef) of class EdgeObservable< concepts::NodeObservable< concepts::BaseObservable< concepts::ReadableUndirectedGraph > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:469: warning: Member Edge (typedef) of class EdgeMappable< BaseUndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:374: warning: Member _Node (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:375: warning: Member _Edge (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:376: warning: Member _Members (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:377: warning: Member _Member (typedef) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:343: warning: Member constraints() (function) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:373: warning: Member _graph (variable) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:379: warning: Member members (variable) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:380: warning: Member member (variable) of class denali::concepts::UndirectedScalarMemberIDGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:414: warning: Member constraints() (function) of class denali::concepts::ContourTreeAlgorithm::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:419: warning: Member _algorithm (variable) of class denali::concepts::ContourTreeAlgorithm::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:420: warning: Member _simplicial_complex (variable) of class denali::concepts::ContourTreeAlgorithm::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:421: warning: Member _graph (variable) of class denali::concepts::ContourTreeAlgorithm::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:436: warning: Member RandomAccessComparisonFunctor(const RandomAccessContainer &values) (function) of class denali::concepts::RandomAccessComparisonFunctor is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:437: warning: Member operator()(unsigned int u, unsigned int v) (function) of class denali::concepts::RandomAccessComparisonFunctor is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:445: warning: Member constraints() (function) of class denali::concepts::RandomAccessComparisonFunctor::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:453: warning: Member _values (variable) of class denali::concepts::RandomAccessComparisonFunctor::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:479: warning: Member size() const  (function) of class denali::concepts::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:484: warning: Member compute(const Values &, RandomAccessComparisonFunctor &) (function) of class denali::concepts::TotalOrder is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:492: warning: Member constraints() (function) of class denali::concepts::TotalOrder::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:504: warning: Member _total_order (variable) of class denali::concepts::TotalOrder::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:505: warning: Member _values (variable) of class denali::concepts::TotalOrder::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/contour_tree.h:506: warning: Member _functor (variable) of class denali::concepts::TotalOrder::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:13: warning: Member Node (typedef) of class denali::concepts::BaseDirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:14: warning: Member Arc (typedef) of class denali::concepts::BaseDirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:22: warning: Member Node (typedef) of class denali::concepts::BaseUndirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:23: warning: Member Edge (typedef) of class denali::concepts::BaseUndirectedGraph is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:67: warning: Member _Node (typedef) of class denali::concepts::NodeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:58: warning: Member constraints() (function) of class denali::concepts::NodeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:68: warning: Member iterable (variable) of class denali::concepts::NodeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:83: warning: Member isArcValid(Arc) const  (function) of class denali::concepts::ArcIterable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:86: warning: Member getFirstArc() const  (function) of class denali::concepts::ArcIterable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:89: warning: Member getNextArc(Arc) const  (function) of class denali::concepts::ArcIterable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:105: warning: Member _Arc (typedef) of class denali::concepts::ArcIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:96: warning: Member constraints() (function) of class denali::concepts::ArcIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:106: warning: Member iterable (variable) of class denali::concepts::ArcIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:149: warning: Member _Edge (typedef) of class denali::concepts::EdgeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:139: warning: Member constraints() (function) of class denali::concepts::EdgeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:150: warning: Member iterable (variable) of class denali::concepts::EdgeIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:198: warning: Member _Node (typedef) of class denali::concepts::ParentIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:199: warning: Member _Arc (typedef) of class denali::concepts::ParentIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:187: warning: Member constraints() (function) of class denali::concepts::ParentIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:200: warning: Member iterable (variable) of class denali::concepts::ParentIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:248: warning: Member _Node (typedef) of class denali::concepts::ChildIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:249: warning: Member _Arc (typedef) of class denali::concepts::ChildIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:237: warning: Member constraints() (function) of class denali::concepts::ChildIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:250: warning: Member iterable (variable) of class denali::concepts::ChildIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:298: warning: Member _Node (typedef) of class denali::concepts::DirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:299: warning: Member _Arc (typedef) of class denali::concepts::DirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:287: warning: Member constraints() (function) of class denali::concepts::DirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:300: warning: Member iterable (variable) of class denali::concepts::DirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:349: warning: Member _Node (typedef) of class denali::concepts::UndirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:350: warning: Member _Edge (typedef) of class denali::concepts::UndirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:337: warning: Member constraints() (function) of class denali::concepts::UndirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:348: warning: Member iterable (variable) of class denali::concepts::UndirectedNeighborIterable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class denali::concepts::NodeMappable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const  (function) of class denali::concepts::NodeMappable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:405: warning: Member _Node (typedef) of class denali::concepts::NodeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:392: warning: Member constraints() (function) of class denali::concepts::NodeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:404: warning: Member graph (variable) of class denali::concepts::NodeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:421: warning: Member Arc (typedef) of class denali::concepts::ArcMappable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:453: warning: Member _Arc (typedef) of class denali::concepts::ArcMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:441: warning: Member constraints() (function) of class denali::concepts::ArcMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:452: warning: Member graph (variable) of class denali::concepts::ArcMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:469: warning: Member Edge (typedef) of class denali::concepts::EdgeMappable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:501: warning: Member _Edge (typedef) of class denali::concepts::EdgeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:489: warning: Member constraints() (function) of class denali::concepts::EdgeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:500: warning: Member graph (variable) of class denali::concepts::EdgeMappable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:515: warning: Member notify()=0 (function) of class denali::concepts::BaseObservable::Observer is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:531: warning: Member Observer (typedef) of class denali::concepts::NodeObservable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:554: warning: Member _Observer (typedef) of class denali::concepts::NodeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:547: warning: Member constraints() (function) of class denali::concepts::NodeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:553: warning: Member observable (variable) of class denali::concepts::NodeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:562: warning: Member nvobserver (variable) of class denali::concepts::NodeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:559: warning: Member notify() (function) of class denali::concepts::NodeObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:579: warning: Member Observer (typedef) of class denali::concepts::ArcObservable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:602: warning: Member _Observer (typedef) of class denali::concepts::ArcObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:595: warning: Member constraints() (function) of class denali::concepts::ArcObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:601: warning: Member observable (variable) of class denali::concepts::ArcObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:610: warning: Member nvobserver (variable) of class denali::concepts::ArcObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:607: warning: Member notify() (function) of class denali::concepts::ArcObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:627: warning: Member Observer (typedef) of class denali::concepts::EdgeObservable is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:650: warning: Member _Observer (typedef) of class denali::concepts::EdgeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:643: warning: Member constraints() (function) of class denali::concepts::EdgeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:649: warning: Member observable (variable) of class denali::concepts::EdgeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:658: warning: Member nvobserver (variable) of class denali::concepts::EdgeObservable::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:655: warning: Member notify() (function) of class denali::concepts::EdgeObservable::Constraints::NonVirtualObserver is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:421: warning: Member Arc (typedef) of class ArcMappable< BaseDirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:83: warning: Member isArcValid(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:86: warning: Member getFirstArc() const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:89: warning: Member getNextArc(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:796: warning: Member _Node (typedef) of class denali::concepts::ReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:797: warning: Member _Arc (typedef) of class denali::concepts::ReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:744: warning: Member constraints() (function) of class denali::concepts::ReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:795: warning: Member _graph (variable) of class denali::concepts::ReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:469: warning: Member Edge (typedef) of class EdgeMappable< BaseUndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:918: warning: Member _Node (typedef) of class denali::concepts::ReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:919: warning: Member _Edge (typedef) of class denali::concepts::ReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:877: warning: Member constraints() (function) of class denali::concepts::ReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:917: warning: Member _graph (variable) of class denali::concepts::ReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:421: warning: Member Arc (typedef) of class ArcMappable< BaseDirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:83: warning: Member isArcValid(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:86: warning: Member getFirstArc() const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:89: warning: Member getNextArc(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:972: warning: Member _Node (typedef) of class denali::concepts::WritableReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:973: warning: Member _Arc (typedef) of class denali::concepts::WritableReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:959: warning: Member constraints() (function) of class denali::concepts::WritableReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:971: warning: Member graph (variable) of class denali::concepts::WritableReadableDirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:469: warning: Member Edge (typedef) of class EdgeMappable< BaseUndirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< EdgeMappable< BaseUndirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:1028: warning: Member _Node (typedef) of class denali::concepts::WritableReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:1029: warning: Member _Edge (typedef) of class denali::concepts::WritableReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:1015: warning: Member constraints() (function) of class denali::concepts::WritableReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:1027: warning: Member graph (variable) of class denali::concepts::WritableReadableUndirectedGraph::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:38: warning: Member constraints() (function) of class denali::concepts::NodeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:49: warning: Member graph (variable) of class denali::concepts::NodeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:85: warning: Member constraints() (function) of class denali::concepts::ArcIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:96: warning: Member graph (variable) of class denali::concepts::ArcIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:132: warning: Member constraints() (function) of class denali::concepts::EdgeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:143: warning: Member graph (variable) of class denali::concepts::EdgeIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:186: warning: Member constraints() (function) of class denali::concepts::ParentIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:200: warning: Member graph (variable) of class denali::concepts::ParentIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:241: warning: Member constraints() (function) of class denali::concepts::ChildIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:255: warning: Member graph (variable) of class denali::concepts::ChildIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:296: warning: Member constraints() (function) of class denali::concepts::DirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:310: warning: Member graph (variable) of class denali::concepts::DirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:351: warning: Member constraints() (function) of class denali::concepts::UndirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:365: warning: Member graph (variable) of class denali::concepts::UndirectedNeighborIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:417: warning: Member constraints() (function) of class denali::concepts::UndirectedBFSIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_iterators.h:433: warning: Member _graph (variable) of class denali::concepts::UndirectedBFSIterator::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:19: warning: Member ObservingNodeMap(GraphType &graph) (function) of class denali::concepts::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:21: warning: Member notify() (function) of class denali::concepts::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:23: warning: Member operator[](typename GraphType::Node node) (function) of class denali::concepts::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:24: warning: Member operator[](typename GraphType::Node node) const  (function) of class denali::concepts::ObservingNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:41: warning: Member _Node (typedef) of class denali::concepts::ObservingNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:29: warning: Member constraints() (function) of class denali::concepts::ObservingNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:39: warning: Member _map (variable) of class denali::concepts::ObservingNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:40: warning: Member _graph (variable) of class denali::concepts::ObservingNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:59: warning: Member ObservingArcMap(GraphType &graph) (function) of class denali::concepts::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:61: warning: Member notify() (function) of class denali::concepts::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:63: warning: Member operator[](typename GraphType::Arc arc) (function) of class denali::concepts::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:64: warning: Member operator[](typename GraphType::Arc arc) const  (function) of class denali::concepts::ObservingArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:81: warning: Member _Arc (typedef) of class denali::concepts::ObservingArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:69: warning: Member constraints() (function) of class denali::concepts::ObservingArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:79: warning: Member _map (variable) of class denali::concepts::ObservingArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:80: warning: Member _graph (variable) of class denali::concepts::ObservingArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:98: warning: Member ObservingEdgeMap(GraphType &graph) (function) of class denali::concepts::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:100: warning: Member notify() (function) of class denali::concepts::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:102: warning: Member operator[](typename GraphType::Edge edge) (function) of class denali::concepts::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:103: warning: Member operator[](typename GraphType::Edge edge) const  (function) of class denali::concepts::ObservingEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:120: warning: Member _Edge (typedef) of class denali::concepts::ObservingEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:108: warning: Member constraints() (function) of class denali::concepts::ObservingEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:118: warning: Member _map (variable) of class denali::concepts::ObservingEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:119: warning: Member _graph (variable) of class denali::concepts::ObservingEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:133: warning: Member StaticNodeMap(const GraphType &graph) (function) of class denali::concepts::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:135: warning: Member operator[](typename GraphType::Node node) (function) of class denali::concepts::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:136: warning: Member operator[](typename GraphType::Node node) const  (function) of class denali::concepts::StaticNodeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:152: warning: Member _Node (typedef) of class denali::concepts::StaticNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:141: warning: Member constraints() (function) of class denali::concepts::StaticNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:150: warning: Member _map (variable) of class denali::concepts::StaticNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:151: warning: Member _graph (variable) of class denali::concepts::StaticNodeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:165: warning: Member StaticArcMap(const GraphType &graph) (function) of class denali::concepts::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:167: warning: Member operator[](typename GraphType::Arc arc) (function) of class denali::concepts::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:168: warning: Member operator[](typename GraphType::Arc arc) const  (function) of class denali::concepts::StaticArcMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:184: warning: Member _Arc (typedef) of class denali::concepts::StaticArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:173: warning: Member constraints() (function) of class denali::concepts::StaticArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:182: warning: Member _map (variable) of class denali::concepts::StaticArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:183: warning: Member _graph (variable) of class denali::concepts::StaticArcMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:197: warning: Member StaticEdgeMap(const GraphType &graph) (function) of class denali::concepts::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:199: warning: Member operator[](typename GraphType::Edge edge) (function) of class denali::concepts::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:200: warning: Member operator[](typename GraphType::Edge edge) const  (function) of class denali::concepts::StaticEdgeMap is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:216: warning: Member _Edge (typedef) of class denali::concepts::StaticEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:205: warning: Member constraints() (function) of class denali::concepts::StaticEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:214: warning: Member _map (variable) of class denali::concepts::StaticEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_maps.h:215: warning: Member _graph (variable) of class denali::concepts::StaticEdgeMap::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:15: warning: Member operator==(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:18: warning: Member operator!=(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:26: warning: Member constraints() (function) of class denali::concepts::GraphObject::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:15: warning: Member operator==(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:18: warning: Member operator!=(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:47: warning: Member constraints() (function) of class denali::concepts::Node::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:15: warning: Member operator==(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:18: warning: Member operator!=(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:63: warning: Member constraints() (function) of class denali::concepts::Arc::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:15: warning: Member operator==(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:18: warning: Member operator!=(GraphObject) const  (function) of class denali::concepts::GraphObject is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_objects.h:79: warning: Member constraints() (function) of class denali::concepts::Edge::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:13: warning: Member x() const  (function) of class denali::concepts::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:16: warning: Member y() const  (function) of class denali::concepts::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:19: warning: Member z() const  (function) of class denali::concepts::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:22: warning: Member id() const  (function) of class denali::concepts::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:29: warning: Member constraints() (function) of class denali::concepts::Point::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:37: warning: Member point (variable) of class denali::concepts::Point::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:48: warning: Member i() const  (function) of class denali::concepts::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:51: warning: Member j() const  (function) of class denali::concepts::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:54: warning: Member k() const  (function) of class denali::concepts::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:61: warning: Member constraints() (function) of class denali::concepts::Triangle::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:68: warning: Member triangle (variable) of class denali::concepts::Triangle::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:81: warning: Member Members (typedef) of class denali::concepts::LandscapeTree is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:373: warning: Member Node (typedef) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:421: warning: Member Arc (typedef) of class ArcMappable< BaseDirectedGraph > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:83: warning: Member isArcValid(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:86: warning: Member getFirstArc() const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:89: warning: Member getNextArc(Arc) const (function) of class ArcIterable< ParentIterable< ChildIterable< DirectedNeighborIterable< NodeMappable< ArcMappable< BaseDirectedGraph > > > > > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/graph_attributes.h:385: warning: Member getNodeFromIdentifier(unsigned int) const (function) of class NodeMappable< ArcMappable< BaseDirectedGraph > > is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:167: warning: Member _Node (typedef) of class denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:168: warning: Member _Arc (typedef) of class denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:169: warning: Member _Members (typedef) of class denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:145: warning: Member constraints() (function) of class denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/concepts/landscape.h:166: warning: Member _tree (variable) of class denali::concepts::LandscapeTree::Constraints is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:443: warning: Member Embedding(const LandscapeTree &tree) (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:447: warning: Member insertCornerPoint(Point point, Node owner) (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:452: warning: Member insertContainerPoint(Point point, Node owner) (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:457: warning: Member insertPoint(double x, double y, Node owner) (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:484: warning: Member insertSplit(const RectangleSplit &split, Node owner) (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:517: warning: Member getContourPoint(Node node, size_t i) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:522: warning: Member getCornerPoint(Node node, size_t i) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:527: warning: Member getContainerPoint(Node node, size_t i) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:532: warning: Member numberOfContourPoints(Node node) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:537: warning: Member numberOfCornerPoints(Node node) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:542: warning: Member numberOfContainerPoints(Node node) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:547: warning: Member numberOfPoints() const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:552: warning: Member getPoint(size_t i) const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:557: warning: Member getMaxPoint() const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:562: warning: Member getMinPoint() const  (function) of class denali::rectangular::Embedding is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:410: warning: Member Point(double x, double y, double z, unsigned int id) (function) of class denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:413: warning: Member x() const  (function) of class denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:416: warning: Member y() const  (function) of class denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:419: warning: Member z() const  (function) of class denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:422: warning: Member id() const  (function) of class denali::rectangular::Embedding::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:597: warning: Member Embedder(const LandscapeTree &tree, const LandscapeWeights< LandscapeTree > &weights, Embedding< LandscapeTree > &embedding) (function) of class denali::rectangular::Embedder is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:603: warning: Member embed() (function) of class denali::rectangular::Embedder is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:574: warning: Member Arc (typedef) of class denali::rectangular::EmbeddingParameters is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:579: warning: Member EmbeddingParameters(Arc arc, Rectangle parent_rectangle, bool parent_orientation) (function) of class denali::rectangular::EmbeddingParameters is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:575: warning: Member arc (variable) of class denali::rectangular::EmbeddingParameters is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:576: warning: Member parent_rectangle (variable) of class denali::rectangular::EmbeddingParameters is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:577: warning: Member parent_orientation (variable) of class denali::rectangular::EmbeddingParameters is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:754: warning: Member insertTriangle(unsigned int i, unsigned int j, unsigned int k, Arc arc) (function) of class denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:760: warning: Member getArc(Triangle tri) const  (function) of class denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:765: warning: Member numberOfTriangles() const  (function) of class denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:770: warning: Member getTriangle(size_t i) const  (function) of class denali::rectangular::Triangularization is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:725: warning: Member Triangle(unsigned int i, unsigned int j, unsigned int k, size_t id) (function) of class denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:728: warning: Member i() const  (function) of class denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:732: warning: Member j() const  (function) of class denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:736: warning: Member k() const  (function) of class denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:740: warning: Member id() const  (function) of class denali::rectangular::Triangularization::Triangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:791: warning: Member Triangularizer(const LandscapeTree &tree, const Embedding< LandscapeTree > &embedding, Triangularization &triangularization) (function) of class denali::rectangular::Triangularizer is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:798: warning: Member triangularize() (function) of class denali::rectangular::Triangularizer is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:69: warning: Member Rectangle(double x, double y, double width, double height) (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:76: warning: Member area() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:79: warning: Member width() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:82: warning: Member height() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:85: warning: Member center() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:88: warning: Member sw() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:91: warning: Member se() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:94: warning: Member ne() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:97: warning: Member nw() const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:100: warning: Member shrink(const double) const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:101: warning: Member print(std::ostream &out) const  (function) of class denali::rectangular::Rectangle is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:60: warning: Member Point(double x, double y) (function) of class denali::rectangular::Rectangle::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:61: warning: Member x() const  (function) of class denali::rectangular::Rectangle::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:64: warning: Member y() const  (function) of class denali::rectangular::Rectangle::Point is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:153: warning: Member addRectangle(Rectangle rect) (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:156: warning: Member getRectangle(size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:159: warning: Member numberOfRectangles() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:163: warning: Member operator[](size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:166: warning: Member size() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:170: warning: Member getBoundaryPoint(size_t id) const =0 (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:171: warning: Member getIndexOfCorner(size_t i) const =0 (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:172: warning: Member getIndexOfRectangleCorner(size_t rectangle, size_t corner) const =0 (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:148: warning: Member rectangles (variable) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:179: warning: Member getBoundaryPoint(size_t i) const  (function) of class denali::rectangular::HorizontalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:191: warning: Member getIndexOfCorner(size_t i) const  (function) of class denali::rectangular::HorizontalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:203: warning: Member getIndexOfRectangleCorner(size_t rectangle, size_t corner) const  (function) of class denali::rectangular::HorizontalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:153: warning: Member addRectangle(Rectangle rect) (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:156: warning: Member getRectangle(size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:159: warning: Member numberOfRectangles() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:163: warning: Member operator[](size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:166: warning: Member size() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:148: warning: Member rectangles (variable) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:220: warning: Member getBoundaryPoint(size_t i) const  (function) of class denali::rectangular::VerticalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:232: warning: Member getIndexOfCorner(size_t i) const  (function) of class denali::rectangular::VerticalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:244: warning: Member getIndexOfRectangleCorner(size_t rectangle, size_t corner) const  (function) of class denali::rectangular::VerticalRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:153: warning: Member addRectangle(Rectangle rect) (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:156: warning: Member getRectangle(size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:159: warning: Member numberOfRectangles() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:163: warning: Member operator[](size_t i) const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:166: warning: Member size() const  (function) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:148: warning: Member rectangles (variable) of class denali::rectangular::OrientedRectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:262: warning: Member RectangleSplit(boost::shared_ptr< OrientedRectangleSplit > split) (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:265: warning: Member getRectangle(size_t i) const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:269: warning: Member numberOfRectangles() const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:274: warning: Member operator[](size_t i) const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:279: warning: Member size() const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:284: warning: Member getBoundaryPoint(size_t id) const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:289: warning: Member getIndexOfCorner(size_t i) const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:294: warning: Member getIndexOfRectangleCorner(size_t rectangle, size_t corner) const  (function) of class denali::rectangular::RectangleSplit is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:310: warning: Member RectangleSplitter(Rectangle rectangle) (function) of class denali::rectangular::RectangleSplitter is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:314: warning: Member horizontally() (function) of class denali::rectangular::RectangleSplitter is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:318: warning: Member vertically() (function) of class denali::rectangular::RectangleSplitter is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:323: warning: Member addWeight(const double weight) (function) of class denali::rectangular::RectangleSplitter is not documented.
+/home/eldridge/workbench/denali/code/denali/rectangular_landscape.h:334: warning: Member split() const  (function) of class denali::rectangular::RectangleSplitter is not documented.

@@ -1103,17 +1103,19 @@ public:
         JoinSplitTree::Node node)
     {
         // if the node has no parents, we just remove it
-        if (tree.inDegree(node) == 0) {
-            tree.removeNode(node);
-        } else {
+        if (tree.inDegree(node) > 0) 
+        {
             // otherwise, we connect its parent to its child
             // (THERE CAN BE ONLY ONE!)
+            assert(tree.inDegree(node) == 1);
             JoinSplitTree::Node parent = tree.source(tree.getFirstInArc(node));
-            JoinSplitTree::Node child = tree.target(tree.getFirstOutArc(node));
-            tree.addArc(parent, child);
-
-            tree.removeNode(node);
+            for (ChildIterator<JoinSplitTree> it(tree, node); !it.done(); ++it)
+            {
+                tree.addArc(parent, it.child());
+            }
         }
+
+        tree.removeNode(node);
     }
 
 
@@ -1133,7 +1135,8 @@ public:
         std::vector<typename MergeTree::Node> merge_tree_nodes;
         std::queue<unsigned int> merge_queue;
 
-        for (size_t i=0; i<plex.numberOfNodes(); ++i) {
+        for (size_t i=0; i<plex.numberOfNodes(); ++i) 
+        {
             // add to the merge tree
             typename MergeTree::Node node =
                 merge_tree.addNode(i, plex.getValue(plex.getNode(i)));
@@ -1141,68 +1144,109 @@ public:
 
             // see if we should add this to the merge queue
             if (join_tree.outDegree(join_tree.getNode(i)) +
-                    split_tree.outDegree(split_tree.getNode(i)) == 1) {
+                    split_tree.outDegree(split_tree.getNode(i)) == 1)
+            {
                 merge_queue.push(i);
             }
         }
 
         // now merge the trees
-        while (merge_queue.size() > 1) {
+        unsigned int i = 0;
+        while (i < merge_tree.numberOfNodes() - 1) 
+        {
+            ++i;
+            std::cout << i << " " << merge_tree.numberOfNodes() << std::endl;
+
             unsigned int vi = merge_queue.front();
             merge_queue.pop();
 
-            if (join_tree.outDegree(join_tree.getNode(vi)) == 0) {
-                // get the parent in the join tree
 
-                JoinSplitTree::Node vk_node = join_tree.source(
-                                              join_tree.getFirstInArc(
-                                              join_tree.getNode(vi)));
+            if ((join_tree.outDegree(join_tree.getNode(vi)) == 0) && 
+                (split_tree.outDegree(split_tree.getNode(vi)) == 0))
+            {
+                JoinSplitTree::Node vk_join_node = join_tree.source(
+                                                   join_tree.getFirstInArc(
+                                                   join_tree.getNode(vi)));
 
-                // if the input was invalid, vk_node may be invalid. We'll error
-                // check here:
-                if (!join_tree.isNodeValid(vk_node))
+                JoinSplitTree::Node vk_split_node = split_tree.source(
+                                                    split_tree.getFirstInArc(
+                                                    split_tree.getNode(vi)));
+
+                unsigned int vk_join = join_tree.getID(vk_join_node);
+                unsigned int vk_split = split_tree.getID(vk_split_node);
+
+                merge_tree.addEdge(merge_tree_nodes[vi], merge_tree_nodes[vk_join]);
+
+                reduceNode(join_tree, join_tree.getNode(vi));
+                reduceNode(split_tree, split_tree.getNode(vi));
+
+                if (join_tree.outDegree(join_tree.getNode(vk_join)) +
+                    split_tree.outDegree(split_tree.getNode(vk_join)) == 1)
                 {
-                    throw std::runtime_error("While merging trees, invalid node encountered. "
-                            "Was the input simplicial complex connected?");
+                    merge_queue.push(vk_join);
                 }
 
-                unsigned int vk = join_tree.getID(vk_node);
+                if (join_tree.outDegree(join_tree.getNode(vk_split)) +
+                    split_tree.outDegree(split_tree.getNode(vk_split)) == 1)
+                {
+                    merge_queue.push(vk_split);
+                }
+
+            }
+            else
+            {
+                unsigned int vk;
+
+                if (join_tree.outDegree(join_tree.getNode(vi)) == 0) 
+                {
+                    // get the parent in the join tree
+                    JoinSplitTree::Node vk_node = join_tree.source(
+                                                  join_tree.getFirstInArc(
+                                                  join_tree.getNode(vi)));
+
+                    // if the input was invalid, vk_node may be invalid. We'll error
+                    // check here:
+                    if (!join_tree.isNodeValid(vk_node))
+                    {
+                        std::cerr << vi << std::endl;
+                        std::cerr << join_tree.degree(join_tree.getNode(vi)) << std::endl;
+                        throw std::runtime_error("While merging trees, invalid node encountered in join tree. "
+                                "Was the input simplicial complex connected?");
+                    }
+
+                    vk = join_tree.getID(vk_node);
+                } 
+                else 
+                {
+                    // get the parent in the split tree
+                    JoinSplitTree::Node vk_node = split_tree.source(
+                                                  split_tree.getFirstInArc(
+                                                  split_tree.getNode(vi)));
+
+                    // if the input was invalid, vk_node may be invalid. We'll error
+                    // check here:
+                    if (!split_tree.isNodeValid(vk_node))
+                    {
+                        std::cerr << vi << std::endl;
+                        throw std::runtime_error("While merging trees, invalid node encountered in split tree. "
+                                "Was the input simplicial complex connected?");
+                    }
+
+                    vk = split_tree.getID(vk_node);
+                }
+
 
                 // add the edge to the merge tree
                 merge_tree.addEdge(merge_tree_nodes[vi], merge_tree_nodes[vk]);
 
-                // remove the node from the join tree
-                join_tree.removeNode(join_tree.getNode(vi));
-
-                // reduce the node in the split tree
+                // reduce the node in the join and split trees
+                reduceNode(join_tree, join_tree.getNode(vi));
                 reduceNode(split_tree, split_tree.getNode(vi));
 
                 // check to see if we have a new merge candidate
                 if (join_tree.outDegree(join_tree.getNode(vk)) +
-                        split_tree.outDegree(split_tree.getNode(vk)) == 1) {
-                    merge_queue.push(vk);
-                }
-
-            } else {
-                // get the parent in the join tree
-                unsigned int vk =
-                    split_tree.getID(
-                        split_tree.source(
-                            split_tree.getFirstInArc(
-                                split_tree.getNode(vi))));
-
-                // add the edge to the merge tree
-                merge_tree.addEdge(merge_tree_nodes[vi], merge_tree_nodes[vk]);
-
-                // remove the node from the split tree
-                split_tree.removeNode(split_tree.getNode(vi));
-
-                // reduce the node in the join tree
-                reduceNode(join_tree, join_tree.getNode(vi));
-
-                // check to see if we have a new merge candidate
-                if (split_tree.outDegree(split_tree.getNode(vk)) +
-                        join_tree.outDegree(join_tree.getNode(vk)) == 1) {
+                        split_tree.outDegree(split_tree.getNode(vk)) == 1) 
+                {
                     merge_queue.push(vk);
                 }
             }
