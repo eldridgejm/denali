@@ -79,6 +79,13 @@ int main(int argc, char ** argv) try
         denali::readSimplicialVertexFile(argv[1], plex);
         denali::readSimplicialEdgeFile(argv[2], plex);
 
+        // check that the input graph is connected
+        if (!denali::isConnected(plex))
+        {
+            std::cerr << "Error: The input graph is not connected." << std::endl;
+            return 1;
+        }
+
         // compute the contour tree
         denali::CarrsAlgorithm carrs_algorithm;
 

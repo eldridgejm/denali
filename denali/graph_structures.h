@@ -989,7 +989,25 @@ public:
 };
 
 
+/// \brief Check if the undirected graph is connected.
+template <typename UndirectedGraph>
+bool isConnected(const UndirectedGraph& graph)
+{
+    if (graph.numberOfNodes() == 0)
+        return true;
 
+    // the node count is 1, because the source node isn't visited by the loop
+    unsigned int node_count = 1;
+
+    typename UndirectedGraph::Node source_node = graph.getFirstNode();
+    for (UndirectedBFSIterator<UndirectedGraph> it(graph, source_node); 
+            !it.done(); ++it)
+    {
+       node_count++; 
+    }
+
+    return node_count == graph.numberOfNodes();
+}
 
 }
 

@@ -1144,22 +1144,30 @@ public:
 
             // see if we should add this to the merge queue
             if (join_tree.outDegree(join_tree.getNode(i)) +
-                    split_tree.outDegree(split_tree.getNode(i)) == 1)
+                    split_tree.outDegree(split_tree.getNode(i)) <= 1)
             {
                 merge_queue.push(i);
             }
         }
 
+        std::vector<bool> visited(merge_tree.numberOfNodes(), false);
+
         // now merge the trees
         unsigned int i = 0;
         while (i < merge_tree.numberOfNodes() - 1) 
         {
-            ++i;
-            std::cout << i << " " << merge_tree.numberOfNodes() << std::endl;
-
             unsigned int vi = merge_queue.front();
             merge_queue.pop();
 
+            if (visited[vi])
+            {
+                continue;
+            }
+            else
+            {
+                ++i;
+                visited[vi] = true;
+            }
 
             if ((join_tree.outDegree(join_tree.getNode(vi)) == 0) && 
                 (split_tree.outDegree(split_tree.getNode(vi)) == 0))
@@ -1181,13 +1189,13 @@ public:
                 reduceNode(split_tree, split_tree.getNode(vi));
 
                 if (join_tree.outDegree(join_tree.getNode(vk_join)) +
-                    split_tree.outDegree(split_tree.getNode(vk_join)) == 1)
+                    split_tree.outDegree(split_tree.getNode(vk_join)) <= 1)
                 {
                     merge_queue.push(vk_join);
                 }
 
                 if (join_tree.outDegree(join_tree.getNode(vk_split)) +
-                    split_tree.outDegree(split_tree.getNode(vk_split)) == 1)
+                    split_tree.outDegree(split_tree.getNode(vk_split)) <= 1)
                 {
                     merge_queue.push(vk_split);
                 }
@@ -1208,8 +1216,6 @@ public:
                     // check here:
                     if (!join_tree.isNodeValid(vk_node))
                     {
-                        std::cerr << vi << std::endl;
-                        std::cerr << join_tree.degree(join_tree.getNode(vi)) << std::endl;
                         throw std::runtime_error("While merging trees, invalid node encountered in join tree. "
                                 "Was the input simplicial complex connected?");
                     }
@@ -1227,7 +1233,6 @@ public:
                     // check here:
                     if (!split_tree.isNodeValid(vk_node))
                     {
-                        std::cerr << vi << std::endl;
                         throw std::runtime_error("While merging trees, invalid node encountered in split tree. "
                                 "Was the input simplicial complex connected?");
                     }
@@ -1245,7 +1250,7 @@ public:
 
                 // check to see if we have a new merge candidate
                 if (join_tree.outDegree(join_tree.getNode(vk)) +
-                        split_tree.outDegree(split_tree.getNode(vk)) == 1) 
+                        split_tree.outDegree(split_tree.getNode(vk)) <= 1) 
                 {
                     merge_queue.push(vk);
                 }
