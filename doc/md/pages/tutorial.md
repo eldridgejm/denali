@@ -154,7 +154,7 @@ and the inner nested contour represents an arc. The following figure makes this
 clear:
 
 <center>
-<img style="margin:20pt 20pt" width=600 src="../resources/interpret_correspondence.png">
+<img style="margin:20pt 20pt" width=450 src="../resources/interpret_correspondence.png">
 </center>
 
 Some of the arcs of the tree and their corresponding regions in the map have
