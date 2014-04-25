@@ -1,11 +1,12 @@
 
 body {
     font-family: "droid sans";
+    font-size: 12pt;
 }
 
 
 div#content {
-    width: 50%;
+    width: 700px;
     margin: 100pt auto;
 }
 
@@ -19,4 +20,25 @@ img.screenshot {
 div#desc-head {
     font-size: 16pt;
     text-align: center;
+}
+
+div#navlist {
+    margin-top: 1em;
+}
+
+div#navlist ul {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    border-bottom: 1px #e0e0e0 solid;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    text-align: center;
+    font-size: 13pt;
+    margin-bottom: -1em;
+    text-shadow: 1px 1px #fff;
+}
+
+ul#navlist li {
+    display: inline;
+    padding-right: 1.7em;
 }
