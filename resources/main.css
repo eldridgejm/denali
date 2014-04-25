@@ -5,7 +5,7 @@ body {
 
 
 div#content {
-    width: 50%;
+    width: 700px;
     margin: 100pt auto;
 }
 
@@ -19,4 +19,9 @@ img.screenshot {
 div#desc-head {
     font-size: 16pt;
     text-align: center;
+}
+
+ul#navlist li {
+    display: inline;
+    padding-right: 1em;
 }
