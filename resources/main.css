@@ -48,7 +48,6 @@ div.section-head {
     background-color: #eee;
     text-align: center;
     margin: 4em 0em 2em 0em;
-    font-size: 20pt;
 }
 
 span.section-head {
@@ -56,4 +55,5 @@ span.section-head {
     position: relative;
     top: -0.7em;
     padding: 0em 1em;
+    font-size: 20pt;
 }
