@@ -43,6 +43,10 @@ ul#navlist li {
     padding-right: 1.7em;
 }
 
+ul#downloadlist {
+    font-size: 20pt;
+}
+
 
 div.section-head {
     height: 1px;
