@@ -60,12 +60,12 @@ trends in complex and high dimensional data.
 </div>
 
 <p>Many sources of data &mdash; from complex networks to probability
-distributions &mdash; can be represented by tree-like structures. These trees,
-however, are often complicated and difficult to visualize. Moreover, it is
-often the case that one not only wants to visualize the tree-like structure of
-his or her data, but also a scalar attribute on top of it. Traditional methods,
-such as simply plotting the tree as a graph in the plane, offer limited
-opportunities to do so.
+distributions &mdash; can be represented or summarized by tree-like structures.
+These trees, however, are often complicated and difficult to visualize.
+Moreover, it is often the case that one not only wants to visualize the
+tree-like structure of his or her data, but also a scalar attribute on top of
+it. Traditional methods, such as simply plotting the tree as a graph in the
+plane, offer limited opportunities to do so.
 
 <p>Denali is a tool for visualizing trees as <i>landscape metaphors</i> &mdash;
 mountain-like surfaces which intuitively represent both the structure of
@@ -73,15 +73,56 @@ complicated trees and scalar attributes defined on their nodes. To learn more ab
 landscape metaphors, see the
 <a href="./doc/pages/tutorial.html#introduction-to-landscape-metaphors">tutorial</a>.</p>
 
-<i>Can denali be used for your application?</i> Denali requires its input to be in the form
-of a scalar tree &mdash; a tree whose nodes are associated with scalar values. Included
-with denali are tools to extract scalar tree structure from graphs and point clouds, 
-allowing denali to be used to visualize many different sources of data. 
+<p><i>Can denali be used for your application?</i> Denali requires its input to
+be in the form of a scalar tree &mdash; a tree whose nodes are associated with
+scalar values. Included with denali are tools to help you extract such scalar
+trees from common sources of data, such as scalar functions defined on point
+clouds. You can also extract tree-like structure using a method you provide,
+and use denali to visualize the result.</p>
+
+<p>The figure below shows the conceptual "pipeline" you'll follow when using denali:</p>
 
 <div style="text-align: center; margin: 2em 0em">
 <img width="600px" src="./resources/pipeline.png">
 </div>
 
+<p>The <i>extraction</i> step is crucial: it is where the input data is transformed
+into something that can be visualized with denali. Included alongside denali is
+<i>ctree</i>, a tool for extracting contour trees from functions defined on
+graphs and point clouds. With it, you can visualize data from many different
+sources. Several important applications are shown in the table below:</p>
+
+<div style="text-align: center">
+<center>
+<table id="domains" style="margin: 20px 0px">
+
+    <tr id="domains-header-row">
+    <td style="width:200px"><b>Data</b></td><td><b>Extraction</b></td><td><b>Examples</b></td>
+    </tr>
+
+    <tr>
+    <td>Scalar tree</td>
+    <td>None</td>
+    <td>Hierarchical clusterings of point clouds, internet comment threads</td>
+    </tr>
+
+    <tr>
+    <td>Scalar function on a graph or point cloud</td>
+    <td>Contour tree</td>
+    <td>Probability densities, cost functions, parameter spaces</td>
+    </tr>
+
+    <tr>
+    <td>Data on a tree-like manifold</td>
+    <td>Contour tree with geodesic distance</td>
+    <td>Mouse cytometry data</td>
+    </tr>
+
+</table>
+</center>
+</div>
+
+<p>For more concrete examples of using denali, see the <a href="#gallery">gallery</a>.</p>
 
 <div class="section-head">
   <span class="section-head">
@@ -89,16 +130,22 @@ allowing denali to be used to visualize many different sources of data.
   </span>
 </div>
 
-<div>
-<ul>
-<li>Explore your data by using the mouse to fly through an interactive 3d landscape.</li>
-<li>Selectively simplify regions of the visualization to discover important trends.</li>
-<li>Interactively choose parts of the data to run domain-specific analyses on.</li> 
-<li>Specify a custom method of coloring the visualization, useful for comparing two scalar functions.</li>
-<li>Re-weight points in the input data to alter their influence on the visualization.</li>
-<li>The suite of included tools and utilities allows you to prepare your data for visualization.</li>
-</ul>
-</div>
+<div><ul id="features-list">
+    <li><b>Fully interactive</b>: Explore your data using the mouse to fly through an interactive, 3-d landscape.</li>
+    <li><b>Selective simplification</b>: Visualizing a noisy data set? Simplify specific regions of the 
+        visualization using the interactive simplification tool, allowing important trends to be more clearly visible.</li>
+    <li><b>Powerful callback system</b>: Integrate denali into your workflow. Run your own code &mdash; written in whatever
+        language you'd like &mdash; whenever you make a selection in the landscape.
+    <li><b>Custom coloring</b>: Color the landscape according to your needs. Compare two scalar functions by using the height
+        to represent one, and the color to represent the other.</li>
+    <li><b>Re-weight your data</b>: Specify a custom weight map to emphasize parts of the landscape. Quickly clear or
+        swap this map for another to make fast comparisons.</li>
+    <li><b>Included utilities</b>: The included utilities make it easy to transform your data into a visualization. Streamline
+        the creation of your callback code by using the included Python package.</li>
+    <li><b>Thorough documentation and demos</b>: An extensive <a href="./docs/pages/tutorial.html">tutorial</a> is included,
+        introducing you to denali, landscape metaphors, and the included tools. Numerous demos, complete with code, are
+        provided to help you apply denali to your specific application.
+</div></ul>
 
 <div class="section-head">
   <span class="section-head">

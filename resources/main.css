@@ -29,7 +29,7 @@ div#navlist {
 div#navlist ul {
     background-color: #f0f0f0;
     border-radius: 10px;
-    border-bottom: 1px #e0e0e0 solid;
+    border-bottom: 1px #d0d0d0 solid;
     padding-top: .5em;
     padding-bottom: .5em;
     text-align: center;
@@ -56,4 +56,22 @@ span.section-head {
     top: -0.7em;
     padding: 0em 1em;
     font-size: 20pt;
+}
+
+table#domains {
+    width: 600px;
+    font-size: 10pt;
+}
+
+table#domains td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+tr#domains-header-row {
+    font-size: 11pt;
+}
+
+ul#features-list li {
+    padding: .5em 0em;
 }
