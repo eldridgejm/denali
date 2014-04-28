@@ -42,3 +42,19 @@ ul#navlist li {
     display: inline;
     padding-right: 1.7em;
 }
+
+
+div.section-head {
+    height: 1px;
+    background-color: #eee;
+    text-align: center;
+    margin: 4em 0em 2em 0em;
+}
+
+span.section-head {
+    background-color: white;
+    position: relative;
+    top: -0.7em;
+    font-size: 20pt;
+    padding: 0em 1em;
+}
