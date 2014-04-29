@@ -12,9 +12,10 @@
 
 <div id="content">
 
-<center>
-<img src="resources/redlogo.png" style="width: 80%">
-</center>
+<div style="text-align: center; margin-bottom: -2em">
+<img src="resources/treelogo.png" style="width: 200px">
+<span id="logotext">denali</span>
+</div>
 
 <hr>
 
@@ -142,7 +143,7 @@ sources. Several important applications are shown in the table below:</p>
         swap this map for another to make fast comparisons.</li>
     <li><b>Included utilities</b>: The included utilities make it easy to transform your data into a visualization. Streamline
         the creation of your callback code by using the included Python package.</li>
-    <li><b>Thorough documentation and demos</b>: An extensive <a href="./docs/pages/tutorial.html">tutorial</a> is included,
+    <li><b>Thorough documentation and demos</b>: An extensive <a href="./doc/pages/tutorial.html">tutorial</a> is included,
         introducing you to denali, landscape metaphors, and the included tools. Numerous demos, complete with code, are
         provided to help you apply denali to your specific application.
 </div></ul>
@@ -157,50 +158,52 @@ Denali can be used to visualize data from many difference domains, and its power
 callback system allows the user to tailor its behavior to his or her own data. Included
 in the download are several demos and proofs-of-concept, such as:
 
+<table id="gallery">
+<tr>
+    <td class="gallery-image-cell"><img class="gallery-image" src="./resources/scrot_comments.png"></td>
+    <td class="gallery-text-cell">
+    <h1>Internet comment thread</h1>
+    Visualize the structure of an online comment thread as a landscape. Use
+    colors to find controversial comments. Clicking the landscape prints the
+    corresponding comment to the screen.
+    </td>
+</tr>
 
-<ul>
-<li>
-<h4>Probability Densities</h4> 
-Visualize a mixture of Gaussians in four
-dimensions as a landscape.  Clicking on a part of the landscape automatically
-resamples the pdf in the region corresponding to the selection and redraws the
-visualization.
-</li>
+<tr>
+    <td class="gallery-image-cell"><img class="gallery-image" src="./resources/scrot_clusters.png"></td>
+    <td class="gallery-text-cell">
+    <h1>Hierarchical clustering of handwritten digit images</h1>
+    Gain an understanding of the structure of your high dimensional data by visualizing
+    the tree produced by a hierarchical clustering algorithm. This demo clusters images
+    of handwritten 0's, 1's, and 7's. Clicking a component of the landscape displays an 
+    average image of the digits which exist in that region.
+    </td>
+</tr>
+
+<tr>
+    <td class="gallery-image-cell"><img class="gallery-image" src=""></td>
+    <td class="gallery-text-cell">
+    <h1>Neural network model space</h1>
+    Explore the parameter space of a neural network model trained to represent the
+    sine function. Local minima of the cost function are represented as plateaus in
+    the landscape. Clicking on a component in the visualization evaluates the
+    corresponding model and plots its output, comparing it to the ideal sine
+    function.
+    </td>
+</tr>
+
+<tr>
+    <td class="gallery-image-cell"><img class="gallery-image" src=""></td>
+    <td class="gallery-text-cell">
+    <h1>Interactively resample a probability distribution</h1>
+    Visualize a mixture of Gaussians in four dimensions as a landscape. Clicking on
+    a part of the landscape automatically resamples the pdf in the region
+    corresponding to the selection and redraws the visualization.
+    </td>
+</tr>
 
 
-<center>
-<img style="float:right; width:400px" src="./resources/scrot_comments.png">
-</center>
-
-<li>
-<h4>Neural Network Models</h4>
-Explore the parameter space of a neural network
-model trained to represent the sine function.  Local minima of the cost
-function are represented as plateaus in the landscape. Clicking on a component
-in the visualization evaluates the corresponding model and plots its output,
-comparing it to the ideal sine function.
-</li>
-<li>
-<h4>Internet Comment Threads <i>(Pictured)</i></h4> 
-Visualize the structure of an online comment
-thread as a landscape. Use colors to find controversial comments. Clicking the
-landscape prints the corresponding comment to the screen.
-
-</li>
-
-<li>
-<h4>Hierarchical Clusterings</h4>
-Gain an understanding of the structure of your high dimensional data by visualizing
-the tree produced by a hierarchical clustering algorithm. This demo clusters images
-of handwritten 0's, 1's, and 7's. Clicking a component of the landscape displays an 
-average image of the digits which exist in that region.
-</li>
-
-<li>
-<h4>And more...</h4>
-</li>
-
-</ul>
+</table>
 
 <div class="section-head">
   <span class="section-head">

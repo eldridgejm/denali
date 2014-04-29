@@ -1,9 +1,15 @@
-
 body {
     font-family: "droid sans";
     font-size: 12pt;
 }
 
+span#logotext {
+    font-size: 150px;
+    color: #e1685a;
+    letter-spacing: -10px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 div#content {
     width: 700px;
@@ -74,4 +80,20 @@ tr#domains-header-row {
 
 ul#features-list li {
     padding: .5em 0em;
+}
+
+table#gallery h1 {
+    font-size: 14pt;
+}
+
+img.gallery-image {
+    width: 200px;
+}
+
+td.gallery-image-cell {
+    padding: 20px;
+}
+
+td.gallery-text-cell {
+    vertical-align: middle;
 }
