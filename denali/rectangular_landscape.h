@@ -627,7 +627,7 @@ public:
         for (ChildIterator<LandscapeTree> it(_tree, _tree.getRoot());
                 !it.done(); ++it)
         {
-            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), false));
+            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), true));
             ++i;
         }
 
@@ -646,7 +646,7 @@ public:
                 embedBranch(embedding_stack, 
                             params.arc, 
                             params.parent_rectangle, 
-                            !params.parent_orientation);
+                            params.parent_orientation);
             }
         }
     }
@@ -693,7 +693,7 @@ private:
         for (ChildIterator<LandscapeTree> it(_tree, current);
                 !it.done(); ++it)
         {
-            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), false));
+            embedding_stack.push(Parameters(it.arc(), split.getRectangle(i), !split_vertically));
             ++i;
         }
     }
