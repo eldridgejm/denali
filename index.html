@@ -75,12 +75,29 @@ complicated trees and scalar attributes defined on their nodes. To learn more ab
 landscape metaphors, see the
 <a href="./doc/pages/tutorial.html#introduction-to-landscape-metaphors">tutorial</a>.</p>
 
-<p><i>Can denali be used for your application?</i> Denali requires its input to
-be in the form of a scalar tree &mdash; a tree whose nodes are associated with
-scalar values. Included with denali are tools to help you extract such scalar
-trees from common sources of data, such as scalar functions defined on point
-clouds. You can also extract tree-like structure using a method you provide,
-and use denali to visualize the result.</p>
+<p>For example, suppose we use a hierarchical clustering algorithm to build a
+cluster tree of 1000 images of handwritten zeros, ones, and sevens. If we
+visualize the tree using the traditional approach, what we obtain is hard to
+visually parse (see the figure below). On the other hand, visualizing the same
+data with denali yields a rich interactive landscape which we can manipulate,
+simplify, and analyze with domain-specific callback functions:</p>
+
+<div style="margin: 2em 0em; text-align: center">
+<img src="./resources/tree.png">
+</div>
+
+<div style="margin: 2em 0em; text-align: center">
+<img src="./resources/scrot_clusters.png" width="200px">
+</div>
+
+<p><b>Can denali be used for your application?</b> Denali can be used to
+visualize such diverse structures as probability densities, complex networks,
+and protein conformational spaces. At the basic level, though, Denali requires
+its input to be in the form of a scalar tree &mdash; a tree whose nodes are
+associated with scalar values.  Included with denali are tools to help you
+extract such scalar trees from common sources of data, such as scalar functions
+defined on point clouds. You can also extract tree-like structure using a
+method you provide, and use denali to visualize the result.</p>
 
 <p>The figure below shows the conceptual "pipeline" you'll follow when using denali:</p>
 
