@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../resources/main.css" type="text/css" />
+</head>
+<body>
+<div id="content">
+
+<div id="header">
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
+</div>
+
+<hr>
+
+<h2 id="ctree">ctree</h2>
+<p>ctree is a command line tool for generating contour trees from scalar functions defined on a simplicial complex.</p>
+<ol style="list-style-type: decimal">
+<li><a href="#usage">Usage</a></li>
+<li><a href="#input-formats">Input Formats</a></li>
+</ol>
+<h3 id="usage">Usage</h3>
+<pre><code>ctree &lt;vertex value file&gt; &lt;edge file&gt; &lt;tree file&gt; 
+      [--join &lt;filename&gt;] [--split &lt;filename&gt;]</code></pre>
+<p>ctree is called from the command line. It takes three required arguments: a vertex value file, an edge file, and a tree file. The vertex value and edge files are used as input, and the tree file is used as output. The format of the input files are described below, while the format of the output file is described in the <a href="./formats.html#tree"><code>.tree</code> format</a> page.</p>
+<p>By default, ctree outputs only the contour tree. The join and split trees are computed in the process, but not output in order to save memory. To output the join or split tree, provide the <code>--join</code> or <code>--split</code> tag, followed by the output file. For example, to output both the contour tree and the join tree, invoke:</p>
+<pre><code>ctree vertex_file edge_file contour.tree --join join.tree</code></pre>
+<p>This will place the contour tree in <code>contour.tree</code> and the join tree in <code>join.tree</code>.</p>
+<h3 id="input-formats">Input Formats</h3>
+<p>The input to ctree is the 1-skeleton of a simplicial complex. In other words, ctree requires a list of vertices and a list of connections between these vertices. Furthermore, each vertex in the simplicial complex has an associated scalar value.</p>
+<p>The vertices and edges are defined in separate files. The vertex file consists of a series of scalar values, one per line. The ID of the vertices is implicit from their order in this file. For example, the file:</p>
+<pre><code>3.1
+-3.4
+-2.1
+42.1</code></pre>
+<p>Defines four vertices. Vertex 0 has value 3.1, vertex 1 has value -3.4, and so on. Note that vertices are 0-indexed.</p>
+<p>The edge file lists the edges in the simplicial complex, one per line. An edge is a tab-separated pair of vertex IDs. For example, to define an edge between 0 and 1:</p>
+<pre><code>0   1</code></pre>
+<p>When specifying an edge, the order of the nodes does not matter: <code>1 0</code> is the same as <code>0  1</code>. Note, however, that edges should be uniquely specified.</p>
+</div>
+</body>
+</html>
