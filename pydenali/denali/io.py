@@ -84,11 +84,33 @@ def read_selection(fileobj):
         data_string = "".join(lines)
         return _read_vertex_definitions(data_string)
 
+    # members and components are both arrays
+    _process_members = _process_component = _process_array 
+
+    def _process_reduction(line):
+        return float(next(line).strip())
+
+    def _process_subtree(lines):
+        """Read the subtree section into a networkx object."""
+        return read_tree(_StringIO("".join(lines)))
+
+    def _process_subtree_reduction(lines):
+        """Reads the subtree reduction in."""
+        reduction = {}
+        for line in lines:
+            parent, child, value = line.split()
+
+            reduction[tuple([int(parent), int(child)])] = float(value)
+
+        return reduction
+
     process_map = {
             "file": _process_filename,
-            "component": _process_array,
-            "members": _process_array,
-            "subtree": _process_array
+            "component": _process_component,
+            "members": _process_members,
+            "reduction": _process_reduction,
+            "subtree": _process_subtree,
+            "subtree_reduction": _process_subtree_reduction
             }
 
     # group the lines of the selection file, breaking on #
@@ -103,6 +125,24 @@ def read_selection(fileobj):
     for flag, data in _itertools.izip(flags, data):
         if flag in process_map:
             selection_information[flag] = process_map[flag](data)
+
+    # the tree was read as an undirected tree, but we know the root
+    if "subtree" in selection_information:
+        tree = selection_information["subtree"]
+        root = selection_information["component"][0][0]
+
+        directed_tree = _networkx.dfs_tree(tree, root)
+
+        selection_information["subtree"] = directed_tree
+
+        if "subtree_reduction" in selection_information:
+            subtree_reduction = selection_information["subtree_reduction"]
+            del selection_information["subtree_reduction"]
+
+            subtree = selection_information["subtree"]
+
+            for (u,v),value in subtree_reduction.iteritems():
+                subtree.edge[u][v]['reduction'] = value
 
     return selection_information
 

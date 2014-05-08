@@ -257,6 +257,30 @@ public:
     typedef std::pair<unsigned int, double> Member;
     typedef std::set<Member> Members;
 
+    struct SubtreeArc
+    {
+        SubtreeArc(size_t parent, size_t child) 
+            : parent(parent), child(child) {}
+
+        size_t parent;
+        size_t child;
+
+        bool operator<(const SubtreeArc& rhs) const
+        {
+            if (parent == rhs.parent)
+            {
+                return child < rhs.child;
+            }
+            else
+            {
+                return parent < rhs.parent;
+            }
+        }
+    };
+
+    typedef std::set<size_t> SubtreeNodes;
+    typedef std::set<SubtreeArc> SubtreeArcs;
+
     virtual ~LandscapeContext() {}
 
     virtual bool isValid() const = 0;
@@ -301,6 +325,7 @@ public:
     virtual void setColorMap(boost::shared_ptr<denali::ColorMap>) = 0;
     virtual void setColorReduction(boost::shared_ptr<Reduction>) = 0;
     virtual double getComponentReductionValue(unsigned int) = 0;
+    virtual double getComponentReductionValue(size_t, size_t) = 0;
     virtual double getMaxReductionValue() = 0;
     virtual double getMinReductionValue() = 0;
     virtual void setMaxReductionValue(double) = 0;
@@ -316,6 +341,8 @@ public:
     virtual Members getMembers(size_t) const = 0;
 
     virtual Members getSubtreeMembers(size_t, size_t) const = 0;
+    virtual SubtreeNodes getSubtreeNodes(size_t, size_t) const = 0;
+    virtual SubtreeArcs getSubtreeArcs(size_t, size_t) const = 0;
 };
 
 
@@ -701,6 +728,38 @@ public:
         return (*_reduction_map)[edge];
     }
 
+
+    virtual double getComponentReductionValue(size_t parent, size_t child)
+    {
+        assert(_color_map && _reduction);
+
+        // get the parent and child nodes from the contour tree
+        typename FoldedContourTree::Node ct_parent_node = 
+                _folded_tree.getNode(parent);
+
+        typename FoldedContourTree::Node ct_child_node = 
+                _folded_tree.getNode(child);
+
+        // now get them in the landscape tree
+        typename Landscape::Node parent_node = 
+                _landscape->getLandscapeTreeNode(ct_parent_node);
+
+        typename Landscape::Node child_node = 
+                _landscape->getLandscapeTreeNode(ct_child_node);
+
+        // get the arc in the landscape and find its reduction value
+        typename Landscape::Arc arc =
+                _landscape->findArc(parent_node, child_node);
+
+        typename FoldedContourTree::Edge edge = 
+                _landscape->getContourTreeEdge(arc);
+
+        assert(_folded_tree.isEdgeValid(edge));
+
+        return (*_reduction_map)[edge];
+    }
+
+
     virtual double getMaxReductionValue() {
         assert(_color_map && _reduction);
         return _max_reduction;
@@ -896,6 +955,65 @@ public:
 
         return member_set;
     }
+
+
+    /// \brief Return a set of all of the nodes in the subtree, including those
+    /// used to specify the subtree's root.
+    virtual SubtreeNodes 
+    getSubtreeNodes(size_t root_parent, size_t root_child) const
+    {
+        typedef typename FoldedContourTree::Node Node;
+
+        SubtreeNodes subtree_nodes;
+
+        // include the root nodes in the subtree
+        subtree_nodes.insert(root_parent);
+        subtree_nodes.insert(root_child);
+
+        // now search down the tree and add every node to the set
+        Node root_parent_node = _folded_tree.getNode(root_parent);
+        Node root_child_node  = _folded_tree.getNode(root_child);
+
+        denali::UndirectedBFSIterator<FoldedContourTree> 
+                it(_folded_tree, root_parent_node, root_child_node);
+
+        for (; !it.done(); ++it)
+        {
+            Node child = it.child();
+            subtree_nodes.insert(_folded_tree.getID(child));
+        }
+
+        return subtree_nodes;
+    }
+
+
+    virtual SubtreeArcs 
+    getSubtreeArcs(size_t root_parent, size_t root_child) const
+    {
+        typedef typename FoldedContourTree::Node Node;
+
+        SubtreeArcs subtree_arcs;
+
+        // include the root nodes in the subtree
+        subtree_arcs.insert(SubtreeArc(root_parent, root_child));
+
+        // now search down the tree and add every arc to the set
+        Node root_parent_node = _folded_tree.getNode(root_parent);
+        Node root_child_node  = _folded_tree.getNode(root_child);
+
+        denali::UndirectedBFSIterator<FoldedContourTree> 
+                it(_folded_tree, root_parent_node, root_child_node);
+
+        for (; !it.done(); ++it)
+        {
+            size_t parent_id = _folded_tree.getID(it.parent());
+            size_t child_id = _folded_tree.getID(it.child());
+            subtree_arcs.insert(SubtreeArc(parent_id, child_id));
+        }
+
+        return subtree_arcs;
+    }
+
 
     virtual void expandLandscape()
     {

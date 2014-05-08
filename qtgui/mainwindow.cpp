@@ -651,7 +651,6 @@ std::string MainWindow::runCallback(
         unsigned int cell,
         bool provide_subtree)
 {
-
     size_t parent, child;
     _landscape_context->getComponentParentChild(_cell_selection, parent, child);
 
@@ -708,23 +707,87 @@ std::string MainWindow::runCallback(
         tempfile.write(member_line.str().c_str());
     }
 
+    if (_landscape_context->hasReduction())
+    {
+        tempfile.write("# reduction\n");
+
+        double reduction = _landscape_context->getComponentReductionValue(
+                parent, child);
+
+        std::stringstream reduction_line;
+        reduction_line << reduction << "\n";
+        tempfile.write(reduction_line.str().c_str());
+    }
+
     if (provide_subtree)
     {
         tempfile.write("# subtree\n");
-        LandscapeContext::Members subtree_members = 
-                _landscape_context->getSubtreeMembers(parent, child);
 
-        for (LandscapeContext::Members::const_iterator it = subtree_members.begin();
-                it != subtree_members.end(); ++it)
+        // get a set of all of the nodes in the subtree
+        LandscapeContext::SubtreeNodes subtree_nodes = 
+                _landscape_context->getSubtreeNodes(parent, child);
+
+        // we will write the tree out in traditional denali format. first comes
+        // the number of vertices in the subtree
+        std::stringstream number_of_nodes;
+        number_of_nodes << subtree_nodes.size() << "\n";
+        tempfile.write(number_of_nodes.str().c_str());
+
+        // now we write each of the nodes
+        for (LandscapeContext::SubtreeNodes::const_iterator it = subtree_nodes.begin();
+                it != subtree_nodes.end(); ++it)
         {
-            unsigned int id = it->first;
-            double value = it->second;
+            std::stringstream node_line;
+            node_line << *it << "\t" << _landscape_context->getValue(*it) << "\n";
+            tempfile.write(node_line.str().c_str());
+        }
 
-            std::stringstream member_line;
-            member_line << id << "\t" << value << std::endl;
-            tempfile.write(member_line.str().c_str());
+        LandscapeContext::SubtreeArcs subtree_arcs = 
+                _landscape_context->getSubtreeArcs(parent, child);
+
+        for (LandscapeContext::SubtreeArcs::const_iterator it = subtree_arcs.begin();
+                it != subtree_arcs.end(); ++it)
+        {
+            std::stringstream arc_line;
+
+            arc_line << it->parent << "\t" << it->child;
+
+            LandscapeContext::Members members = 
+                    _landscape_context->getMembers(it->parent, it->child);
+
+            for (LandscapeContext::Members::const_iterator it = members.begin();
+                    it != members.end(); ++it)
+            {
+                unsigned int id = it->first;
+                double value = it->second;
+
+                arc_line << "\t" << id << "\t" << value;
+            }
+
+            arc_line << "\n";
+            tempfile.write(arc_line.str().c_str());
         }
     } 
+
+    if (_landscape_context->hasReduction() && provide_subtree)
+    {
+        tempfile.write("# subtree_reduction\n");
+
+        // get all of the arcs in the subtree
+        LandscapeContext::SubtreeArcs subtree_arcs = 
+                _landscape_context->getSubtreeArcs(parent, child);
+
+        for (LandscapeContext::SubtreeArcs::const_iterator it = subtree_arcs.begin();
+                it != subtree_arcs.end(); ++it)
+        {
+            double reduction = _landscape_context->getComponentReductionValue(
+                    it->parent, it->child);
+
+            std::stringstream reduction_line;
+            reduction_line << it->parent << "\t" << it->child << "\t" << reduction << "\n";
+            tempfile.write(reduction_line.str().c_str());
+        }
+    }
 
     tempfile.close();
 
