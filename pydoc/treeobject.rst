@@ -1,3 +1,5 @@
+.. _working-with-trees:
+
 Working with denali tree objects
 ================================
 
@@ -16,9 +18,7 @@ and graphs.
   under the "value" key. For example, to access the scalar value associated with
   node 0 in a tree `t`, we write:
 
-    ::
-
-    t.node[0]['value']
+  >>> t.node[0]['value']
 
 - An edge's members are included as a dictionary under the "members" key in the
   edge's data dictionary. In other words, each edge has a "members" dictionary
@@ -27,22 +27,16 @@ and graphs.
 
   For example, to get the members of the edge between 0 and 2:
 
-    ::
-
-    t.edge[0][2]['members']
+  >>> t.edge[0][2]['members']
 
   And if we knew, for example, that 1 was a member of this edge, we could get
   its associated scalar value by writing:
 
-    ::
-
-    t.edge[0][2]['members'][1]
+  >>> t.edge[0][2]['members'][1]
 
 If a colormap has been supplied to `denali`, there may be a "reduction" entry in
 the data dictionary for each edge, representing the value of the reduction of
 the second color function on that edge. To obtain the reduction value of edge 0
 to 2, we would write
 
-    ::
-
-    t.edge[0][2]['reduction']
+    >>> t.edge[0][2]['reduction']
