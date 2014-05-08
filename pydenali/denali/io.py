@@ -52,31 +52,32 @@ def read_selection(fileobj):
     **members**
         A nx2 nested list representing the members in the selection.
 
-    **subtree**
-        (Optional) Contains the members and nodes in the selected subtree.
+    If a colormap was specified in `denali`, the following entry is present:
+        
+    **reduction**
+        The result of applying the reduction to the selected component and its
+        members
 
-    Each of *component*, *members*, and *subtree* is a nested list with two
-    columns. Each row represents a single node or member. The first column
-    contains the ids of the node or member, and the second contains the scalar
-    value.
+    If the "Provide subtree" box has been checked in `denali`'s callback
+    configuration dialog, then the additional entry is present:
+
+    **subtree**
+        A networkx tree object representing the selected subtree. The structure
+        of the subtree is as described in :ref:`working-with-trees`.
+
+    *component* and *members* are nested lists with two columns. Each
+    row represents a single node or member. The first column contains the ids
+    of the node or member, and the second contains the scalar value.
 
     *Example*:
 
     >>> denali.io.read_selection(open("selection_file"))
-    {'component': [[4, 16.0], [5, 32.0]],
-     'file': '/path/to/denali/examples/tutorial/tree.tree',
+    {'component': [[4, 16.0], [5, 31.0]],
+     'file': '/path/to/tree/file.tree',
      'members': [[0, 25.0], [4, 16.0], [5, 32.0]],
-     'subtree': [[1, 62.0],
-      [2, 45.0],
-      [3, 66.0],
-      [6, 64.0],
-      [7, 39.0],
-      [8, 58.0],
-      [9, 51.0],
-      [10, 53.0],
-      [11, 30.0]]}
+     'reduction': 1.89452,
+     'subtree': <networkx.classes.digraph.DiGraph object at 0x379bd10>}
     """
-
     def _process_filename(data):
         return list(data)[0].strip()
 
