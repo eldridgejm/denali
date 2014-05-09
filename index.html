@@ -75,16 +75,26 @@ complicated trees and scalar attributes defined on their nodes. To learn more ab
 landscape metaphors, see the
 <a href="./doc/pages/tutorial.html#introduction-to-landscape-metaphors">tutorial</a>.</p>
 
-<p>For example, suppose we use a hierarchical clustering algorithm to build a
-cluster tree of 1000 images of handwritten zeros, ones, and sevens. If we
-visualize the tree using the traditional approach, what we obtain is hard to
-visually parse (see the figure below). On the other hand, visualizing the same
-data with denali yields a rich interactive landscape which we can manipulate,
-simplify, and analyze with domain-specific callback functions:</p>
+<p>For example, suppose we visualize a hierarchical discussion on an online
+forum consisting of nearly 1000 comments. If we visualize the tree using the
+traditional approach, what we obtain is hard to visually parse. For example,
+<i>graphviz</i> produces the visualization below. Enlarging a section of the
+image shows that the result can be complex and difficult to understand, even
+locally.</p>
 
-<div style="margin: 2em 0em; text-align: center">
-<img src="./resources/tree_to_landscape.png">
+<div style="margin: 4em 0em; text-align: center">
+<img src="./resources/ugly_tree.png">
 </div>
+
+Below is the visualization produced by denali on the same data.
+
+<div style="margin: 4em 0em; text-align: center">
+<img src="./resources/scrot_comments.png" width="400px">
+</div>
+
+<p>Denali's result not only presents the complicated tree structure in an
+easy-to-interpret form, but also allows the user to manipulate, zoom, simplify,
+and query the landscape interactively.</p>
 
 <p><b>Can denali be used for your application?</b> Denali can be used to
 visualize such diverse structures as probability densities, complex networks,
