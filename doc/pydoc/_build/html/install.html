@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; pydenali 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydenali 1.0 documentation" href="index.html" />
+    <link rel="next" title="Working with denali tree objects" href="treeobject.html" />
+    <link rel="prev" title="Welcome to pydenali’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="treeobject.html" title="Working with denali tree objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pydenali’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p><cite>pydenali</cite> is a cross-platform Python package, and doesn&#8217;t need to be installed
+as-such. However, it may be convenient to install <cite>pydenali</cite> to a location
+where Python knows about it, so that using <cite>pydenali</cite> as simple as writing
+<tt class="docutils literal"><span class="pre">import</span> <span class="pre">denali</span></tt>.  In this regard, <cite>pydenali</cite> can be installed just as any
+other python module, though an install script is not provided. It is simple to
+install <cite>pydenali</cite>, neverthelless.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p><cite>pydenali</cite> requires that you have the <cite>networkx</cite> package.  Additionally, if
+you&#8217;d like to create knn graphs for input to <cite>ctree</cite>, you&#8217;ll need <cite>numpy</cite>, and
+<cite>scikit-learn</cite>.</p>
+</div>
+<div class="section" id="using-pip">
+<h2>Using <cite>pip</cite><a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h2>
+<p><cite>pydenali</cite> is compatible with pip. To install to a system-wide location (or to
+a virtualenv), simply run <cite>pip</cite> on the <cite>pydenali</cite> directory (assuming that you
+are in the root of the project directory):</p>
+<blockquote>
+<div>pip install ./pydenali</div></blockquote>
+<p>You may need root priviledges to run the above command.</p>
+</div>
+<div class="section" id="no-installation">
+<h2>No installation<a class="headerlink" href="#no-installation" title="Permalink to this headline">¶</a></h2>
+<p>You can use <cite>pydenali</cite> without installing it by changing your python path at
+the beginning of your script. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;/path/to/denali/python&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">denali</span>
+</pre></div>
+</div>
+<p>will import <cite>pydenali</cite> from the location on disk. On a Unix-like system, you
+can also append <cite>/path/to/denali/python</cite> to your <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> environment
+variable.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#using-pip">Using <cite>pip</cite></a></li>
+<li><a class="reference internal" href="#no-installation">No installation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to pydenali&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="treeobject.html"
+                        title="next chapter">Working with denali tree objects</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="treeobject.html" title="Working with denali tree objects"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pydenali’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Justin Eldridge.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
