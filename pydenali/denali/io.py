@@ -1,12 +1,6 @@
 import itertools as _itertools
 from StringIO import StringIO as _StringIO
-
-try:
-    import networkx as _networkx
-except ImportError:
-    _has_networkx = False
-else:
-    _has_networkx = True
+import networkx as _networkx
 
 
 def _read_vertex_definitions(string):
@@ -162,9 +156,6 @@ def read_tree(fileobj):
     to the scalar value of the node in the tree. The edges have a `members`
     attribute which is a dictionary mapping member ids to their values.
     """
-    if not _has_networkx:
-        raise RuntimeError("The networkx package is required to read a tree.")
-
     tree = _networkx.Graph()
 
     for i,line in enumerate(fileobj):
@@ -206,9 +197,6 @@ def write_tree(fileobj, tree):
     That is, its nodes must have a `value` attribute, and the edges must
     have a `members` attribute.
     """
-    if not _has_networkx:
-        raise RuntimeError("The networkx package is required to read a tree.")
-
     # write the number of vertices
     fileobj.write("{}\n".format(len(tree)))
 

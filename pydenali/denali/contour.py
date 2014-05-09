@@ -1,16 +1,11 @@
+import networkx as _networkx
+
 try:
     from sklearn.neighbors import kneighbors_graph as _kneighbors_graph
 except ImportError:
     _has_sklearn = False
 else:
     _has_sklearn = True
-
-try:
-    import networkx as _networkx
-except ImportError:
-    _has_networkx = False
-else:
-    _has_networkx = True
 
 try:
     import numpy as _numpy
@@ -51,9 +46,6 @@ def kneighbors_complex(data, k):
 
     if not _has_numpy:
         raise ImportError("numpy is required to build a complex.")
-
-    if not _has_networkx:
-        raise ImportError("networkx is required to build a complex.")
 
     nn = _kneighbors_graph(data, k)
     
