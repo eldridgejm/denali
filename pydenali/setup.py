@@ -10,8 +10,9 @@ setup(
 
     packages=["denali"],
 
+    install_requires = ["networkx"],
+
     extras_require = {
         "numpy": ["numpy"],
-        "sklearn": ["scikit-learn"],
-        "networkx": ["networkx"]}
+        "sklearn": ["scikit-learn"]}
 )
