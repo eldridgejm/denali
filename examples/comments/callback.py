@@ -11,7 +11,7 @@ comments_path = os.path.join(os.path.dirname(__file__), "comments.pickle")
 comments = pickle.load(open(comments_path))
 
 # load the selection file
-selection = denali.io.read_selection(open(sys.argv[1]))
+selection = denali.io.read_selection_file(sys.argv[1])
 
 comment_id = selection['component'][1][0]
 

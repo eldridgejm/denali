@@ -1,6 +1,7 @@
 import itertools as _itertools
 from StringIO import StringIO as _StringIO
 import networkx as _networkx
+import os as _os
 
 
 def _read_vertex_definitions(string):
@@ -142,8 +143,29 @@ def read_selection(fileobj):
     return selection_information
 
 
+def read_selection_file(path, delete_after=True):
+    """Read the selection information from a file path.
+
+    This is the preferred way to open selection files, as it deletes the 
+    selection file after reading it, by default. This is useful in the case
+    of asynchronous callbacks, as denali does not automatically delete the
+    selection file. In the case of info and tree callbacks, denali does
+    delete the file. This function can be used for any type of callback.
+
+    :param path: The path to the selection file.
+    :param delete_after: Whether to delete the file after reading it.
+    """
+    with open(path) as f:
+        selection = read_selection(f)
+
+    if delete_after:
+        _os.remove(path)
+
+    return selection
+
+
 def read_tree(fileobj):
-    """Reads in a .tree file to a networkx tree object.
+    """Reads in a .tree file-like object to a networkx tree object.
 
     **Note**: This function requires that the `networkx` package is installed.
 
