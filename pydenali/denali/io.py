@@ -27,6 +27,10 @@ def _read_vertex_definitions(string):
 def read_selection(fileobj):
     """Read the selection information from a file-like object.
 
+    This function should only be used if the selection information is not
+    in a file, but rather in a stream. This is rare. For most cases, the
+    `read_selection_file` function is to be preferred.
+
     :param fileobj: A file-like object containing the selection file.
     :type fileobj: File-like
     :returns: A dictionary containing information about the selection.
@@ -154,6 +158,9 @@ def read_selection_file(path, delete_after=True):
 
     :param path: The path to the selection file.
     :param delete_after: Whether to delete the file after reading it.
+    :returns: A dictionary containing information about the selection. The 
+        format of this dictionary is the same as described in the documentation
+        of the `read_selection` function.
     """
     with open(path) as f:
         selection = read_selection(f)
