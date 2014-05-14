@@ -139,11 +139,11 @@
    <item>
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Void Callback</string>
+      <string>Async Callback</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="2">
-       <widget class="QPushButton" name="pushButtonBrowseVoid">
+       <widget class="QPushButton" name="pushButtonBrowseAsync">
         <property name="maximumSize">
          <size>
           <width>75</width>
@@ -156,21 +156,21 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="checkBoxRunVoidOnSelection">
+       <widget class="QCheckBox" name="checkBoxRunAsyncOnSelection">
         <property name="text">
          <string>Run on selection</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="checkBoxVoidSubtree">
+       <widget class="QCheckBox" name="checkBoxAsyncSubtree">
         <property name="text">
          <string>Supply subtree</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="pushButtonClearVoid">
+       <widget class="QPushButton" name="pushButtonClearAsync">
         <property name="maximumSize">
          <size>
           <width>75</width>
@@ -183,7 +183,7 @@
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
-       <widget class="QLineEdit" name="lineEditVoidCallback"/>
+       <widget class="QLineEdit" name="lineEditAsyncCallback"/>
       </item>
      </layout>
     </widget>

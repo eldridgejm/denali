@@ -17,24 +17,24 @@ public:
 
     std::string getInfoCallback();
     std::string getTreeCallback();
-    std::string getVoidCallback();
+    std::string getAsyncCallback();
 
     bool runInfoOnSelection();
     bool runTreeOnSelection();
-    bool runVoidOnSelection();
+    bool runAsyncOnSelection();
 
     bool provideInfoSubtree();
     bool provideTreeSubtree();
-    bool provideVoidSubtree();
+    bool provideAsyncSubtree();
 
 public slots:
     void setInfoCallback();
     void setTreeCallback();
-    void setVoidCallback();
+    void setAsyncCallback();
 
     void clearInfoCallback();
     void clearTreeCallback();
-    void clearVoidCallback();
+    void clearAsyncCallback();
 
 private:
 

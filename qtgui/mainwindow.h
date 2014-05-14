@@ -24,9 +24,19 @@ public:
 
     void setContext(LandscapeContext*);
     void receiveCellSelection(unsigned int);
-    std::string runCallback(std::string callback_path, 
-                            unsigned int cell, 
-                            bool provide_subtree = false);
+
+    std::string prepareCallback(std::string callback_path,
+                                unsigned int cell,
+                                QTemporaryFile& tempfile,
+                                bool provide_subtree = false);
+
+    std::string runSynchronousCallback(std::string callback_path, 
+                                       unsigned int cell, 
+                                       bool provide_subtree = false);
+
+    void runAsynchronousCallback(std::string callback_path, 
+                                       unsigned int cell, 
+                                       bool provide_subtree = false);
 
 public slots:
     void setStatus(const std::string&);
@@ -60,16 +70,16 @@ public slots:
     void configureCallbacks();
     void runInfoCallback();
     void runTreeCallback();
-    void runVoidCallback();
+    void runAsyncCallback();
 
     void updateCallbackAvailability();
     void runCallbacksOnSelection();
     void enableInfoCallback();
     void enableTreeCallback();
-    void enableVoidCallback();
+    void enableAsyncCallback();
     void disableInfoCallback();
     void disableTreeCallback();
-    void disableVoidCallback();
+    void disableAsyncCallback();
 
     void enableRebaseLandscape();
     void disableRebaseLandscape();

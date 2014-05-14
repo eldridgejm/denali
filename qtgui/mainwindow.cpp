@@ -86,8 +86,8 @@ MainWindow::MainWindow() :
     connect(_mainwindow.pushButtonTreeCallback, SIGNAL(clicked()),
             this, SLOT(runTreeCallback()));
 
-    connect(_mainwindow.pushButtonVoidCallback, SIGNAL(clicked()),
-            this, SLOT(runVoidCallback()));
+    connect(_mainwindow.pushButtonAsyncCallback, SIGNAL(clicked()),
+            this, SLOT(runAsyncCallback()));
 
     connect(this, SIGNAL(cellSelected(unsigned int)), 
             this, SLOT(runCallbacksOnSelection()));
@@ -639,18 +639,24 @@ void MainWindow::updateCallbackAvailability()
         this->disableTreeCallback();
     }
 
-    if (_callbacks_dialog->getVoidCallback().size() != 0) {
-        this->enableVoidCallback();
+    if (_callbacks_dialog->getAsyncCallback().size() != 0) {
+        this->enableAsyncCallback();
     } else {
-        this->disableVoidCallback();
+        this->disableAsyncCallback();
     }
 }
 
-std::string MainWindow::runCallback(
-        std::string callback_path, 
+
+std::string MainWindow::prepareCallback(
+        std::string callback_path,
         unsigned int cell,
+        QTemporaryFile& tempfile,
         bool provide_subtree)
 {
+    // Factors out the common steps in launching a blocking or non-blocking 
+    // callback, such as writing the selection file. Returns the command to
+    // run.
+
     size_t parent, child;
     _landscape_context->getComponentParentChild(_cell_selection, parent, child);
 
@@ -660,7 +666,6 @@ std::string MainWindow::runCallback(
     std::stringstream command;
     command << callback_path;
 
-    QTemporaryFile tempfile;
     if (!tempfile.open())
     {
         throw std::runtime_error("Problem opening tempfile.");
@@ -789,10 +794,21 @@ std::string MainWindow::runCallback(
         }
     }
 
+    return command.str();
+}
+
+
+std::string MainWindow::runSynchronousCallback(
+        std::string callback_path, 
+        unsigned int cell,
+        bool provide_subtree)
+{
+    QTemporaryFile tempfile;
+    std::string command = prepareCallback(callback_path, cell, tempfile, provide_subtree);
     tempfile.close();
 
     QProcess process;
-    process.start(command.str().c_str());
+    process.start(command.c_str());
     process.waitForFinished(-1);
 
     QString p_stdout = process.readAllStandardOutput();
@@ -804,8 +820,28 @@ std::string MainWindow::runCallback(
         std::cerr << p_stderr.toUtf8().constData() << std::endl;
     }
 
+
     return p_stdout.toUtf8().constData();
 };
+
+
+void MainWindow::runAsynchronousCallback(
+        std::string callback_path,
+        unsigned int cell,
+        bool provide_subtree)
+{
+    QTemporaryFile tempfile;
+
+    // we'll rely on the callback script to delete the selection file, since we
+    // can't know for sure how long it will take the callback to read the file
+    tempfile.setAutoRemove(false);
+
+    std::string command = prepareCallback(callback_path, cell, tempfile, provide_subtree);
+    tempfile.close();
+
+    QProcess process;
+    process.startDetached(command.c_str());
+}
 
 
 void MainWindow::enableInfoCallback() {
@@ -818,8 +854,8 @@ void MainWindow::enableTreeCallback() {
 }
 
 
-void MainWindow::enableVoidCallback() {
-    _mainwindow.pushButtonVoidCallback->setEnabled(true);
+void MainWindow::enableAsyncCallback() {
+    _mainwindow.pushButtonAsyncCallback->setEnabled(true);
 }
 
 
@@ -833,8 +869,8 @@ void MainWindow::disableTreeCallback() {
 }
 
 
-void MainWindow::disableVoidCallback() {
-    _mainwindow.pushButtonVoidCallback->setEnabled(false);
+void MainWindow::disableAsyncCallback() {
+    _mainwindow.pushButtonAsyncCallback->setEnabled(false);
 }
 
 
@@ -850,9 +886,9 @@ void MainWindow::runCallbacksOnSelection()
         runTreeCallback();
     }
 
-    if (_callbacks_dialog->runVoidOnSelection() && 
-            _callbacks_dialog->getVoidCallback().size() != 0) {
-        runVoidCallback();
+    if (_callbacks_dialog->runAsyncOnSelection() && 
+            _callbacks_dialog->getAsyncCallback().size() != 0) {
+        runAsyncCallback();
     }
 }
 
@@ -861,7 +897,7 @@ void MainWindow::runInfoCallback()
     std::string callback_path = _callbacks_dialog->getInfoCallback();
     bool provide_subtree = _callbacks_dialog->provideInfoSubtree();
 
-    std::string result = runCallback(callback_path, _cell_selection, provide_subtree);
+    std::string result = runSynchronousCallback(callback_path, _cell_selection, provide_subtree);
     if (result.size() > 0) {
         this->appendStatus(result);
     }
@@ -877,7 +913,7 @@ void MainWindow::runTreeCallback()
     std::string callback_path = _callbacks_dialog->getTreeCallback();
     bool provide_subtree = _callbacks_dialog->provideTreeSubtree();
 
-    std::string result = runCallback(callback_path, _cell_selection, provide_subtree);
+    std::string result = runSynchronousCallback(callback_path, _cell_selection, provide_subtree);
 
     if (result.size() == 0) {
             QString message = QString::fromStdString(
@@ -904,12 +940,12 @@ void MainWindow::runTreeCallback()
 }
 
 
-void MainWindow::runVoidCallback()
+void MainWindow::runAsyncCallback()
 {
-    std::string callback_path = _callbacks_dialog->getVoidCallback();
-    bool provide_subtree = _callbacks_dialog->provideVoidSubtree();
+    std::string callback_path = _callbacks_dialog->getAsyncCallback();
+    bool provide_subtree = _callbacks_dialog->provideAsyncSubtree();
 
-    runCallback(callback_path, _cell_selection, provide_subtree);
+    runAsynchronousCallback(callback_path, _cell_selection, provide_subtree);
 }
 
 

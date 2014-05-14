@@ -42,12 +42,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonVoidCallback">
+        <widget class="QPushButton" name="pushButtonAsyncCallback">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>Void</string>
+          <string>Async</string>
          </property>
         </widget>
        </item>

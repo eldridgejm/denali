@@ -13,8 +13,8 @@ CallbacksDialog::CallbacksDialog(QWidget* parent) :
     connect(_dialog.pushButtonBrowseTree, SIGNAL(clicked()),
             this, SLOT(setTreeCallback()));
 
-    connect(_dialog.pushButtonBrowseVoid, SIGNAL(clicked()),
-            this, SLOT(setVoidCallback()));
+    connect(_dialog.pushButtonBrowseAsync, SIGNAL(clicked()),
+            this, SLOT(setAsyncCallback()));
 
     connect(_dialog.pushButtonClearInfo, SIGNAL(clicked()),
             this, SLOT(clearInfoCallback()));
@@ -22,8 +22,8 @@ CallbacksDialog::CallbacksDialog(QWidget* parent) :
     connect(_dialog.pushButtonClearTree, SIGNAL(clicked()),
             this, SLOT(clearTreeCallback()));
 
-    connect(_dialog.pushButtonClearVoid, SIGNAL(clicked()),
-            this, SLOT(clearVoidCallback()));
+    connect(_dialog.pushButtonClearAsync, SIGNAL(clicked()),
+            this, SLOT(clearAsyncCallback()));
 }
 
 
@@ -53,16 +53,16 @@ void CallbacksDialog::setTreeCallback()
 }
 
 
-void CallbacksDialog::setVoidCallback()
+void CallbacksDialog::setAsyncCallback()
 {
     // open a file dialog to get the filename
     QString qfilename = QFileDialog::getOpenFileName(
-            this, tr("Select Void Callback"), "", tr("Files(*)"));
+            this, tr("Select Async Callback"), "", tr("Files(*)"));
 
     // convert the filename to a std::string
     std::string filename = qfilename.toUtf8().constData();
 
-    _dialog.lineEditVoidCallback->setText(qfilename);
+    _dialog.lineEditAsyncCallback->setText(qfilename);
 }
 
 
@@ -76,8 +76,8 @@ std::string CallbacksDialog::getTreeCallback() {
 }
 
 
-std::string CallbacksDialog::getVoidCallback() {
-    return _dialog.lineEditVoidCallback->text().toUtf8().constData();
+std::string CallbacksDialog::getAsyncCallback() {
+    return _dialog.lineEditAsyncCallback->text().toUtf8().constData();
 }
 
 
@@ -91,8 +91,8 @@ bool CallbacksDialog::runTreeOnSelection() {
 }
 
 
-bool CallbacksDialog::runVoidOnSelection() {
-    return _dialog.checkBoxRunVoidOnSelection->isChecked();
+bool CallbacksDialog::runAsyncOnSelection() {
+    return _dialog.checkBoxRunAsyncOnSelection->isChecked();
 }
 
 
@@ -106,8 +106,8 @@ bool CallbacksDialog::provideTreeSubtree() {
 }
 
 
-bool CallbacksDialog::provideVoidSubtree() {
-    return _dialog.checkBoxVoidSubtree->isChecked();
+bool CallbacksDialog::provideAsyncSubtree() {
+    return _dialog.checkBoxAsyncSubtree->isChecked();
 }
 
 
@@ -125,8 +125,8 @@ void CallbacksDialog::clearTreeCallback() {
 }
 
 
-void CallbacksDialog::clearVoidCallback() {
-    _dialog.lineEditVoidCallback->clear();
-    _dialog.checkBoxRunVoidOnSelection->setChecked(false);
-    _dialog.checkBoxVoidSubtree->setChecked(false);
+void CallbacksDialog::clearAsyncCallback() {
+    _dialog.lineEditAsyncCallback->clear();
+    _dialog.checkBoxRunAsyncOnSelection->setChecked(false);
+    _dialog.checkBoxAsyncSubtree->setChecked(false);
 }
