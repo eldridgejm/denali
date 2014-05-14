@@ -9,6 +9,7 @@ in *denali* formats.
 Reading selection files
 -----------------------
 
+.. autofunction:: denali.io.read_selection_file
 .. autofunction:: denali.io.read_selection
 
 

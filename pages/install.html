@@ -9,7 +9,7 @@
   <style type="text/css">
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; }
+table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
 code > span.kw { color: #007020; font-weight: bold; }
@@ -49,15 +49,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>The build process is managed by CMake. To build from source and install to the default location under <code>/usr/local</code>, invoke from the project's root directory:</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
 <span class="kw">cd</span> build
-cmake ..
+<span class="kw">cmake</span> ..
 <span class="kw">make</span>
-<span class="kw">sudo</span> <span class="kw">make</span> <span class="kw">install</span></code></pre>
+<span class="kw">sudo</span> make install</code></pre>
 <p>To install to a location other than the default, specify a prefix by using CMake's <code>CMAKE_INSTALL_PREFIX</code>. For example, to install to user <code>eldridge</code>'s home directory, run</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
 <span class="kw">cd</span> build
-cmake .<span class="kw">.</span> -DCMAKE_INSTALL_PREFIX=/home/eldridge
+<span class="kw">cmake</span> .. -DCMAKE_INSTALL_PREFIX=/home/eldridge
 <span class="kw">make</span>
-<span class="kw">make</span> <span class="kw">install</span></code></pre>
+<span class="kw">make</span> install</code></pre>
 <p><code>make install</code> creates the executables <code>denali</code> and <code>ctree</code> under <code>CMAKE_INSTALL_PREFIX/bin</code> and all files in the directory <code>CMAKE_INSTALL_PREFIX/share/denali</code>. To remove the software, simply delete these files.</p>
 <h2 id="pydenali">pydenali</h2>
 <p><em>pydenali</em>, the Python package of utilities included with <em>denali</em>, is included with <em>denali</em>, but not installed by the above steps. <em>pydenali</em> is an optional component for working with files in <em>denali</em> format, among other things. If you'd like to install it, see the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>

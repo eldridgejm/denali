@@ -9,6 +9,8 @@
     - [`members` section](#members-section)
     - [`subtree` section](#subtree-section)
     - [An example selection file](#an-example-selection-file)
+    - [A note on the deletion of selection
+      files](#a-note-on-the-deletion-of-selection-files)
 
 ---
 
@@ -29,7 +31,15 @@ selection](tutorial.html#printing-special-information-about-a-selection)
 section of the tutorial for a step-by-step introduction to creating a callback
 script. 
 
-The callback system works as follows:
+There are three types of callbacks. *Info* callbacks print information to the
+status box. *Tree* callbacks supply *denali* with a new tree to visualize. And
+*async* callbacks are run asynchronously, providing no information to *denali*.
+
+The *info* and *tree* callbacks are necessarily synchronous, meaning, they block
+the *denali* process. When these callbacks are invoked, the *denali* interface
+will become unresponsive until the callbacks finish executing. 
+
+In the case of *info* and *tree* callbacks, the callback system works as follows:
 
 1. When the callback is invoked, either by the user selecting a component or
    manually invoking the callback by pressing the callback button, a text file
@@ -46,13 +56,21 @@ The callback system works as follows:
    - *Info*: the output is printed to the status box
    - *Tree*: the output is interpreted as if it were the content of a `.tree`
    file, and the visualization is updated to represent this tree
-   - *Void*: the output is ignored
 
     Any other output of the callback that isn't on STDOUT, such as that printed
     to STDERR, is not handled by *denali*.
 
-Because the system communicates via files and STDOUT, callbacks may be written
-in virtually any language.
+4. Once the callback has completed, the selection file is automatically deleted
+   by *denali*.
+
+In the case of an *async* callback, the system's first step is exactly the same,
+steps 2-4 are not. After the selection file is written and the callback is
+invoked, *denali* detaches the callback process and has no further interaction
+with it. Also, as noted later in (#a-note-on-the-deletion-of-selection-files),
+the selection file is **not** deleted when an *async* callback is run. It is the
+responsibility of the callback process to delete the selection file. If the
+python convenience functions are used, this deletion is automatically done.
+
 
 ## The selection file
 *Denali* prints information about the selection to a temporary file. Information
@@ -63,8 +81,9 @@ selection.
 
 Note that if you are writing a callback in Python, you *do not* need to know how
 to parse the selection file: utilities are included in the *denali.py* module
-which read selection files. This section is useful only to users who would like
-to write their own callbacks in another language.
+which read selection files, namely, the `read_selection_file` function. This
+section is useful only to users who would like to write their own callbacks in
+another language.
 
 The selection file is broken into sections. Each section begins with a line
 containing `# ` followed by the section name, i.e:
@@ -200,3 +219,24 @@ component representing arc 4 → 5) of the tree file located at
 10	53
 11	30
 ~~~~
+
+
+### A note on the deletion of selection files
+
+Selection files are written where your system keeps its temporary files (for
+example, `/tmp` on Unix). If an info or tree callback is invoked, it is possible
+to automatically removed the temporary file when the callback completes, and
+*denali* does so. It is not known, however, when an *async* callback completes,
+so *denali* does not automatically delete the selection file when *async*
+callbacks are invoked.  Instead, it is up to the callback process to delete the
+file when it no longer needs it.
+
+If you use the python convenience function `read_selection_file`, then you do
+not need to do anything special. This function automatically deletes the
+selection file after it is read.
+
+If you are using another language, you should remove the selection file after
+your callback process reads it. If you neglect to do this, it is unlikely that
+anything *bad* will happen -- temporary files are automatically removed by your
+operating system every so often. Nevertheless, selection files for large
+datasets can themselves be large, and so it is best to clean them.

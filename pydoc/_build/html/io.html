@@ -68,9 +68,40 @@ in <em>denali</em> formats.</p>
 <div class="section" id="reading-selection-files">
 <h2><a class="toc-backref" href="#id2">Reading selection files</a><a class="headerlink" href="#reading-selection-files" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="denali.io.read_selection_file">
+<tt class="descclassname">denali.io.</tt><tt class="descname">read_selection_file</tt><big>(</big><em>path</em>, <em>delete_after=True</em><big>)</big><a class="headerlink" href="#denali.io.read_selection_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the selection information from a file path.</p>
+<p>This is the preferred way to open selection files, as it deletes the 
+selection file after reading it, by default. This is useful in the case
+of asynchronous callbacks, as denali does not automatically delete the
+selection file. In the case of info and tree callbacks, denali does
+delete the file. This function can be used for any type of callback.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> &#8211; The path to the selection file.</li>
+<li><strong>delete_after</strong> &#8211; Whether to delete the file after reading it.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dictionary containing information about the selection. The 
+format of this dictionary is the same as described in the documentation
+of the <cite>read_selection</cite> function.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="denali.io.read_selection">
 <tt class="descclassname">denali.io.</tt><tt class="descname">read_selection</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#denali.io.read_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the selection information from a file-like object.</p>
+<p>This function should only be used if the selection information is not
+in a file, but rather in a stream. This is rare. For most cases, the
+<cite>read_selection_file</cite> function is to be preferred.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -93,27 +124,30 @@ visualization was generated.</dd>
 <dd>A 2x2 nested list representing the nodes in the selection.</dd>
 <dt><strong>members</strong></dt>
 <dd>A nx2 nested list representing the members in the selection.</dd>
-<dt><strong>subtree</strong></dt>
-<dd>(Optional) Contains the members and nodes in the selected subtree.</dd>
 </dl>
-<p>Each of <em>component</em>, <em>members</em>, and <em>subtree</em> is a nested list with two
-columns. Each row represents a single node or member. The first column
-contains the ids of the node or member, and the second contains the scalar
-value.</p>
+<p>If a colormap was specified in <cite>denali</cite>, the following entry is present:</p>
+<dl class="docutils">
+<dt><strong>reduction</strong></dt>
+<dd>The result of applying the reduction to the selected component and its
+members</dd>
+</dl>
+<p>If the &#8220;Provide subtree&#8221; box has been checked in <cite>denali</cite>&#8216;s callback
+configuration dialog, then the additional entry is present:</p>
+<dl class="docutils">
+<dt><strong>subtree</strong></dt>
+<dd>A networkx tree object representing the selected subtree. The structure
+of the subtree is as described in <em class="xref std std-ref">working-with-trees</em>.</dd>
+</dl>
+<p><em>component</em> and <em>members</em> are nested lists with two columns. Each
+row represents a single node or member. The first column contains the ids
+of the node or member, and the second contains the scalar value.</p>
 <p><em>Example</em>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">denali</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_selection</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;selection_file&quot;</span><span class="p">))</span>
-<span class="go">{&#39;component&#39;: [[4, 16.0], [5, 32.0]],</span>
-<span class="go"> &#39;file&#39;: &#39;/path/to/denali/examples/tutorial/tree.tree&#39;,</span>
+<span class="go">{&#39;component&#39;: [[4, 16.0], [5, 31.0]],</span>
+<span class="go"> &#39;file&#39;: &#39;/path/to/tree/file.tree&#39;,</span>
 <span class="go"> &#39;members&#39;: [[0, 25.0], [4, 16.0], [5, 32.0]],</span>
-<span class="go"> &#39;subtree&#39;: [[1, 62.0],</span>
-<span class="go">  [2, 45.0],</span>
-<span class="go">  [3, 66.0],</span>
-<span class="go">  [6, 64.0],</span>
-<span class="go">  [7, 39.0],</span>
-<span class="go">  [8, 58.0],</span>
-<span class="go">  [9, 51.0],</span>
-<span class="go">  [10, 53.0],</span>
-<span class="go">  [11, 30.0]]}</span>
+<span class="go"> &#39;reduction&#39;: 1.89452,</span>
+<span class="go"> &#39;subtree&#39;: &lt;networkx.classes.digraph.DiGraph object at 0x379bd10&gt;}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -124,7 +158,7 @@ value.</p>
 <dl class="function">
 <dt id="denali.io.read_tree">
 <tt class="descclassname">denali.io.</tt><tt class="descname">read_tree</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#denali.io.read_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads in a .tree file to a networkx tree object.</p>
+<dd><p>Reads in a .tree file-like object to a networkx tree object.</p>
 <p><strong>Note</strong>: This function requires that the <cite>networkx</cite> package is installed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

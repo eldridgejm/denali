@@ -573,9 +573,8 @@ There are three flavors of callbacks:
 - *Information* callbacks provide a string the *Denali*, which is then printed
   in the status box.
 
-- *Void* callbacks function just like information callbacks, but their output is
-  ignored. They can still have side-effects, though, like opening a window
-  containing a plot.
+- *Async* callbacks functions run asynchronously, so that they do not block 
+  *denali*'s interface while they are running.
 
 - *Tree* callbacks provide as output a tree in `.tree` format. This tree
   replaces the one that was previously being visualized.
