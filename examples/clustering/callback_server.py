@@ -6,6 +6,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+import denali
 
 def plot_digit(digit_image):
     """Plots a digit."""
@@ -41,13 +42,14 @@ def main():
             conn = listener.accept()
             continue
 
-        # pick out the members which correspond to singleton clusters
-        members = selection['members'][:,0]
 
         if "subtree" in selection:
-            members = np.concatenate((members, selection['subtree'][:,0]))
+            members = selection['subtree'].nodes()
+        else:
+            members = [x[0] for x in selection['members']]
 
-        singles = np.array(members[members < data.shape[0]], int)
+        # find the nodes which are leaf nodes, not cluster nodes
+        singles = np.array([x for x in members if x < data.shape[0]], int)
 
         component_labels = labels[singles]
 
@@ -60,6 +62,7 @@ def main():
             digit_image = np.reshape(component_mean, (28,28))
 
             Process(target=plot_digit, args=[digit_image]).start()
+            # plot_digit(digit_image)
 
 if __name__ == "__main__":
     main()

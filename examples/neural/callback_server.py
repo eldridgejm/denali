@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import argparse
 from multiprocessing import Process
 from multiprocessing.connection import Listener
 import pickle
@@ -18,13 +19,23 @@ def plot_net(net, targets):
     y_true = np.sin(x)
 
     plt.plot(x,y_sim)
+
     plt.plot(x,y_true, color='black', linestyle='--')
 
     plt.scatter(*targets.T, alpha=0.5)
-
     plt.show()
 
+
 def main():
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("parameters_file", type=str)
+    parser.add_argument("topology_file", type=str)
+    parser.add_argument("targets", type=str)
+
+    args = parser.parse_args()
+
     # load the data
     parameters = np.load(sys.argv[1])
 
@@ -46,12 +57,13 @@ def main():
             continue
 
         # get the id of the child of the component
-        child = int(selection['component'][1,0])
+        child = int(selection['component'][1][0])
 
         selected_param = parameters[child]
         net = nnsample.unpack_network(selected_param, topology)
 
-        Process(target=plot_net, args=[net, targets]).start()
+        # Process(target=plot_net, args=[net, targets]).start()
+        plot_net(net, targets)
 
 if __name__ == "__main__":
     main()
