@@ -11,6 +11,10 @@
     - [`subtree` section](#subtree-section)
     - [`subtree_reduction` section](#subtree-reduction-section)
     - [An example selection file](#an-example-selection-file)
+- [Tips and tricks for writing callbacks](#tips-and-tricks-for-writing-callbacks)
+    - [Debugging callback scripts](#debugging-callback-scripts)
+    - [Non-blocking operation](#non-blocking-operation)
+    - [Working with paths](#working-with-paths)
 
 ---
 
@@ -303,3 +307,51 @@ component representing arc 4 → 5) of the tree file located at
 10	3	66
 10	9	53
 ~~~~
+
+## Tips and tricks for writing callbacks
+
+Included in this section are several "tricks" for writing callbacks.
+
+### Debugging callback scripts
+
+If your callback encounters a problem and must exit, it will most likely print
+the error to STDERR. For example, a python script will print an exception to
+STDERR before exiting.
+
+*Denali* does not print the output from STDERR to the status box by design (it
+only prints the STDOUT, and that only occurs if the callback is an "info
+callback"). Nevertheless, you can still view the error output of your callback
+by launching *denali* in a terminal. Anything printed by your callback to STDERR
+will be passed along and displayed in the console.
+
+This can be awkward, however. If much debugging needs to be done, a better
+alternative is to copy a selection file produced by denali and simply run the
+callback from the shell with the path to the selection file as its first
+argument. 
+
+
+### Non-blocking operation
+
+When *denali* runs a callback, it must wait for the callback to finish. This is
+because the output of the callback is used to print information to the status
+box and/or regenerate the visualization. This isn't always necessary, however.
+If you'd prefer that *denali* didn't wait while your callback was running (that
+is, that it worked in "non-blocking" fashion), then you should write a quick
+script in your favorite language to fork your callback in the background.
+
+Another possibility is to start a *server* script before starting
+*denali*, and specify a *client* script as the callback. Whenever a selection is
+made, the small client contacts the server, telling it to perform some action.
+This is the route taken by the "clustering" example provided alongside *denali*.
+Look at example's python code to see how one might do this.
+
+### Working with paths
+
+This is less of a tip, and more of a warning: any callback run by *denali*
+inherits *denali*'s environment. This means that if you include any relative
+paths in your callback script, you have to be careful about where you start
+*denali*. 
+
+Many of the examples avoid this by making the paths relative to the location of
+the callback script, so that as long as the script and the files it requires are
+moved together, the script functions.

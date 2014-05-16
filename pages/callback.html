@@ -32,6 +32,12 @@
 <li><a href="#subtree-reduction-section"><code>subtree_reduction</code> section</a></li>
 <li><a href="#an-example-selection-file">An example selection file</a></li>
 </ul></li>
+<li><a href="#tips-and-tricks-for-writing-callbacks">Tips and tricks for writing callbacks</a>
+<ul>
+<li><a href="#debugging-callback-scripts">Debugging callback scripts</a></li>
+<li><a href="#non-blocking-operation">Non-blocking operation</a></li>
+<li><a href="#working-with-paths">Working with paths</a></li>
+</ul></li>
 </ul>
 <hr />
 <h2 id="callback-system-overview">Callback system overview</h2>
@@ -185,6 +191,17 @@
 7   11  39
 10  3   66
 10  9   53</code></pre>
+<h2 id="tips-and-tricks-for-writing-callbacks">Tips and tricks for writing callbacks</h2>
+<p>Included in this section are several &quot;tricks&quot; for writing callbacks.</p>
+<h3 id="debugging-callback-scripts">Debugging callback scripts</h3>
+<p>If your callback encounters a problem and must exit, it will most likely print the error to STDERR. For example, a python script will print an exception to STDERR before exiting.</p>
+<p><em>Denali</em> does not print the output from STDERR to the status box by design (it only prints the STDOUT, and that only occurs if the callback is an &quot;info callback&quot;). Nevertheless, you can still view the error output of your callback by launching <em>denali</em> in a terminal. Anything printed by your callback to STDERR will be passed along and displayed in the console.</p>
+<p>This can be awkward, however. If much debugging needs to be done, a better alternative is to copy a selection file produced by denali and simply run the callback from the shell with the path to the selection file as its first argument.</p>
+<h3 id="non-blocking-operation">Non-blocking operation</h3>
+<p>When <em>denali</em> runs a callback, it must wait for the callback to finish. This is because the output of the callback is used to print information to the status box and/or regenerate the visualization. This isn't always necessary, however. If you'd prefer that <em>denali</em> didn't wait while your callback was running (that is, that it worked in &quot;non-blocking&quot; fashion), then you should write a quick script in your favorite language to fork your callback in the background.</p>
+<p>Another possibility is to start a <em>server</em> script before starting <em>denali</em>, and specify a <em>client</em> script as the callback. Whenever a selection is made, the small client contacts the server, telling it to perform some action. This is the route taken by the &quot;clustering&quot; example provided alongside <em>denali</em>. Look at example's python code to see how one might do this.</p>
+<h3 id="working-with-paths">Working with paths</h3>
+<p>This is less of a tip, and more of a warning: any callback run by <em>denali</em> inherits <em>denali</em>'s environment. This means that if you include any relative paths in your callback script, you have to be careful about where you start <em>denali</em>.</p>
 </div>
 </body>
 </html>
