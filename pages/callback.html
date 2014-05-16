@@ -127,7 +127,7 @@
 9   51
 10  53
 11  30</code></pre>
-<h3 id="a-note-on-the-selection-of-deletion-files">A note on the selection of deletion files</h3>
+<h3 id="a-note-on-the-deletion-of-selection-files">A note on the deletion of selection files</h3>
 <p>Selection files are written where your system keeps its temporary files (for example, <code>/tmp</code> on Unix). If an info or tree callback is invoked, it is possible to automatically removed the temporary file when the callback completes, and <em>denali</em> does so. It is not known, however, when an <em>async</em> callback completes, so <em>denali</em> does not automatically delete the selection file when <em>async</em> callbacks are invoked. Instead, it is up to the callback process to delete the file when it no longer needs it.</p>
 <p>If you use the python convenience function <code>read_selection_file</code>, then you do not need to do anything special. This function automatically deletes the selection file after it is read.</p>
 <p>If you are using another language, you should remove the selection file after your callback process reads it. If you neglect to do this, it is unlikely that anything <em>bad</em> will happen -- temporary files are automatically removed by your operating system every so often. Nevertheless, selection files for large datasets can themselves be large, and so it is best to clean them.</p>
