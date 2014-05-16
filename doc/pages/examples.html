@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../resources/main.css" type="text/css" />
+</head>
+<body>
+<div id="content">
+
+<div id="header">
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
+</div>
+
+<hr>
+
+<h2 id="examples">Examples</h2>
+<p><em>Denali</em> comes complete with a variety of examples. All of these examples are located in the <code>/examples</code> folder, directly under the project root. Most of these examples are designed to show how the various features of <em>denali</em> can be used for various purposes. In particular, the callback system is demonstrated. The examples use the included python module, and may require that several python packages be installed.</p>
+<hr />
+<ul>
+<li><a href="#tutorial"><code>./tutorial</code></a></li>
+<li><a href="#clustering"><code>./clustering</code></a></li>
+<li><a href="#comments"><code>./comments</code></a></li>
+<li><a href="#neural"><code>./neural</code></a></li>
+</ul>
+<hr />
+<h3 id="tutorial"><code>./tutorial</code></h3>
+<p><strong>Description</strong>: This is the example referenced throughout the <a href="./tutorial.html">tutorial</a>. It demonstrates color maps, weight maps, and a simple callback. The data being visualized is a toy tree; there isn't much to interpret.</p>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>tree.tree</code>: A contour tree used throughout the tutorial.</li>
+<li><code>tree.colors</code>: A color map for the above tree.</li>
+<li><code>tree.weights</code>: A weight map for the above tree.</li>
+<li><code>callback.py</code>: A simple info callback which prints the nodes in the selected component to the status box.</li>
+</ul>
+<p>The following files are referred to in the section on computing a contour tree from a point cloud:</p>
+<ul>
+<li><code>data.txt</code>: A data file containing 10000 samples of a probability density in four dimensions.</li>
+<li><code>makenngraph.py</code>: Builds a nearest neighbor graph for the data in the <code>data.txt</code> file and prints the vertices and edges to files. Requires the <code>numpy</code> package.</li>
+<li><code>vertices.txt</code>: A vertex definition file describing points in a density function consisting of three Gaussians.</li>
+<li><code>edges.txt</code>: The edges made between vertices by using the <code>makenngraph.py</code> script.</li>
+<li><code>gendata.py</code>: Generates more data, like that in <code>data.txt</code>.</li>
+</ul>
+<p><strong>Usage</strong>: See the <a href="./tutorial">tutorial</a></p>
+<h3 id="clustering"><code>./clustering</code></h3>
+<p><strong>Description</strong>: 647 images of handwritten digits (consisting of zeros, ones, and sevens) are hierarchically clustered using single-linkage clustering. The resulting tree is visualized. This demo shows the rich callback system by displaying an average image of the digits in the selected component in a new window.</p>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>mnist_017.npy</code>: A <em>numpy</em> archive containing the digit images.</li>
+<li><code>mnist_017_labels.npy</code>: A <em>numpy</em> archive containing the labels of the images in <code>mnist_017.npy</code>. The label for an image is either 0, 1, or 7.</li>
+<li><code>mnist_017.tree</code>: The tree resulting from running single-linkage clustering on the data.</li>
+<li><code>callback.py</code>: The callback which shows the digits in the component when the selection is made. Requires <em>numpy</em> and <em>matplotlib</em>.</li>
+</ul>
+<p><strong>Usage</strong>: Load the <code>mnist_017.tree</code> file in <em>denali</em>. The three classes of digits are represented by &quot;plateaus&quot; in the landscape. To explore the landscape more thoroughly, we'll use the callback. Select <strong>File → Configure Callbacks</strong> to open the callbacks dialog. We'll use an Async callback. Browse for the callback file, and select <strong>Run on selection</strong> and <strong>Supply subtree</strong>. Click <strong>Ok</strong>, and right click to select a component of the landscape. An image will appear, showing the average of all of the digits in the subtree induced by your selection.</p>
+<h3 id="comments"><code>./comments</code></h3>
+<p><strong>Description</strong>: An comment thread from a website which features hierarchical discussions was scraped, and 954 comments were downloaded. Each comment has an unbounded integer score rating its popularity. This naturally yields a scalar tree, but for the ease of visualization, we make a slight adjustment to the scalar value of each node. The scalar value associated with a comment is taken to be its score, plus the score of its parent comment. This causes the landscape to grow upward.</p>
+<p>Highlighted by this example are the color map and callback features. The callback prints the selected comment to the status box.</p>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>comments.pickle</code>: A <code>networkx</code> tree representing the discussion serialized using the Python 2 <code>pickle</code> module.</li>
+<li><code>comments.tree</code>: The tree in <em>denali</em> format.</li>
+<li><code>vote_ratio.colors</code>: A color map describing the ratio of upvotes to downvotes for every comment.</li>
+<li><code>callback.py</code>: The python callback which prints the comments to the status box.</li>
+</ul>
+<p><strong>Usage</strong>: Open the tree in <em>denali</em> and set the root node to be &quot;0&quot;. This node is artificially inserted into the tree to be a parent of all of the top-level comments. Next, set the color map by selecting <strong>File → Configure Color Map</strong>. Browse for the color map file. Set the &quot;Contributors&quot; to <strong>Child</strong> and the reduction to <strong>Maximum</strong>. The particular reduction used doesn't matter in this case, as we're only using the child node in the reduction set.</p>
+<p>To see the content of individual comments, we'll use the callback function. As before, load the callback, but as an <em>Info</em> callback rather than an <em>Async</em> callback. Right click to select a component. The comment's score and content will be printed to the status box.</p>
+<h3 id="neural"><code>./neural</code></h3>
+<p><strong>Description</strong>: A neural network model's parameter space. Several neural nets are trained on a noisy sampling of the sine function, and the parameter space is sampled around some of the local minima found. This example demonstrates the callback system. Whenever the user selects a component of the landscape, the corresponding model is evaluated and plotted in comparison to the ideal sine function and the training data. The callback requires the <code>neurolab</code> python package.</p>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>all_params.npy</code>: A numpy archive containing samples of the neural network's parameter space.</li>
+<li><code>vertices</code>: A file containing each of the parameter samples in the above file. A vertex's scalar value is the loss of the model when evaluated with the corresponding parameters on the training data.</li>
+<li><code>edges</code>: A set of nearest neighbor edges connecting the vertices into a graph.</li>
+<li><code>tree.tree</code>: A contour tree generated from <code>vertices</code> and <code>edges</code> by using <code>ctree</code>.</li>
+<li><code>targets.npy</code>: A numpy archive containing the training examples.</li>
+<li><code>topology.pickle</code>: The topology of the neural network, serialize into a python pickle file.</li>
+<li><code>nnsample.py</code>: Utility functions used by the callback to read and write serialized neural networks.</li>
+<li><code>callback.py</code>: The python callback script. Requires <code>neurolab</code> to function.</li>
+</ul>
+<p><strong>Usage</strong>: First, load the <code>tree.tree</code> file into <em>denali</em>. By default, <em>denali</em> chooses the node with the minimum scalar value to be the root. Since this tree visualizes the cost function, it is more natural to set the root to be the node with the maximum scalar value. Click <strong>Choose Root</strong>, then select the <strong>Maximum node</strong> radio button, then hit <strong>Ok</strong>.</p>
+<p>Next, we'll use the callback to gain an understanding of the cost landscape. Select <strong>File → Configure Callbacks</strong>. We'll run this callback asynchronously. Click <strong>Browse</strong> in the <em>Async Callback</em> section, and select the <code>callback.py</code> file. Next, select <strong>Run on selection</strong>, then hit <strong>Ok</strong>.</p>
+<p>Right clicking on a component will extract the parameter associated with the child node of the arc, evaluate the network using that parameter vector, and plot the model on the interval <img style="vertical-align:middle" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=%5B0%2C%202%20%5Cpi%5D" alt="[0, 2 \pi]" title="[0, 2 \pi]" />. Also shown in the plot are the ideal sine function (dashed line), and the noisy training samples (blue dots). By exploring, we see that the global minimum tends to overfit the data, while two plateaus corresponding to local minima then to underfit the data.</p>
+</div>
+</body>
+</html>
