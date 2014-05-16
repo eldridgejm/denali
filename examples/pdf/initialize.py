@@ -5,7 +5,6 @@ import subprocess
 
 import numpy as np
 
-sys.path.append("../../../code/python/")
 import denali
 
 print "Sampling from probability distribution..."
