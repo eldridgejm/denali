@@ -3,6 +3,7 @@ Welcome to the documentation for denali, ctree, and related tools.
 - [Introduction](pages/intro.html)
 - [Installation](pages/install.html)
 - [Tutorial](pages/tutorial.html)
+- [Examples](pages/examples.html)
 - [Cookbook](pages/cookbook.html)
 
 ----

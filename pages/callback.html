@@ -27,10 +27,9 @@
 <li><a href="#file-section"><code>file</code> section</a></li>
 <li><a href="#component-section"><code>component</code> section</a></li>
 <li><a href="#members-section"><code>members</code> section</a></li>
-<li><a href="#reduction-section"><code>reduction</code> section</a></li>
 <li><a href="#subtree-section"><code>subtree</code> section</a></li>
-<li><a href="#subtree-reduction-section"><code>subtree_reduction</code> section</a></li>
 <li><a href="#an-example-selection-file">An example selection file</a></li>
+<li><a href="#a-note-on-the-deletion-of-selection-files">A note on the deletion of selection files</a></li>
 </ul></li>
 <li><a href="#tips-and-tricks-for-writing-callbacks">Tips and tricks for writing callbacks</a>
 <ul>
@@ -48,7 +47,9 @@
 <li>Callbacks can print to the status box, and even change the landscape that is being visualized.</li>
 </ul>
 <p>See the <a href="tutorial.html#printing-special-information-about-a-selection">Printing special information about a selection</a> section of the tutorial for a step-by-step introduction to creating a callback script.</p>
-<p>The callback system works as follows:</p>
+<p>There are three types of callbacks. <em>Info</em> callbacks print information to the status box. <em>Tree</em> callbacks supply <em>denali</em> with a new tree to visualize. And <em>async</em> callbacks are run asynchronously, providing no information to <em>denali</em>.</p>
+<p>The <em>info</em> and <em>tree</em> callbacks are necessarily synchronous, meaning, they block the <em>denali</em> process. When these callbacks are invoked, the <em>denali</em> interface will become unresponsive until the callbacks finish executing.</p>
+<p>In the case of <em>info</em> and <em>tree</em> callbacks, the callback system works as follows:</p>
 <ol style="list-style-type: decimal">
 <li><p>When the callback is invoked, either by the user selecting a component or manually invoking the callback by pressing the callback button, a text file containing information about the selection is written to disk. This file will be referred to as the &quot;selection file&quot;.</p></li>
 <li><p>The callback command is run as a blocking subprocess (<em>denali</em>'s interface will be frozen until the script returns). The process is given as its first argument the path to the selection file.</p></li>
@@ -56,21 +57,22 @@
 </ol>
 <ul>
 <li><em>Info</em>: the output is printed to the status box</li>
-<li><em>Tree</em>: the output is interpreted as if it were the content of a <code>.tree</code> file, and the visualization is updated to represent this tree</li>
-<li><p><em>Void</em>: the output is ignored</p>
+<li><p><em>Tree</em>: the output is interpreted as if it were the content of a <code>.tree</code> file, and the visualization is updated to represent this tree</p>
 <p>Any other output of the callback that isn't on STDOUT, such as that printed to STDERR, is not handled by <em>denali</em>.</p></li>
 </ul>
-<p>Because the system communicates via files and STDOUT, callbacks may be written in virtually any language.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Once the callback has completed, the selection file is automatically deleted by <em>denali</em>.</li>
+</ol>
+<p>In the case of an <em>async</em> callback, the system's first step is exactly the same, steps 2-4 are not. After the selection file is written and the callback is invoked, <em>denali</em> detaches the callback process and has no further interaction with it. Also, as noted later in (#a-note-on-the-deletion-of-selection-files), the selection file is <strong>not</strong> deleted when an <em>async</em> callback is run. It is the responsibility of the callback process to delete the selection file. If the python convenience functions are used, this deletion is automatically done.</p>
 <h2 id="the-selection-file">The selection file</h2>
 <p><em>Denali</em> prints information about the selection to a temporary file. Information contained in the file includes the selected component, the members contained within the component, the path to the file being visualized, and (optionally) a list of all of the nodes and members present in the subtree induced by the selection.</p>
-<p>Note that if you are writing a callback in Python, you <em>do not</em> need to know how to parse the selection file: utilities are included in the <em>denali.py</em> module which read selection files. This section is useful only to users who would like to write their own callbacks in another language.</p>
+<p>Note that if you are writing a callback in Python, you <em>do not</em> need to know how to parse the selection file: utilities are included in the <em>denali.py</em> module which read selection files, namely, the <code>read_selection_file</code> function. This section is useful only to users who would like to write their own callbacks in another language.</p>
 <p>The selection file is broken into sections. Each section begins with a line containing <code>#</code> followed by the section name, i.e:</p>
 <pre><code># &lt;section 1 name&gt;
 ...
 # &lt;section 2 name&gt;
 ...</code></pre>
-<p>The <code>file</code>, <code>component</code>, and <code>members</code> sections are always present. The <code>reduction</code> section is present only when a color map has been provided to denali. The <code>subtree</code> section is present only when the &quot;Provide subtree&quot; option is set in the callback configuration dialog. And the <code>subtree_reduction</code> section is present only when both the &quot;Provide subtree&quot; option is set and a color map was provided.</p>
-<p>We will now described the format and purpose of each of these sections.</p>
+<p>Possible section names are: <code>file</code>, <code>component</code>, <code>members</code> and <code>subtree</code>. The format of each of these sections is described in detail below:</p>
 <h3 id="file-section"><code>file</code> section</h3>
 <p><strong>Description</strong>: Contains the full, absolute file path of the tree currently being visualized. This path is <em>not</em> changed by running a tree callback. In other words, if we open <code>/path/to/foo.tree</code> and run the tree callback, subsequent selections will still have <code>/path/to/foo.tree</code> in the file section even though the tree being visualized is not the same as the tree described by this file.</p>
 <p><strong>Format</strong>: A single line containing the full file path to the tree file.</p>
@@ -101,57 +103,17 @@
 10  77.2
 42  -4.3
 11  99</code></pre>
-<h3 id="reduction-section"><code>reduction</code> section</h3>
-<p><em>Only present when a color map was provided to denali.</em></p>
-<p><strong>Description</strong>: A color map is provided to denali by specifying a second scalar value for each of the nodes and members in the tree. As each edge of the tree has multiple nodes and members associated with it, it is necessary to <em>reduce</em> a set of scalar values to a single number, which is then mapped to a color. Denali provides several reduction functions, such as the mean and the covariance, for this task. This section of the file gives the result of the reduction for the selected arc.</p>
-<p><strong>Format</strong>: A single line containing the result of the reduction as a decimal number.</p>
-<p><strong>Example</strong>:</p>
-<pre><code># reduction
-42.0</code></pre>
 <h3 id="subtree-section"><code>subtree</code> section</h3>
-<p><em>Only present when the &quot;Supply subtree&quot; option is set in the &quot;Configure Callbacks&quot; dialog.</em></p>
-<p><strong>Description:</strong> The subtree induced by the user's selection.</p>
-<p><strong>Format</strong>: The tree is represented using denali <code>.tree</code> format (see the <a href="./formats.html#tree">format specifications</a>).</p>
+<p><strong>Description</strong>: A list of all of the nodes and members in the subtree induced by the selection. This is only printed to the selection file if the <strong>Supply subtree</strong> option is checked for the callback in the <strong>File → Configure Callbacks</strong> dialog. Otherwise, the section header is not present. By convention, the selected component is <em>not</em> included in the subtree.</p>
+<p><strong>Format</strong>: Same as the <code>members</code> section.</p>
 <p><strong>Example</strong>:</p>
-<p>This example shows a subtree with 9 nodes.</p>
 <pre><code># subtree
-9
-1   62
-3   66
-4   16
-5   32
-7   39
-8   58
-9   51
-10  53
-11  30
-4   5   0   25
-5   1   2   45
-5   7
-7   8
-7   10
-7   11
-10  3   6   64
-10  9</code></pre>
-<h3 id="subtree_reduction-section"><code>subtree_reduction</code> section</h3>
-<p><em>Only present when both the &quot;Supply subtree&quot; option is set in the &quot;Configure Callbacks&quot; dialog, and a color map was provided to denali.</em></p>
-<p><strong>Description</strong>: The result of applying the reduction function to each of the edges in the subtree.</p>
-<p><strong>Format</strong>: <img style="vertical-align:middle" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=n" alt="n" title="n" /> lines, where <img style="vertical-align:middle" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=n" alt="n" title="n" /> is the number of edges in the subtree, where each line is of the form:</p>
-<pre><code>&lt;parent_id&gt; &lt;child_id&gt;  &lt;reduction_value&gt;</code></pre>
-<p><code>&lt;parent_id&gt;</code> is the id of the parent node of the arc, and <code>&lt;child_id&gt;</code> is the id of the child. The columns are tab-separated, as usual.</p>
-<p><strong>Example:</strong></p>
-<p>This example shows the reduction as applied to the edges of the subtree in the previous section's example.</p>
-<pre><code># subtree_reduction
-4   5   32
-5   1   62
-5   7   39
-7   8   58
-7   10  53
-7   11  39
-10  3   66
-10  9   53</code></pre>
+1   42.3
+10  77.2
+42  -4.3
+11  99</code></pre>
 <h3 id="an-example-selection-file">An example selection file</h3>
-<p>The following selection file was generated by selecting the base component (the component representing arc 4 → 5) of the tree file located at <code>examples/tutorial/tree.tree</code>. Additionally, the color map file located at <code>examples/tutorial/tree.colors</code> was used. Note that the file is <strong>tab-delimited</strong>.</p>
+<p>The following selection file was generated by selecting the base component (the component representing arc 4 → 5) of the tree file located at <code>examples/tutorial/tree.tree</code>. Note that the file is <strong>tab-delimited</strong>.</p>
 <pre><code># file
 /path/to/denali/examples/tutorial/tree.tree
 # component
@@ -161,36 +123,20 @@
 0   25
 4   16
 5   32
-# reduction
-32
 # subtree
-9
 1   62
+2   45
 3   66
-4   16
-5   32
+6   64
 7   39
 8   58
 9   51
 10  53
-11  30
-4   5   0   25
-5   1   2   45
-5   7
-7   8
-7   10
-7   11
-10  3   6   64
-10  9
-# subtree_reduction
-4   5   32
-5   1   62
-5   7   39
-7   8   58
-7   10  53
-7   11  39
-10  3   66
-10  9   53</code></pre>
+11  30</code></pre>
+<h3 id="a-note-on-the-deletion-of-selection-files">A note on the deletion of selection files</h3>
+<p>Selection files are written where your system keeps its temporary files (for example, <code>/tmp</code> on Unix). If an info or tree callback is invoked, it is possible to automatically removed the temporary file when the callback completes, and <em>denali</em> does so. It is not known, however, when an <em>async</em> callback completes, so <em>denali</em> does not automatically delete the selection file when <em>async</em> callbacks are invoked. Instead, it is up to the callback process to delete the file when it no longer needs it.</p>
+<p>If you use the python convenience function <code>read_selection_file</code>, then you do not need to do anything special. This function automatically deletes the selection file after it is read.</p>
+<p>If you are using another language, you should remove the selection file after your callback process reads it. If you neglect to do this, it is unlikely that anything <em>bad</em> will happen -- temporary files are automatically removed by your operating system every so often. Nevertheless, selection files for large datasets can themselves be large, and so it is best to clean them.</p>
 <h2 id="tips-and-tricks-for-writing-callbacks">Tips and tricks for writing callbacks</h2>
 <p>Included in this section are several &quot;tricks&quot; for writing callbacks.</p>
 <h3 id="debugging-callback-scripts">Debugging callback scripts</h3>
@@ -202,6 +148,7 @@
 <p>Another possibility is to start a <em>server</em> script before starting <em>denali</em>, and specify a <em>client</em> script as the callback. Whenever a selection is made, the small client contacts the server, telling it to perform some action. This is the route taken by the &quot;clustering&quot; example provided alongside <em>denali</em>. Look at example's python code to see how one might do this.</p>
 <h3 id="working-with-paths">Working with paths</h3>
 <p>This is less of a tip, and more of a warning: any callback run by <em>denali</em> inherits <em>denali</em>'s environment. This means that if you include any relative paths in your callback script, you have to be careful about where you start <em>denali</em>.</p>
+<p>Many of the examples avoid this by making the paths relative to the location of the callback script, so that as long as the script and the files it requires are moved together, the script functions.</p>
 </div>
 </body>
 </html>

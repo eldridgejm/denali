@@ -11,16 +11,17 @@ install `pydenali`, neverthelless.
 Requirements
 ------------
 
-`pydenali` requires that you have the `networkx` package.  Additionally, if
-you'd like to create knn graphs for input to `ctree`, you'll need `numpy`, and
+`pydenali` does not depend on other packages for much of its functionality, but 
+several features have additional requirements. If you'd like to use `pydenali`
+to read and write tree files, you'll need the `networkx` package. If you'd like
+to create knn graphs for input to `ctree`, you'll need `networkx`, `numpy`, and
 `scikit-learn`.
 
 Using `pip`
 -----------
 
 `pydenali` is compatible with pip. To install to a system-wide location (or to
-a virtualenv), simply run `pip` on the `pydenali` directory (assuming that you
-are in the root of the project directory):
+a virtualenv), simply run `pip` on the `pydenali` directory:
 
     pip install ./pydenali
 

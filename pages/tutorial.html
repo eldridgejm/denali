@@ -293,7 +293,7 @@ Child total weight: 10</code></pre>
 <p>There are three flavors of callbacks:</p>
 <ul>
 <li><p><em>Information</em> callbacks provide a string the <em>Denali</em>, which is then printed in the status box.</p></li>
-<li><p><em>Void</em> callbacks function just like information callbacks, but their output is ignored. They can still have side-effects, though, like opening a window containing a plot.</p></li>
+<li><p><em>Async</em> callbacks functions run asynchronously, so that they do not block <em>denali</em>'s interface while they are running.</p></li>
 <li><p><em>Tree</em> callbacks provide as output a tree in <code>.tree</code> format. This tree replaces the one that was previously being visualized.</p></li>
 </ul>
 <p>A full treatment of the callback system is outside of the scope of this tutorial — for that, see the <a href="callback.html">callback system section</a>. For now, we'll cover the creation of a simple callback in Python. Whenever a component is selected, the callback will print some information about the selection to the status box. We'll therefore be implementing an <em>info</em> callback.</p>
@@ -304,13 +304,10 @@ Child total weight: 10</code></pre>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> sys
 <span class="ch">import</span> denali
 
-<span class="kw">with</span> <span class="dt">open</span>(sys.argv[<span class="dv">1</span>]) <span class="ch">as</span> f:
-    selection = denali.io.read_selection(f)
-    u,v = selection[<span class="st">&#39;component&#39;</span>][:,<span class="dv">0</span>]
-    <span class="kw">print</span> <span class="st">&quot;The selection component was {} --&gt; {}.&quot;</span>.<span class="dt">format</span>(
-            <span class="dt">int</span>(u), <span class="dt">int</span>(v))</code></pre>
+selection = denali.io.read_selection_file(sys.argv[<span class="dv">1</span>])
+u,v = [x[<span class="dv">0</span>] <span class="kw">for</span> x in selection[<span class="st">&#39;component&#39;</span>]]</code></pre>
 <p>The callback gets the path of the selection file from its first argument. It then reads the selection and prints a simple message to the screen. The standard output of the callback is captured, however, and redirected to the status box in the <em>denali</em>. Therefore, printing information to <em>denali</em>'s status box is as simple as printing to the screen, no matter what language you choose to use.</p>
-<p>Now, let's try testing this callback. First thing is first: you'll need the <em>denali</em> python module in your path. There are several ways of doing this. You can pick your favorite, or simply add the line:</p>
+<p>Now, let's try testing this callback. First you'll need the <em>denali</em> python module in your path. There are several ways of doing this. You can pick your favorite, or simply add the line:</p>
 <pre class="sourceCode python"><code class="sourceCode python">sys.path.append(<span class="st">&quot;/path/to/denali/python&quot;</span>)</code></pre>
 <p>under <code>import sys</code> in the above script.</p>
 <p>Now we'll notify <em>denali</em> to use this script as a callback. Click on <strong>File → Configure Callbacks</strong>. You should see the following:</p>

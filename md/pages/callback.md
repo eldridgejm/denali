@@ -7,10 +7,10 @@
     - [`file` section](#file-section)
     - [`component` section](#component-section)
     - [`members` section](#members-section)
-    - [`reduction` section](#reduction-section)
     - [`subtree` section](#subtree-section)
-    - [`subtree_reduction` section](#subtree-reduction-section)
     - [An example selection file](#an-example-selection-file)
+    - [A note on the deletion of selection
+      files](#a-note-on-the-deletion-of-selection-files)
 - [Tips and tricks for writing callbacks](#tips-and-tricks-for-writing-callbacks)
     - [Debugging callback scripts](#debugging-callback-scripts)
     - [Non-blocking operation](#non-blocking-operation)
@@ -35,7 +35,15 @@ selection](tutorial.html#printing-special-information-about-a-selection)
 section of the tutorial for a step-by-step introduction to creating a callback
 script. 
 
-The callback system works as follows:
+There are three types of callbacks. *Info* callbacks print information to the
+status box. *Tree* callbacks supply *denali* with a new tree to visualize. And
+*async* callbacks are run asynchronously, providing no information to *denali*.
+
+The *info* and *tree* callbacks are necessarily synchronous, meaning, they block
+the *denali* process. When these callbacks are invoked, the *denali* interface
+will become unresponsive until the callbacks finish executing. 
+
+In the case of *info* and *tree* callbacks, the callback system works as follows:
 
 1. When the callback is invoked, either by the user selecting a component or
    manually invoking the callback by pressing the callback button, a text file
@@ -52,13 +60,21 @@ The callback system works as follows:
    - *Info*: the output is printed to the status box
    - *Tree*: the output is interpreted as if it were the content of a `.tree`
    file, and the visualization is updated to represent this tree
-   - *Void*: the output is ignored
 
     Any other output of the callback that isn't on STDOUT, such as that printed
     to STDERR, is not handled by *denali*.
 
-Because the system communicates via files and STDOUT, callbacks may be written
-in virtually any language.
+4. Once the callback has completed, the selection file is automatically deleted
+   by *denali*.
+
+In the case of an *async* callback, the system's first step is exactly the same,
+steps 2-4 are not. After the selection file is written and the callback is
+invoked, *denali* detaches the callback process and has no further interaction
+with it. Also, as noted later in (#a-note-on-the-deletion-of-selection-files),
+the selection file is **not** deleted when an *async* callback is run. It is the
+responsibility of the callback process to delete the selection file. If the
+python convenience functions are used, this deletion is automatically done.
+
 
 ## The selection file
 *Denali* prints information about the selection to a temporary file. Information
@@ -69,8 +85,9 @@ selection.
 
 Note that if you are writing a callback in Python, you *do not* need to know how
 to parse the selection file: utilities are included in the *denali.py* module
-which read selection files. This section is useful only to users who would like
-to write their own callbacks in another language.
+which read selection files, namely, the `read_selection_file` function. This
+section is useful only to users who would like to write their own callbacks in
+another language.
 
 The selection file is broken into sections. Each section begins with a line
 containing `# ` followed by the section name, i.e:
@@ -82,14 +99,9 @@ containing `# ` followed by the section name, i.e:
 ...
 ~~~~
 
-The `file`, `component`, and `members` sections are always present. The
-`reduction` section is present only when a color map has been provided to
-denali. The `subtree` section is present only when the "Provide subtree" option
-is set in the callback configuration dialog. And the `subtree_reduction` section
-is present only when both the "Provide subtree" option is set and a color map
-was provided.
-
-We will now described the format and purpose of each of these sections.
+Possible section names are:
+`file`, `component`, `members` and `subtree`. The format of each of these
+sections is described in detail below:
 
 ### `file` section 
 
@@ -163,108 +175,32 @@ is not important:
 11  99
 ~~~~
 
-
-### `reduction` section
-
-*Only present when a color map was provided to denali.*
-
-**Description**: A color map is provided to denali by specifying a second scalar
-value for each of the nodes and members in the tree. As each edge of the tree
-has multiple nodes and members associated with it, it is necessary to *reduce* a
-set of scalar values to a single number, which is then mapped to a color. Denali
-provides several reduction functions, such as the mean and the covariance, for
-this task. This section of the file gives the result of the reduction for the
-selected arc.
-
-**Format**: A single line containing the result of the reduction as a decimal
-number.
-
-**Example**:
-
-~~~~
-# reduction
-42.0
-~~~~
-
 ### `subtree` section
 
-*Only present when the "Supply subtree" option is set in the "Configure
-Callbacks" dialog.*
+**Description**: A list of all of the nodes and members in the subtree induced
+by the selection. This is only printed to the selection file if the **Supply
+subtree** option is checked for the callback in the **File → Configure
+Callbacks** dialog. Otherwise, the section header is not present. By convention,
+the selected component is *not* included in the subtree.
 
-**Description:** The subtree induced by the user's selection.
-
-**Format**: The tree is represented using denali `.tree` format (see the [format
-specifications](./formats.html#tree)).
+**Format**: Same as the `members` section.
 
 **Example**:
-
-This example shows a subtree with 9 nodes.
 
 ~~~~
 # subtree
-9
-1	62
-3	66
-4	16
-5	32
-7	39
-8	58
-9	51
-10	53
-11	30
-4	5	0	25
-5	1	2	45
-5	7
-7	8
-7	10
-7	11
-10	3	6	64
-10	9
+1   42.3
+10  77.2
+42  -4.3
+11  99
 ~~~~
 
-
-### `subtree_reduction` section
-
-*Only present when both the "Supply subtree" option is set in the "Configure
-Callbacks" dialog, and a color map was provided to denali.*
-
-**Description**: The result of applying the reduction function to each of the
-edges in the subtree.
-
-**Format**: $n$ lines, where $n$ is the number of edges in the subtree, where
-each line is of the form:
-
-~~~~
-<parent_id> <child_id>  <reduction_value>
-~~~~
-
-`<parent_id>` is the id of the parent node of the arc, and `<child_id>` is the
-id of the child. The columns are tab-separated, as usual.
-
-**Example:**
-
-This example shows the reduction as applied to the edges of the subtree in the
-previous section's example.
-
-~~~~
-# subtree_reduction
-4	5	32
-5	1	62
-5	7	39
-7	8	58
-7	10	53
-7	11	39
-10	3	66
-10	9	53
-~~~~
 
 ### An example selection file 
 
 The following selection file was generated by selecting the base component (the
 component representing arc 4 → 5) of the tree file located at
-`examples/tutorial/tree.tree`. Additionally, the color map file located at
-`examples/tutorial/tree.colors` was used. Note that the file is
-**tab-delimited**.
+`examples/tutorial/tree.tree`. Note that the file is **tab-delimited**.
 
 ~~~~
 # file
@@ -276,37 +212,38 @@ component representing arc 4 → 5) of the tree file located at
 0	25
 4	16
 5	32
-# reduction
-32
 # subtree
-9
 1	62
+2	45
 3	66
-4	16
-5	32
+6	64
 7	39
 8	58
 9	51
 10	53
 11	30
-4	5	0	25
-5	1	2	45
-5	7
-7	8
-7	10
-7	11
-10	3	6	64
-10	9
-# subtree_reduction
-4	5	32
-5	1	62
-5	7	39
-7	8	58
-7	10	53
-7	11	39
-10	3	66
-10	9	53
 ~~~~
+
+### A note on the deletion of selection files
+
+Selection files are written where your system keeps its temporary files (for
+example, `/tmp` on Unix). If an info or tree callback is invoked, it is possible
+to automatically removed the temporary file when the callback completes, and
+*denali* does so. It is not known, however, when an *async* callback completes,
+so *denali* does not automatically delete the selection file when *async*
+callbacks are invoked.  Instead, it is up to the callback process to delete the
+file when it no longer needs it.
+
+If you use the python convenience function `read_selection_file`, then you do
+not need to do anything special. This function automatically deletes the
+selection file after it is read.
+
+If you are using another language, you should remove the selection file after
+your callback process reads it. If you neglect to do this, it is unlikely that
+anything *bad* will happen -- temporary files are automatically removed by your
+operating system every so often. Nevertheless, selection files for large
+datasets can themselves be large, and so it is best to clean them.
+
 
 ## Tips and tricks for writing callbacks
 
@@ -355,3 +292,4 @@ paths in your callback script, you have to be careful about where you start
 Many of the examples avoid this by making the paths relative to the location of
 the callback script, so that as long as the script and the files it requires are
 moved together, the script functions.
+

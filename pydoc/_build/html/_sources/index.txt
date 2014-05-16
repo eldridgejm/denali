@@ -16,7 +16,6 @@ Contents:
    :maxdepth: 2
 
    install
-   treeobject
    io
    contour
 

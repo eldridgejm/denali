@@ -573,9 +573,8 @@ There are three flavors of callbacks:
 - *Information* callbacks provide a string the *Denali*, which is then printed
   in the status box.
 
-- *Void* callbacks function just like information callbacks, but their output is
-  ignored. They can still have side-effects, though, like opening a window
-  containing a plot.
+- *Async* callbacks functions run asynchronously, so that they do not block 
+  *denali*'s interface while they are running.
 
 - *Tree* callbacks provide as output a tree in `.tree` format. This tree
   replaces the one that was previously being visualized.
@@ -610,11 +609,8 @@ at the `examples/tutorial/callback.py` file, you'll see:
 import sys
 import denali
 
-with open(sys.argv[1]) as f:
-    selection = denali.io.read_selection(f)
-    u,v = selection['component'][:,0]
-    print "The selection component was {} --> {}.".format(
-            int(u), int(v))
+selection = denali.io.read_selection_file(sys.argv[1])
+u,v = [x[0] for x in selection['component']]
 ~~~~
 
 The callback gets the path of the selection file from its first argument. It
@@ -623,9 +619,9 @@ output of the callback is captured, however, and redirected to the status box in
 the *denali*. Therefore, printing information to *denali*'s status box is as simple as
 printing to the screen, no matter what language you choose to use.
 
-Now, let's try testing this callback. First thing is first: you'll need the
-*denali* python module in your path. There are several ways of doing this. You
-can pick your favorite, or simply add the line:
+Now, let's try testing this callback. First you'll need the *denali* python
+module in your path. There are several ways of doing this. You can pick your
+favorite, or simply add the line:
 
 ~~~~{.python}
 sys.path.append("/path/to/denali/python")

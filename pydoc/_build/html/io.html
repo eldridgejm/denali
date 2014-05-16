@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="pydenali 1.0 documentation" href="index.html" />
     <link rel="next" title="Contour tree utilities" href="contour.html" />
-    <link rel="prev" title="Working with denali tree objects" href="treeobject.html" /> 
+    <link rel="prev" title="Installation" href="install.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="contour.html" title="Contour tree utilities"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="treeobject.html" title="Working with denali tree objects"
+          <a href="install.html" title="Installation"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -68,9 +68,40 @@ in <em>denali</em> formats.</p>
 <div class="section" id="reading-selection-files">
 <h2><a class="toc-backref" href="#id2">Reading selection files</a><a class="headerlink" href="#reading-selection-files" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="denali.io.read_selection_file">
+<tt class="descclassname">denali.io.</tt><tt class="descname">read_selection_file</tt><big>(</big><em>path</em>, <em>delete_after=True</em><big>)</big><a class="headerlink" href="#denali.io.read_selection_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the selection information from a file path.</p>
+<p>This is the preferred way to open selection files, as it deletes the 
+selection file after reading it, by default. This is useful in the case
+of asynchronous callbacks, as denali does not automatically delete the
+selection file. In the case of info and tree callbacks, denali does
+delete the file. This function can be used for any type of callback.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> &#8211; The path to the selection file.</li>
+<li><strong>delete_after</strong> &#8211; Whether to delete the file after reading it.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dictionary containing information about the selection. The 
+format of this dictionary is the same as described in the documentation
+of the <cite>read_selection</cite> function.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="denali.io.read_selection">
 <tt class="descclassname">denali.io.</tt><tt class="descname">read_selection</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#denali.io.read_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the selection information from a file-like object.</p>
+<p>This function should only be used if the selection information is not
+in a file, but rather in a stream. This is rare. For most cases, the
+<cite>read_selection_file</cite> function is to be preferred.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -105,7 +136,7 @@ configuration dialog, then the additional entry is present:</p>
 <dl class="docutils">
 <dt><strong>subtree</strong></dt>
 <dd>A networkx tree object representing the selected subtree. The structure
-of the subtree is as described in <a class="reference internal" href="treeobject.html#working-with-trees"><em>Working with denali tree objects</em></a>.</dd>
+of the subtree is as described in <em class="xref std std-ref">working-with-trees</em>.</dd>
 </dl>
 <p><em>component</em> and <em>members</em> are nested lists with two columns. Each
 row represents a single node or member. The first column contains the ids
@@ -127,7 +158,7 @@ of the node or member, and the second contains the scalar value.</p>
 <dl class="function">
 <dt id="denali.io.read_tree">
 <tt class="descclassname">denali.io.</tt><tt class="descname">read_tree</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#denali.io.read_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads in a .tree file to a networkx tree object.</p>
+<dd><p>Reads in a .tree file-like object to a networkx tree object.</p>
 <p><strong>Note</strong>: This function requires that the <cite>networkx</cite> package is installed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -278,8 +309,8 @@ with 2 columns.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="treeobject.html"
-                        title="previous chapter">Working with denali tree objects</a></p>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="contour.html"
                         title="next chapter">Contour tree utilities</a></p>
@@ -315,7 +346,7 @@ with 2 columns.</p>
           <a href="contour.html" title="Contour tree utilities"
              >next</a> |</li>
         <li class="right" >
-          <a href="treeobject.html" title="Working with denali tree objects"
+          <a href="install.html" title="Installation"
              >previous</a> |</li>
         <li><a href="index.html">pydenali 1.0 documentation</a> &raquo;</li> 
       </ul>
