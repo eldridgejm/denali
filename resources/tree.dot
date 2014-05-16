@@ -1,0 +1,19 @@
+strict digraph  {
+    1 [label="id: 1\nvalue: 62.0"];
+    3 [label="id: 3\nvalue: 66.0"];
+    4 [label="id: 4\nvalue: 16.0"];
+    5 [label="id: 5\nvalue: 32.0"];
+    7 [label="id: 7\nvalue: 39.0"];
+    8 [label="id: 8\nvalue: 58.0"];
+    9 [label="id: 9\nvalue: 51.0"];
+    10 [label="id: 10\nvalue: 53.0"];
+    11 [label="id: 11\nvalue: 30.0"];
+	4 -> 5 [label=" id: 0, value: 25"];
+	5 -> 1 [headlabel=" id: 2, value: 45", labeldistance=6.5, labelangle=80];
+	5 -> 7;
+	7 -> 8;
+	7 -> 10;
+	7 -> 11;
+	10 -> 3 [headlabel= "id: 6, value:64", labeldistance=4.5, labelangle=95];
+	10 -> 9;
+}
