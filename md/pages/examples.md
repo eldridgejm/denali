@@ -7,6 +7,15 @@ used for various purposes. In particular, the callback system is demonstrated.
 The examples use the included python module, and may require that several python
 packages be installed.
 
+----
+
+- [`./tutorial`](#tutorial)
+- [`./clustering`](#clustering)
+- [`./comments`](#comments)
+- [`./neural`](#neural)
+
+----
+
 
 ### `./tutorial`
 
@@ -110,5 +119,45 @@ will be printed to the status box.
 ### `./neural`
 
 **Description**: A neural network model's parameter space. Several neural nets
-are trained on a sine function, and the parameter space is sampled around some
-of the local minima found.
+are trained on a noisy sampling of the sine function, and the parameter space is
+sampled around some of the local minima found. This example demonstrates the
+callback system.  Whenever the user selects a component of the landscape, the
+corresponding model is evaluated and plotted in comparison to the ideal sine
+function and the training data. The callback requires the `neurolab` python
+package.
+
+**Files**:
+
+- `all_params.npy`: A numpy archive containing samples of the neural network's
+  parameter space.
+- `vertices`: A file containing each of the parameter samples in the above file.
+  A vertex's scalar value is the loss of the model when evaluated with the
+  corresponding parameters on the training data.
+- `edges`: A set of nearest neighbor edges connecting the vertices into a graph.
+- `tree.tree`: A contour tree generated from `vertices` and `edges` by using
+  `ctree`.
+- `targets.npy`: A numpy archive containing the training examples.
+- `topology.pickle`: The topology of the neural network, serialize into a python
+  pickle file.
+- `nnsample.py`: Utility functions used by the callback to read and write
+  serialized neural networks.
+- `callback.py`: The python callback script. Requires `neurolab` to function.
+
+
+**Usage**: First, load the `tree.tree` file into *denali*. By default, *denali*
+chooses the node with the minimum scalar value to be the root. Since this tree
+visualizes the cost function, it is more natural to set the root to be the node
+with the maximum scalar value. Click **Choose Root**, then select the **Maximum
+node** radio button, then hit **Ok**.
+
+Next, we'll use the callback to gain an understanding of the cost landscape.
+Select **File → Configure Callbacks**. We'll run this callback asynchronously.
+Click **Browse** in the *Async Callback* section, and select the `callback.py`
+file. Next, select **Run on selection**, then hit **Ok**.
+
+Right clicking on a component will extract the parameter associated with the
+child node of the arc, evaluate the network using that parameter vector, and
+plot the model on the interval $[0, 2 \pi]$. Also shown in the plot are the
+ideal sine function (dashed line), and the noisy training samples (blue dots).
+By exploring, we see that the global minimum tends to overfit the data, while
+two plateaus corresponding to local minima then to underfit the data.

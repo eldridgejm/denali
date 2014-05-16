@@ -20,6 +20,14 @@
 
 <h2 id="examples">Examples</h2>
 <p><em>Denali</em> comes complete with a variety of examples. All of these examples are located in the <code>/examples</code> folder, directly under the project root. Most of these examples are designed to show how the various features of <em>denali</em> can be used for various purposes. In particular, the callback system is demonstrated. The examples use the included python module, and may require that several python packages be installed.</p>
+<hr />
+<ul>
+<li><a href="#tutorial"><code>./tutorial</code></a></li>
+<li><a href="#clustering"><code>./clustering</code></a></li>
+<li><a href="#comments"><code>./comments</code></a></li>
+<li><a href="#neural"><code>./neural</code></a></li>
+</ul>
+<hr />
 <h3 id="tutorial"><code>./tutorial</code></h3>
 <p><strong>Description</strong>: This is the example referenced throughout the <a href="./tutorial.html">tutorial</a>. It demonstrates color maps, weight maps, and a simple callback. The data being visualized is a toy tree; there isn't much to interpret.</p>
 <p><strong>Files</strong>:</p>
@@ -60,6 +68,22 @@
 </ul>
 <p><strong>Usage</strong>: Open the tree in <em>denali</em> and set the root node to be &quot;0&quot;. This node is artificially inserted into the tree to be a parent of all of the top-level comments. Next, set the color map by selecting <strong>File → Configure Color Map</strong>. Browse for the color map file. Set the &quot;Contributors&quot; to <strong>Child</strong> and the reduction to <strong>Maximum</strong>. The particular reduction used doesn't matter in this case, as we're only using the child node in the reduction set.</p>
 <p>To see the content of individual comments, we'll use the callback function. As before, load the callback, but as an <em>Info</em> callback rather than an <em>Async</em> callback. Right click to select a component. The comment's score and content will be printed to the status box.</p>
+<h3 id="neural"><code>./neural</code></h3>
+<p><strong>Description</strong>: A neural network model's parameter space. Several neural nets are trained on a noisy sampling of the sine function, and the parameter space is sampled around some of the local minima found. This example demonstrates the callback system. Whenever the user selects a component of the landscape, the corresponding model is evaluated and plotted in comparison to the ideal sine function and the training data. The callback requires the <code>neurolab</code> python package.</p>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>all_params.npy</code>: A numpy archive containing samples of the neural network's parameter space.</li>
+<li><code>vertices</code>: A file containing each of the parameter samples in the above file. A vertex's scalar value is the loss of the model when evaluated with the corresponding parameters on the training data.</li>
+<li><code>edges</code>: A set of nearest neighbor edges connecting the vertices into a graph.</li>
+<li><code>tree.tree</code>: A contour tree generated from <code>vertices</code> and <code>edges</code> by using <code>ctree</code>.</li>
+<li><code>targets.npy</code>: A numpy archive containing the training examples.</li>
+<li><code>topology.pickle</code>: The topology of the neural network, serialize into a python pickle file.</li>
+<li><code>nnsample.py</code>: Utility functions used by the callback to read and write serialized neural networks.</li>
+<li><code>callback.py</code>: The python callback script. Requires <code>neurolab</code> to function.</li>
+</ul>
+<p><strong>Usage</strong>: First, load the <code>tree.tree</code> file into <em>denali</em>. By default, <em>denali</em> chooses the node with the minimum scalar value to be the root. Since this tree visualizes the cost function, it is more natural to set the root to be the node with the maximum scalar value. Click <strong>Choose Root</strong>, then select the <strong>Maximum node</strong> radio button, then hit <strong>Ok</strong>.</p>
+<p>Next, we'll use the callback to gain an understanding of the cost landscape. Select <strong>File → Configure Callbacks</strong>. We'll run this callback asynchronously. Click <strong>Browse</strong> in the <em>Async Callback</em> section, and select the <code>callback.py</code> file. Next, select <strong>Run on selection</strong>, then hit <strong>Ok</strong>.</p>
+<p>Right clicking on a component will extract the parameter associated with the child node of the arc, evaluate the network using that parameter vector, and plot the model on the interval <img style="vertical-align:middle" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=%5B0%2C%202%20%5Cpi%5D" alt="[0, 2 \pi]" title="[0, 2 \pi]" />. Also shown in the plot are the ideal sine function (dashed line), and the noisy training samples (blue dots). By exploring, we see that the global minimum tends to overfit the data, while two plateaus corresponding to local minima then to underfit the data.</p>
 </div>
 </body>
 </html>
