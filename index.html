@@ -3,274 +3,51 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
-  <title>denali</title>
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="resources/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="resources/main.css" type="text/css" />
-  <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
 <div id="content">
 
-<div style="text-align: center; margin-bottom: -2em">
-<img src="resources/treelogo.png" style="width: 200px">
-<span id="logotext">denali</span>
+<div id="header">
+<a href="./index.html"><img src="./resources/docslogo.png"></a>
 </div>
 
 <hr>
 
-<div id="desc-head">
-<b>denali</b> is a tool for visualizing scalar functions defined on trees,
-graphs, and point clouds as mountainous terrains. Denali helps you discover
-trends in complex and high dimensional data.
-
-
-</div>
-
-<div id="navlist">
-<ul id="navlist">
-<li><a href="#get-denali">Get Denali</a></li>
-<li><a href="#what-does-it-do">What does it do?</a></li>
-<li><a href="#features">Features</a></li>
-<li><a href="#gallery">Gallery</a></li>
-<li><a href="#documentation">Documentation</a></li>
-</ul>
-</div>
-
-<div class="section-head">
-  <span class="section-head">
-    <a id="get-denali"></a>Get Denali
-  </span>
-</div>
-
-<div>
+<p>Welcome to the documentation for denali, ctree, and related tools.</p>
 <ul>
-<li><a href="./denali-1.0.exe">Windows</a> v1.0 (64 bit, binary)
-<li><a href="">Ubuntu Linux</a> v1.0 (64 bit, binary)
-<li>Build v1.0 from <a href="">source</a> for Windows or Linux</li>
-<li>Get the bleeding-edge source from
-<a href="https://github.com/eldridgejm/denali">GitHub</a></li>
+<li><a href="pages/intro.html">Introduction</a></li>
+<li><a href="pages/install.html">Installation</a></li>
+<li><a href="pages/tutorial.html">Tutorial</a></li>
+<li><a href="pages/examples.html">Examples</a></li>
+<li><a href="pages/cookbook.html">Cookbook</a></li>
 </ul>
-</div>
-
-
-<div class="section-head">
-  <span class="section-head">
-    <a id="what-does-it-do"></a>What does it do?
-  </span>
-</div>
-
-<p>Many sources of data &mdash; from complex networks to probability
-distributions &mdash; can be represented or summarized by tree-like structures.
-These trees, however, are often complicated and difficult to visualize.
-Moreover, it is often the case that one not only wants to visualize the
-tree-like structure of his or her data, but also a scalar attribute on top of
-it. Traditional methods, such as simply plotting the tree as a graph in the
-plane, offer limited opportunities to do so.
-
-<p>Denali is a tool for visualizing trees as <i>landscape metaphors</i> &mdash;
-mountain-like surfaces which intuitively represent both the structure of
-complicated trees and scalar attributes defined on their nodes. To learn more about
-landscape metaphors, see the
-<a href="./doc/pages/tutorial.html#introduction-to-landscape-metaphors">tutorial</a>.</p>
-
-<p>For example, suppose we visualize a hierarchical discussion on an online
-forum consisting of nearly 1000 comments. If we visualize the tree using the
-traditional approach, what we obtain is hard to visually parse. For example,
-<i>graphviz</i> produces the visualization below. Enlarging a section of the
-image (left) shows that the result can be complex and difficult to understand,
-even locally. If the entire tree is visualized with <i>graphviz</i>, the
-resulting image, shown at the same resolution as the cropped version below, is
-over 20 inches wide. In contrast, denali (right) is able to show the entire
-tree with clarity.</p>
-
-<div style="margin: 2em 0em; text-align: center">
-<img src="./resources/tree_to_landscape.png">
-</div>
-
-<p>Denali not only presents the complicated tree structure in an
-easy-to-interpret form, but also allows the user to manipulate, zoom, simplify,
-and query the landscape interactively.</p>
-
-<p><b>Can denali be used for your application?</b> Denali can be used to
-visualize such diverse structures as probability densities, complex networks,
-and protein conformational spaces. At the basic level, though, Denali requires
-its input to be in the form of a scalar tree &mdash; a tree whose nodes are
-associated with scalar values.  Included with denali are tools to help you
-extract such scalar trees from common sources of data, such as scalar functions
-defined on point clouds. You can also extract tree-like structure using a
-method you provide, and use denali to visualize the result.</p>
-
-<p>The figure below shows the conceptual "pipeline" you'll follow when using denali:</p>
-
-<div style="text-align: center; margin: 2em 0em">
-<img width="600px" src="./resources/pipeline.png">
-</div>
-
-<p>The <i>extraction</i> step is crucial: it is where the input data is transformed
-into something that can be visualized with denali. Included alongside denali is
-<i>ctree</i>, a tool for extracting contour trees from functions defined on
-graphs and point clouds. With it, you can visualize data from many different
-sources. Several important applications are shown in the table below:</p>
-
-<div style="text-align: center">
-<center>
-<table id="domains" style="margin: 20px 0px">
-
-    <tr id="domains-header-row">
-    <td style="width:200px"><b>Data</b></td><td><b>Extraction</b></td><td><b>Examples</b></td>
-    </tr>
-
-    <tr>
-    <td>Scalar tree</td>
-    <td>None</td>
-    <td>Hierarchical clusterings of point clouds, internet comment threads</td>
-    </tr>
-
-    <tr>
-    <td>Scalar function on a graph or point cloud</td>
-    <td>Contour tree</td>
-    <td>Probability densities, cost functions, parameter spaces</td>
-    </tr>
-
-    <tr>
-    <td>Data on a tree-like manifold</td>
-    <td>Contour tree with geodesic distance</td>
-    <td>Mouse cytometry data</td>
-    </tr>
-
-</table>
-</center>
-</div>
-
-<p>For more concrete examples of using denali, see the <a href="#gallery">gallery</a>.</p>
-
-<div class="section-head">
-  <span class="section-head">
-    <a id="features"></a>Features
-  </span>
-</div>
-
-<div><ul id="features-list">
-    <li><b>Fully interactive</b>: Explore your data using the mouse to fly through an interactive, 3-d landscape.</li>
-    <li><b>Selective simplification</b>: Visualizing a noisy data set? Simplify specific regions of the 
-        visualization using the interactive simplification tool, allowing important trends to be more clearly visible.</li>
-    <li><b>Powerful callback system</b>: Integrate denali into your workflow. Run your own code &mdash; written in whatever
-        language you'd like &mdash; whenever you make a selection in the landscape.
-    <li><b>Custom coloring</b>: Color the landscape according to your needs. Compare two scalar functions by using the height
-        to represent one, and the color to represent the other.</li>
-    <li><b>Re-weight your data</b>: Specify a custom weight map to emphasize parts of the landscape. Quickly clear or
-        swap this map for another to make fast comparisons.</li>
-    <li><b>Included utilities</b>: The included utilities make it easy to transform your data into a visualization. Streamline
-        the creation of your callback code by using the included Python package.</li>
-    <li><b>Thorough documentation and demos</b>: An extensive <a href="./doc/pages/tutorial.html">tutorial</a> is included,
-        introducing you to denali, landscape metaphors, and the included tools. Numerous demos, complete with code, are
-        provided to help you apply denali to your specific application.
-</div></ul>
-
-<div class="section-head">
-  <span class="section-head">
-    <a id="gallery"></a>Gallery
-  </span>
-</div>
-
-Denali can be used to visualize data from many difference domains, and its powerful
-callback system allows the user to tailor its behavior to his or her own data. Included
-in the download are several demos and proofs-of-concept, such as:
-
-<table id="gallery">
-
-<tr>
-    <td class="gallery-image-cell">
-    <a href="./resources/scrot_clusters_callback.png"><img class="gallery-image" src="./resources/scrot_clusters_callback.png"></a>
-    </td>
-    <td class="gallery-text-cell">
-    <h1>Hierarchical clustering of handwritten digit images</h1>
-    Gain an understanding of the structure of your high dimensional data by visualizing
-    the tree produced by a hierarchical clustering algorithm. This demo clusters images
-    of handwritten 0's, 1's, and 7's. Clicking a component of the landscape displays an 
-    average image of the digits which exist in that region.
-    </td>
-</tr>
-
-<tr>
-    <td class="gallery-image-cell">
-    <a href="./resources/scrot_comments.png"><img class="gallery-image" src="./resources/scrot_comments.png"></a>
-    </td>
-    <td class="gallery-text-cell">
-    <h1>Internet comment thread</h1>
-    Visualize the structure of an online comment thread as a landscape. Use
-    colors to find controversial comments. Clicking the landscape prints the
-    corresponding comment to the screen.
-    </td>
-</tr>
-
-<tr>
-    <td class="gallery-image-cell">
-    <a href="./resources/scrot_neural.png"><img class="gallery-image" src="./resources/scrot_neural.png"></a>
-    </td>
-    <td class="gallery-text-cell">
-    <h1>Neural network model space</h1>
-    Explore the parameter space of a neural network model trained to represent the
-    sine function. Local minima of the cost function are represented as plateaus in
-    the landscape. Clicking on a component in the visualization evaluates the
-    corresponding model and plots its output, comparing it to the ideal sine
-    function.
-    </td>
-</tr>
-
-<tr>
-    <td class="gallery-image-cell">
-    <a href="./resources/scrot_pdf.png"><img class="gallery-image" src="./resources/scrot_pdf.png"></a>
-    </td>
-    <td class="gallery-text-cell">
-    <h1>Interactively resample a probability distribution</h1>
-    Visualize a mixture of Gaussians in four dimensions as a landscape. Clicking on
-    a part of the landscape automatically resamples the pdf in the region
-    corresponding to the selection and redraws the visualization.
-    </td>
-</tr>
-
-<tr>
-    <td class="gallery-image-cell">
-    <a href="./resources/scrot_mouse.png"><img class="gallery-image" src="./resources/scrot_mouse.png"></a>
-    </td>
-    <td class="gallery-text-cell">
-    <h1>Mouse cytometry data</h1>
-    Certain type of mouse cells can be organized into a hierarchy. Given data from ten markers, forming a point
-    cloud embedded in 10 dimensions, but lying on a tree-like manifold, Denali is able to recover the hierarchical structure.
-    The color function shows the response of individual markers so that each cell type can be identified by the user.
-    </td>
-</tr>
-
-
-</table>
-
-<div class="section-head">
-  <span class="section-head">
-    <a id="documentation"></a>Documentation
-  </span>
-</div>
-
-You can access denali's documentation either offline (it is in the <code>doc</code> subfolder of your download),
-or online, here:
-
+<hr />
+<h2 id="denali">denali</h2>
+<p><em>Denali</em> is the graphical interface for visualizing landscapes. For a general information on how to use <em>denali</em>, see the <a href="pages/tutorial.html">tutorial</a>. For detailed information about supplying input to <em>denali</em>, see:</p>
 <ul>
-<li>
-For the detailed and complete guide to using denali, see the <a href="./doc">main documentation</a>.
-</li>
-
-<li>
-If you're looking for a quick-start guide, see the <a href="./doc/pages/tutorial.html">tutorial</a>.
-</li>
+<li><a href="pages/formats.html">File format specifications</a></li>
+<li><a href="pages/callback.html">Callback system</a></li>
 </ul>
-
-If you've found a bug in Denali, let us know by adding an issue on our <a href="https://github.com/eldridgejm/denali/issues">
-issue tracker</a>.
-
+<hr />
+<h2 id="ctree">ctree</h2>
+<p><em>Ctree</em> is a command line interface for creating contour trees from graph input.</p>
+<ul>
+<li><a href="pages/ctree.html">ctree documentation</a></li>
+</ul>
+<hr />
+<h2 id="pydenali">pydenali</h2>
+<p><em>pydenali</em> is a Python package containing useful utility functions for interacting with <em>denali</em> and <em>ctree</em>. These functions help read files in <em>denali</em> formats, create callbacks, and generate contour trees. Read the full documentation here:</p>
+<ul>
+<li><a href="pydoc/_build/html/index.html">pydenali documentation</a></li>
+</ul>
+<hr />
+<h2 id="developer-documentation">developer documentation</h2>
+<p>The developer documentation is useful for those who are interested in modifying or extending <em>denali</em>. The documentation is managed by Doxygen. To create it, run <code>doxygen</code> in the <code>doc/dev</code> directory. Once generated, it can be found <a href="dev/html/index.html">here</a>.</p>
 </div>
-
-
 </body>
 </html>

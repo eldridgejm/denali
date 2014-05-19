@@ -1,16 +1,3 @@
-body {
-    font-family: "droid sans";
-    font-size: 12pt;
-}
-
-span#logotext {
-    font-size: 150px;
-    color: #e1685a;
-    letter-spacing: -10px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
 div#content {
     width: 700px;
     margin: 100pt auto;
@@ -20,80 +7,5 @@ img.screenshot {
     margin: 20pt;
     padding: 3pt;
     border: 6px solid #eeeeee;
-
-}
-
-div#desc-head {
-    font-size: 16pt;
-    text-align: center;
-}
-
-div#navlist {
-    margin-top: 1em;
-}
-
-div#navlist ul {
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    border-bottom: 1px #d0d0d0 solid;
-    padding-top: .5em;
-    padding-bottom: .5em;
-    text-align: center;
-    font-size: 13pt;
-    margin-bottom: -1em;
-    text-shadow: 1px 1px #fff;
-}
-
-ul#navlist li {
-    display: inline;
-    padding-right: 1.7em;
-}
-
-div.section-head {
-    height: 1px;
-    background-color: #eee;
-    text-align: center;
-    margin: 4em 0em 2em 0em;
-}
-
-span.section-head {
-    background-color: white;
-    position: relative;
-    top: -0.7em;
-    padding: 0em 1em;
-    font-size: 20pt;
-}
-
-table#domains {
-    width: 600px;
-    font-size: 10pt;
-}
-
-table#domains td {
-    padding: 10px 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-tr#domains-header-row {
-    font-size: 11pt;
-}
-
-ul#features-list li {
-    padding: .5em 0em;
-}
-
-table#gallery h1 {
-    font-size: 14pt;
-}
-
-img.gallery-image {
-    width: 200px;
-}
-
-td.gallery-image-cell {
-    padding: 20px;
-}
-
-td.gallery-text-cell {
-    vertical-align: middle;
+    width: 450px;
 }

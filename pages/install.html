@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../resources/main.css" type="text/css" />
+</head>
+<body>
+<div id="content">
+
+<div id="header">
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
+</div>
+
+<hr>
+
+<h1 id="installation">Installation</h1>
+<p><em>denali</em> is available as a binary package on Windows and Linux, and can be installed from source on nearly every modern operating system.</p>
+<ul>
+<li><a href="#windows">Windows</a></li>
+<li><a href="#linux">Linux</a>
+<ul>
+<li><a href="#from-binary">From binary</a></li>
+<li><a href="#from-source">From source</a></li>
+</ul></li>
+<li><a href="#pydenali">pydenali</a></li>
+</ul>
+<h2 id="windows">Windows</h2>
+<p><em>Denali</em> is available as a binary on Windows, complete with an easy-to-use installer. For the most up-to-date package, see the <a href="http://www.cse.ohio-state.edu/~eldridge/denali/">project page</a>.</p>
+<p>On Windows, using the installer is recommended in nearly all cases, but <em>denali</em> can also be compiled from source. The project uses the CMake meta-compiler so that the instructions for installing from source are nearly identical to those for Linux. If you choose to install form source on Windows, we recommend the MinGW 4.8.2 compiler, Qt 4.8.6, and VTK 5.10.1.</p>
+<h2 id="linux">Linux</h2>
+<h3 id="from-binary">From binary</h3>
+<p><em>Denali</em> is available as a pre-compiled binary for several Linux distributions, including Ubuntu. If a binary package is available for your distribution, it is the preferred method of installation. See the <a href="http://www.cse.ohio-state.edu/~eldridge/denali/">project page</a> for an up-to-date listing of the distributions which are supported.</p>
+<h3 id="from-source">From source</h3>
+<p>If a binary package is not available for your distribution, you can always compile <em>denali</em> from source. The build process is managed by CMake. You will need Qt 4 and VTK 5 to install. These can likely be obtained using your system's package manager. We recommend using the gcc compiler.</p>
+<p>To build from source and install to the default location under <code>/usr/local</code>, invoke from the project's root directory:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
+<span class="kw">cd</span> build
+cmake ..
+<span class="kw">make</span>
+<span class="kw">sudo</span> <span class="kw">make</span> <span class="kw">install</span></code></pre>
+<p>To install to a location other than the default, specify a prefix by using CMake's <code>CMAKE_INSTALL_PREFIX</code>. For example, to install to user <code>eldridge</code>'s home directory, run</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
+<span class="kw">cd</span> build
+cmake .<span class="kw">.</span> -DCMAKE_INSTALL_PREFIX=/home/eldridge
+<span class="kw">make</span>
+<span class="kw">make</span> <span class="kw">install</span></code></pre>
+<p><code>make install</code> creates the executables <code>denali</code> and <code>ctree</code> under <code>CMAKE_INSTALL_PREFIX/bin</code> and all files in the directory <code>CMAKE_INSTALL_PREFIX/share/denali</code>. To remove the software, simply delete these files.</p>
+<h2 id="pydenali">pydenali</h2>
+<p><em>pydenali</em>, the Python package of utilities included with <em>denali</em>, is included with <em>denali</em>, but not installed by the above steps. <em>pydenali</em> is an optional component for working with files in <em>denali</em> format, among other things. If you'd like to install it, see the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>
+</div>
+</body>
+</html>
