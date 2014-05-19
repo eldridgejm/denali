@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>denali documentation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../resources/main.css" type="text/css" />
+</head>
+<body>
+<div id="content">
+
+<div id="header">
+<a href="../index.html"><img src="../resources/docslogo.png"></a>
+</div>
+
+<hr>
+
+<h1 id="cookbook">Cookbook</h1>
+<p><em>Denali</em> can be used to visualize many different sources of data, but it requires that its input be in the form of a <a href="tutorial.html#scalar-tree">scalar tree</a>. <em>Denali</em> includes tools to extract tree-like structure from your data so that it can be visualized as a landscape metaphor.</p>
+<p>This document describes several ways to combine these tools to perform several common analyses.</p>
+<ul>
+<li><a href="#visualize-a-scalar-function-on-a-tree">Visualize a scalar function on a tree</a></li>
+<li><a href="#visualize-a-scalar-function-on-a-graph">Visualize a scalar function on a graph</a></li>
+<li><a href="#visualize-a-scalar-function-on-a-point-cloud">Visualize a scalar function on a point cloud</a></li>
+<li><a href="#visualize-and-interactively-sample-a-probability-distribution">Visualize and interactively sample a probability distribution</a></li>
+</ul>
+<h2 id="scalar-function-on-a-tree">Scalar function on a tree</h2>
+<p>If your function is defined on a tree, then you may not need to do anything extra to visualize it with denali. Simply provide your input as a <code>.tree</code> file (see the <a href="formats.html#tree">specification</a> or the <a href="tutorial.html">tutorial</a> for more information).</p>
+<h2 id="scalar-function-on-a-graph">Scalar function on a graph</h2>
+<p>If your function is defined on a graph, you'll need to extract tree-like structure from the graph. One way to do this is to compute the contour tree of the graph. The included <em>ctree</em> tool will do this: simply provide the vertex values and edges of your graph to <em>ctree</em>, and it will output the contour tree in a file <em>denali</em> can read.</p>
+<h2 id="scalar-function-on-a-point-cloud">Scalar function on a point cloud</h2>
+<p>If your function is defined on a point cloud, you'll need to extract tree-like structure. One way to do this is with a contour tree. The included <em>ctree</em> tool and <em>pydenali</em>'s contour tree utilities can help do this. For more information, see the <a href="tutorial.html#visualizing-functions-on-point-clouds">Visualizing function on point clouds</a> section of the tutorial.</p>
+<h2 id="visualize-and-interactively-sample-a-probability-distribution">Visualize and interactively sample a probability distribution</h2>
+<p>Suppose you have many samples from a probability distribution in the form of points with associated probabilities. You can visualize the distribution as any other scalar function defined on a point cloud: by first building a nearest-neighbor graph, then building the contour tree. See the <a href="#visualize-a-scalar-function-on-a-point-cloud">Visualize a scalar function on a point cloud</a> section above for more.</p>
+<p><em>Denali</em>'s callback system can be used to interactively resample the probability distribution. Simply write a <a href="callback.html">tree callback</a> to do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Resample points around the selection.</li>
+<li>Recompute the neighbor graph.</li>
+<li>Pass the recomputed neighbors and new vertices into <em>ctree</em>.</li>
+<li>Print the computed tree to STDOUT.</li>
+</ol>
+<p>Included in <code>examples/pdf</code> is a callback which does just this for a simple mixture of Gaussians.</p>
+</div>
+</body>
+</html>
