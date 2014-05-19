@@ -25,7 +25,13 @@ include_directories(
         ${PROJECT_BINARY_DIR}
         )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-add_executable(denali ${SOURCES} ${HEADERS_MOC} ${UI_SRCS})
+
+IF(WIN32)
+    add_executable(denali WIN32 ${SOURCES} ${HEADERS_MOC} ${UI_SRCS})
+ELSE()
+    add_executable(denali ${SOURCES} ${HEADERS_MOC} ${UI_SRCS})
+ENDIF()
+
 target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES} QVTK)
 
 install(TARGETS denali DESTINATION bin)
