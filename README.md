@@ -1,32 +1,12 @@
-denali - a tool for visualizing scalar trees
+denali
+======
 
-Installation
-================================================================================
+*denali* is a tool for visualizing scalar functions defined on trees, graphs, and
+point clouds as mountainous terrains. Denali helps you discover trends in
+complex and high dimensional data.
 
-Linux
---------------------------------------------------------------------------------
+*denali* is available as a binary package for Windows and Ubuntu Linux. It can
+be compiled from source on any modern system.
 
-### From source
-The build process is managed by CMake. To build from source and install to the 
-default location under `/usr/local`, invoke from the project's root directory:
-
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install
-
-To install to a location other than the default, specify a prefix by using
-CMake's `CMAKE_INSTALL_PREFIX`. For example, to install to user `eldridge`'s
-home directory, run
-
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX=/home/eldridge
-    make
-    make install
-
-`make install` creates the executables `denali` and `ctree` under
-`CMAKE_INSTALL_PREFIX/bin` and all files in the directory
-`CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
-simply delete these files.
+For support, binaries, a tutorial, and examples, see the 
+[project page](http://www.cse.ohio-state.edu/~eldridge/denali/#documentation).
