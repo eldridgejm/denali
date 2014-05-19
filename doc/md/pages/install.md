@@ -1,13 +1,46 @@
 # Installation
 
+*denali* is available as a binary package on Windows and Linux, and can be
+installed from source on nearly every modern operating system.
+
+- [Windows](#windows)
 - [Linux](#linux)
+    - [From binary](#from-binary)
     - [From source](#from-source)
+- [pydenali](#pydenali)
+
+
+## Windows
+*Denali* is available as a binary on Windows, complete with an easy-to-use
+installer. For the most up-to-date package, see the [project
+page](http://www.cse.ohio-state.edu/~eldridge/denali/).
+
+On Windows, using the installer is recommended in nearly all cases,
+but *denali* can also be compiled from source. The project uses the CMake
+meta-compiler so that the instructions for installing from source are nearly
+identical to those for Linux. If you choose to install form source on Windows,
+we recommend the MinGW 4.8.2 compiler, Qt 4.8.6, and VTK 5.10.1.
+
 
 ## Linux
 
+### From binary
+
+*Denali* is available as a pre-compiled binary for several Linux distributions,
+including Ubuntu. If a binary package is available for your distribution, it is
+the preferred method of installation. See the [project
+page](http://www.cse.ohio-state.edu/~eldridge/denali/) for an up-to-date listing
+of the distributions which are supported.
+
 ### From source
-The build process is managed by CMake. To build from source and install to the 
-default location under `/usr/local`, invoke from the project's root directory:
+
+If a binary package is not available for your distribution, you can always
+compile *denali* from source.  The build process is managed by CMake. You will
+need Qt 4 and VTK 5 to install.  These can likely be obtained using your
+system's package manager. We recommend using the gcc compiler.
+
+To build from source and install to the default location under `/usr/local`,
+invoke from the project's root directory:
 
 ~~~~~~ {.bash}
 mkdir build
@@ -33,6 +66,7 @@ make install
 `CMAKE_INSTALL_PREFIX/bin` and all files in the directory
 `CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
 simply delete these files.
+
 
 ## pydenali
 

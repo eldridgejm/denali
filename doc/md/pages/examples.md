@@ -4,8 +4,10 @@
 located in the `/examples` folder, directly under the project root. Most of
 these examples are designed to show how the various features of *denali* can be
 used for various purposes. In particular, the callback system is demonstrated.
-The examples use the included python module, and may require that several python
-packages be installed.
+The examples use the included `pydenali` python module, and may require that
+several python packages be installed. Note that `pydenali` is included with your
+download, but not automatically installed. To install `pydenali`, see the
+[pydenali](../pydoc/_build/html/index.html) documentation.
 
 ----
 
