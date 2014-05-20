@@ -54,6 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2 id="linux">Linux</h2>
 <h3 id="from-binary">From binary</h3>
 <p><em>Denali</em> is available as a pre-compiled binary for several Linux distributions, including Ubuntu. If a binary package is available for your distribution, it is the preferred method of installation. See the <a href="http://www.cse.ohio-state.edu/~eldridge/denali/">project page</a> for an up-to-date listing of the distributions which are supported.</p>
+<p><em>denali</em> installs two binaries, <code>denali</code> and <code>ctree</code>, into <code>/usr/bin</code>. It also installs the documentation, examples, and the python module into <code>/usr/share/denali</code>. Note that to use the python module, you must install it from <code>/usr/share/denali/pydenali</code>, either using <code>pip</code>, or some other tool. See the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>
 <h3 id="from-source">From source</h3>
 <p>If a binary package is not available for your distribution, you can always compile <em>denali</em> from source. The build process is managed by CMake. You will need Qt 4 and VTK 5 to install. These can likely be obtained using your system's package manager. We recommend using the gcc compiler.</p>
 <p>To build from source and install to the default location under <code>/usr/local</code>, invoke from the project's root directory:</p>
@@ -68,7 +69,13 @@ cmake ..
 cmake .<span class="kw">.</span> -DCMAKE_INSTALL_PREFIX=/home/eldridge
 <span class="kw">make</span>
 <span class="kw">make</span> <span class="kw">install</span></code></pre>
-<p><code>make install</code> creates the executables <code>denali</code> and <code>ctree</code> under <code>CMAKE_INSTALL_PREFIX/bin</code> and all files in the directory <code>CMAKE_INSTALL_PREFIX/share/denali</code>. To remove the software, simply delete these files.</p>
+<p><code>make install</code> creates the executables <code>denali</code> and <code>ctree</code> under <code>CMAKE_INSTALL_PREFIX/bin</code> and all files in the directory &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <code>CMAKE_INSTALL_PREFIX/share/denali</code>. To remove the software, ======= <code>CMAKE_INSTALL_PREFIX/share/denali</code>. In particular, you may find:</p>
+<ul>
+<li><code>CMAKE_INSTALL_PREFIX/share/denali/doc</code>: the documentation</li>
+<li><code>CMAKE_INSTALL_PREFIX/share/denali/examples</code>: example files</li>
+<li><code>CMAKE_INSTALL_PREFIX/share/denali/pydenali</code>: the python utility module</li>
+</ul>
+<p>To remove the software, &gt;&gt;&gt;&gt;&gt;&gt;&gt; doc_branch simply delete these files.</p>
 <h2 id="pydenali">pydenali</h2>
 <p><em>pydenali</em>, the Python package of utilities included with <em>denali</em>, is included with <em>denali</em>, but not installed by the above steps. <em>pydenali</em> is an optional component for working with files in <em>denali</em> format, among other things. If you'd like to install it, see the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>
 </div>
