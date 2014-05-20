@@ -32,6 +32,13 @@ the preferred method of installation. See the [project
 page](http://www.cse.ohio-state.edu/~eldridge/denali/) for an up-to-date listing
 of the distributions which are supported.
 
+*denali* installs two binaries, `denali` and `ctree`, into `/usr/bin`. It also
+installs the documentation, examples, and the python module into
+`/usr/share/denali`. Note that to use the python module, you must install it
+from `/usr/share/denali/pydenali`, either using `pip`, or some other tool.  See
+the [installation section](../pydoc/_build/html/install.html) of the *pydenali*
+documentation. 
+
 ### From source
 
 If a binary package is not available for your distribution, you can always
@@ -64,7 +71,13 @@ make install
 
 `make install` creates the executables `denali` and `ctree` under
 `CMAKE_INSTALL_PREFIX/bin` and all files in the directory
-`CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
+`CMAKE_INSTALL_PREFIX/share/denali`. In particular, you may find:
+
+- `CMAKE_INSTALL_PREFIX/share/denali/doc`: the documentation
+- `CMAKE_INSTALL_PREFIX/share/denali/examples`: example files
+- `CMAKE_INSTALL_PREFIX/share/denali/pydenali`: the python utility module
+
+To remove the software, 
 simply delete these files.
 
 
