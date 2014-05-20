@@ -24,3 +24,6 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/extern/UnitTest++/src/" )
     add_subdirectory(tests)
 endif(EXISTS "${PROJECT_SOURCE_DIR}/extern/UnitTest++/src/" )
 
+install(DIRECTORY doc DESTINATION share/denali)
+install(DIRECTORY examples DESTINATION share/denali)
+install(DIRECTORY pydenali DESTINATION share/denali)
