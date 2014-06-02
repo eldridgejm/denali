@@ -133,6 +133,10 @@ def read_selection(fileobj):
 
         directed_tree = _networkx.dfs_tree(tree, root)
 
+        # we have to copy the members of the edges
+        for u,v in directed_tree.edges_iter():
+            directed_tree[u][v] = tree[u][v]
+
         selection_information["subtree"] = directed_tree
 
         if "subtree_reduction" in selection_information:
