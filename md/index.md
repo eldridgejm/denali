@@ -5,6 +5,7 @@ Welcome to the documentation for denali, ctree, and related tools.
 - [Tutorial](pages/tutorial.html)
 - [Examples](pages/examples.html)
 - [Cookbook](pages/cookbook.html)
+- [Related Work](pages/related.html)
 
 ----
 
