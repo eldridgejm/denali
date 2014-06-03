@@ -1,10 +1,2 @@
 warning: source ../denali is not a readable file or directory... skipping.
 warning: source ../denali/concepts is not a readable file or directory... skipping.
-<<<<<<< HEAD
-/home/eldridge/workbench/denali/code/doc/dev/pages.dox:175: warning: found subsection command outside of section context!
-/home/eldridge/workbench/denali/code/doc/dev/pages.dox:180: warning: found subsection command outside of section context!
-/home/eldridge/workbench/denali/code/doc/dev/pages.dox:185: warning: Unsupported xml/html tag <typename> found
-/home/eldridge/workbench/denali/code/doc/dev/pages.dox:199: warning: Unsupported xml/html tag <typename> found
-/home/eldridge/workbench/denali/code/doc/dev/pages.dox:207: warning: found subsection command outside of section context!
-=======
->>>>>>> doc_branch
