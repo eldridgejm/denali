@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Justin Eldridge, The Ohio State University
-// All rights reserved.
+// Copyright (c) 2014, Justin Eldridge, Mikhail Belkin, and Yusu Wang
+// at The Ohio State University. All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:

@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Justin Eldridge, The Ohio State University
-// All rights reserved.
+// Copyright (c) 2014, Justin Eldridge, Mikhail Belkin, and Yusu Wang
+// at The Ohio State University. All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -21,7 +21,6 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
 
 #ifndef DENALI_CONTOUR_TREE_H

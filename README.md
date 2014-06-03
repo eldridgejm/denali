@@ -9,4 +9,4 @@ complex and high dimensional data.
 be compiled from source on any modern system.
 
 For support, binaries, a tutorial, and examples, see the 
-[project page](http://www.cse.ohio-state.edu/~eldridge/denali/#documentation).
+[project page](http://denali.cse.ohio-state.edu).
