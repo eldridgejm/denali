@@ -71,9 +71,6 @@ make install
 
 `make install` creates the executables `denali` and `ctree` under
 `CMAKE_INSTALL_PREFIX/bin` and all files in the directory
-<<<<<<< HEAD
-`CMAKE_INSTALL_PREFIX/share/denali`. To remove the software, 
-=======
 `CMAKE_INSTALL_PREFIX/share/denali`. In particular, you may find:
 
 - `CMAKE_INSTALL_PREFIX/share/denali/doc`: the documentation
@@ -81,7 +78,6 @@ make install
 - `CMAKE_INSTALL_PREFIX/share/denali/pydenali`: the python utility module
 
 To remove the software, 
->>>>>>> doc_branch
 simply delete these files.
 
 
