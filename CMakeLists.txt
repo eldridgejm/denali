@@ -6,7 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 message(STATUS "The install prefix is ${CMAKE_INSTALL_PREFIX}")
 add_definitions(-DINSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DDENALI_VERSION="v0.1")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -gdwarf-2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -gdwarf-2 -O0")
 
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})

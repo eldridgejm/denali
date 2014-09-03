@@ -672,7 +672,7 @@ public:
             typedef typename ContourTree::Member Member;
 
             const Members* _members;
-            typename ContourTree::Members::iterator _ct_member_it;
+            typename ContourTree::Members::const_iterator _ct_member_it;
             typename std::list<MembersPtr>::const_iterator _folded_list_it;
             boost::shared_ptr<const_iterator> _folded_member_it;
 

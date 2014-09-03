@@ -213,7 +213,7 @@ public:
         }
     };
 
-    typedef std::set<Member> Members;
+    typedef std::vector<Member> Members;
 
 private:
     typedef
@@ -263,7 +263,7 @@ public:
 
         // the convention: a node is in its own member set
         _node_to_members[node].clear();
-        _node_to_members[node].insert(Member(id, value));
+        _node_to_members[node].push_back(Member(id, value));
         return node;
     }
 
@@ -288,20 +288,24 @@ public:
     void removeEdge(Edge edge)
     {
         _nodes_plus_members -= _edge_to_members[edge].size();
+
+        // an idiom to reduce the capacity of a vector
+        std::vector<Member>().swap(_edge_to_members[edge]);
+
         _graph.removeEdge(edge);
     }
 
     /// \brief Insert a member into the node's member set.
     void insertNodeMember(Node node, Member member)
     {
-        _node_to_members[node].insert(member);
+        _node_to_members[node].push_back(member);
         _nodes_plus_members++;
     }
 
     /// \brief Insert a member into the edge's member set.
     void insertEdgeMember(Edge edge, Member member)
     {
-        _edge_to_members[edge].insert(member);
+        _edge_to_members[edge].push_back(member);
         _nodes_plus_members++;
     }
 
@@ -311,7 +315,7 @@ public:
         for (typename Members::const_iterator it = members.begin();
                 it != members.end();
                 ++it) {
-            _node_to_members[node].insert(*it);
+            _node_to_members[node].push_back(*it);
             _nodes_plus_members++;
         }
     }
@@ -322,7 +326,7 @@ public:
         for (typename Members::const_iterator it = members.begin();
                 it != members.end();
                 ++it) {
-            _edge_to_members[edge].insert(*it);
+            _edge_to_members[edge].push_back(*it);
             _nodes_plus_members++;
         }
     }
@@ -1371,6 +1375,9 @@ public:
             // union the members from the old edges
             tree.insertEdgeMembers(edge_uw, tree.getEdgeMembers(edge_uv));
             tree.insertEdgeMembers(edge_uw, tree.getEdgeMembers(edge_vw));
+
+            tree.removeEdge(edge_uv);
+            tree.removeEdge(edge_vw);
 
             // remove the middle node
             tree.removeNode(v);
