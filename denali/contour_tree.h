@@ -281,6 +281,16 @@ public:
         _nodes_plus_members -= _node_to_members[node].size();
 
         _id_to_node.erase(_node_to_id[node]);
+
+        // since we do some cleanup when we delete edges in removeEdge, and
+        // this cleanup isn't done by the underlying graph structure, we'll
+        // manually delete edges here
+        UndirectedNeighborIterator<UndirectedScalarMemberIDGraphBase> it(*this, node);
+        for (; !it.done(); ++it)
+        {
+            this->removeEdge(it.edge());
+        }
+
         _graph.removeNode(node);
     }
 
@@ -1375,9 +1385,6 @@ public:
             // union the members from the old edges
             tree.insertEdgeMembers(edge_uw, tree.getEdgeMembers(edge_uv));
             tree.insertEdgeMembers(edge_uw, tree.getEdgeMembers(edge_vw));
-
-            tree.removeEdge(edge_uv);
-            tree.removeEdge(edge_vw);
 
             // remove the middle node
             tree.removeNode(v);
