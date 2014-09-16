@@ -57,6 +57,7 @@
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
 #include <vtkTriangle.h>
+#include <vtkProperty.h>
 
 #include <denali/fileio.h>
 #include "landscape_context.h"
@@ -357,6 +358,9 @@ public:
 
         //Add the actor to the scene
         _renderer->AddActor(_landscape_actor);
+
+        // comment out this line to disable transparency
+        _landscape_actor->GetProperty()->SetOpacity(0.5);
 
         // display the logo
         vtkSmartPointer<vtkPNGReader> png_reader = 
