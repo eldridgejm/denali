@@ -190,10 +190,12 @@ cellColorizer(
 
     size_t n_cells = trianglePolyData->GetNumberOfCells();
 
+    // Yang: Set to 4 to enable transparency, 3 to enable opacity
     cell_data->SetNumberOfComponents(3);
+
     cell_data->SetNumberOfTuples(n_cells);
 
-    double colors[3];
+    double colors[4];
     color_table->GetColor(valueMapper.getMinValue(), colors);
     color_table->GetColor(valueMapper.getMaxValue(), colors);
 
@@ -201,12 +203,19 @@ cellColorizer(
     {
         double value = valueMapper(i);
 
-        double colors[3];
+        double colors[4];
         color_table->GetColor(value, colors);
 
         colors[0] *= 255;
         colors[1] *= 255;
         colors[2] *= 255;
+
+        if (colors[0] == 0 && colors[1] == 0)
+        {
+            colors[3] = 50;
+        } else {
+            colors[3] = 255;
+        }
 
         cell_data->InsertTuple(i, colors);
     }
@@ -358,9 +367,6 @@ public:
 
         //Add the actor to the scene
         _renderer->AddActor(_landscape_actor);
-
-        // comment out this line to disable transparency
-        _landscape_actor->GetProperty()->SetOpacity(0.5);
 
         // display the logo
         vtkSmartPointer<vtkPNGReader> png_reader = 
