@@ -70,10 +70,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#building-a-neighbor-graph">Building a neighbor graph</a></li>
 <li><a href="#computing-the-contour-tree">Computing the contour tree</a></li>
 </ul></li>
+<li><a href="#other-sources-of-hierarchical-structure">Other sources of hierarchical structure</a></li>
 </ul>
 <hr />
 <h2 id="introduction-to-landscape-metaphors">Introduction to landscape metaphors</h2>
-<p>As described in the <a href="intro.html">introduction</a>, <em>denali</em> is a tool for visualizing data that meets two prerequisites. First, each data point must have an associate scalar value, whether it be a probability, score, cost, etc. Second, it must be possible to extract some tree-like structure from the data. <a href="#visualizing-functions-on-point-clouds">Later</a> in this tutorial, we'll see how to extract tree-like structure from such things as scalar functions defined on point clouds. For now, we'll assume that our data is already in tree-like form.</p>
+<p>As described in the <a href="intro.html">introduction</a>, <em>denali</em> is a tool for visualizing data that meets two prerequisites. First, each data point must have an associated scalar value, whether it be a probability, score, cost, etc. Second, it must be possible to extract some tree-like structure from the data. <a href="#visualizing-functions-on-point-clouds">Later</a> in this tutorial, we'll see how to extract tree-like structure from such things as scalar functions defined on point clouds. <em>Denali</em> can also be used in other useful cases, such as visualizing the structure of a tree-like manifold, and interpreting hierachical structure in a dataset through agglomerative clustering. For now, we'll assume that a scalar tree has already been extracted from our data, and we'd now like to visualize the structure using <em>denali</em>.</p>
 <h3 id="scalar-trees">Scalar trees</h3>
 <p>The fundamental unit of input in <em>denali</em> is the <em>scalar tree</em>. A scalar tree is a tree for which every node has an associated integer ID and scalar value. An example of a (directed) scalar tree is shown below.</p>
 <center>
@@ -369,6 +370,10 @@ denali.io.write_edges(<span class="dt">open</span>(<span class="st">&quot;edges.
 <pre><code>ctree vertices.txt edges.txt tutorial.tree</code></pre>
 <p>Now, start <em>denali</em> and load the <code>tutorial.tree</code> file. You should see a large peak with several other, smaller peaks surrounding it. If so, you've successfully visualized a scalar function defined on a point cloud.</p>
 <p>For more information on how to use <em>ctree</em>, see the <a href="ctree.html">ctree documentation</a>.</p>
+<h2 id="other-sources-of-hierarchical-structure">Other Sources of Hierarchical Structure</h2>
+<p>There are many ways of extracting hierarchical structure from a data set. Computing the contour tree of a scalar function defined on the data is one approach -- this is the method described above. In other situations, however, a different technique may be more applicable.</p>
+<p>A general approach to extracting hierarchical structure from data is via <a href="http://en.wikipedia.org/wiki/Hierarchical_clustering">hierarchical clustering</a>. Most hierarchical clustering algorithms accept a dissimilarity matrix as input and produce a scalar tree as output. This tree is commonly represented as a <a href="http://en.wikipedia.org/wiki/Dendrogram">dendrogram</a>. <em>Denali</em> offers an alternative way of visualizing the hierarchical clustering which is more suitable for large datasets. An example of this use case can be seen <a href="http://denali.cse.ohio-state.edu/doc/pages/examples.html#clustering">here</a>.</p>
+<p>In other cases, the data may lie near a tree-like manifold embedded in a high dimensional space. A natural way of visualizing the structure of the manifold is to visualize the level sets of the geodesic distance from an arbitrary data point. This is the approach taken in the mouse cytometry example included in the <em>denali</em> distribution.</p>
 </div>
 </body>
 </html>
