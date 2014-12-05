@@ -6,25 +6,6 @@
   <meta name="generator" content="pandoc" />
   <title>denali documentation</title>
   <style type="text/css">code{white-space: pre;}</style>
-  <style type="text/css">
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
-  </style>
   <link rel="stylesheet" href="../resources/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="../resources/main.css" type="text/css" />
 </head>
@@ -38,37 +19,68 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <hr>
 
 <h1 id="installation">Installation</h1>
-<p><em>denali</em> is available as a binary package on Windows and Linux, and can be installed from source on nearly every modern operating system.</p>
+<p><em>Denali</em> is available as a binary package on Windows, Debian/Ubuntu Linux, and Mac OS X. It can also be compiled from source on any platform supporting Qt 4 and VTK 5.</p>
 <ul>
 <li><a href="#windows">Windows</a></li>
-<li><a href="#linux">Linux</a>
-<ul>
-<li><a href="#from-binary">From binary</a></li>
+<li><a href="#os-x">OS X</a></li>
+<li><a href="#linux">Linux</a></li>
 <li><a href="#from-source">From source</a></li>
-</ul></li>
-<li><a href="#pydenali">pydenali</a></li>
 </ul>
 <h2 id="windows">Windows</h2>
-<p><em>Denali</em> is available as a binary on Windows, complete with an easy-to-use installer. For the most up-to-date package, see the <a href="http://www.cse.ohio-state.edu/~eldridge/denali/">project page</a>.</p>
-<p>On Windows, using the installer is recommended in nearly all cases, but <em>denali</em> can also be compiled from source. The project uses the CMake meta-compiler so that the instructions for installing from source are nearly identical to those for Linux. If you choose to install form source on Windows, we recommend the MinGW 4.8.2 compiler, Qt 4.8.6, and VTK 5.10.1.</p>
+<p><em>See the <a href="http://denali.cse.ohio-state.edu">project page</a> for the latest version of the Denali installer.</em></p>
+<p>The recommended method of installing <em>Denali</em> on Windows is via the binary installer.</p>
+<ol style="list-style-type: decimal">
+<li>Download and launch the installer.</li>
+<li>Click &quot;I Agree&quot; to accept the license.</li>
+<li>Click &quot;Install&quot; to install to the default location.</li>
+</ol>
+<p>This will typically install <em>Denali</em> to <code>C:\Program Files (x86)\denali</code>. You can find the examples and a copy of the documentation under this directory, as well as <a href="./ctree.html"><em>ctree</em></a> and <a href="../pydoc/_build/html/index.html"><em>pydenali</em></a>, a python package for working with <em>denali</em> file formats.</p>
+<p>You can launch <em>Denali</em> from the Start Menu.</p>
+<h2 id="os-x">OS X</h2>
+<p><em>See the <a href="http://denali.cse.ohio-state.edu">project page</a> for the latest version of the Denali installer.</em></p>
+<p>The recommended method of installing <em>Denali</em> on Mac OS X is by downloading the <code>.dmg</code> found on the project page.</p>
+<ol style="list-style-type: decimal">
+<li>Download and double click the <code>denali_x.y.dmg</code> to mount the image.</li>
+<li>Click and drag the <em>Denali</em> app icon to your <em>Applications</em> folder.</li>
+</ol>
+<p>The OS X <code>.dmg</code> distribution <strong>does not</strong> include <em>pydenali</em> or the examples. You can download these separately from the project page.</p>
+<p><a href="./ctree.html"><code>ctree</code></a> <em>is</em> included, however. You can access it from the command line. If you've installed <em>Denali</em> as described above, you can find <code>ctree</code> at <code>/Applications/Denali.app/Contents/MacOS/ctree</code>.</p>
 <h2 id="linux">Linux</h2>
-<h3 id="from-binary">From binary</h3>
-<p><em>Denali</em> is available as a pre-compiled binary for several Linux distributions, including Ubuntu. If a binary package is available for your distribution, it is the preferred method of installation. See the <a href="http://www.cse.ohio-state.edu/~eldridge/denali/">project page</a> for an up-to-date listing of the distributions which are supported.</p>
-<p><em>denali</em> installs two binaries, <code>denali</code> and <code>ctree</code>, into <code>/usr/bin</code>. It also installs the documentation, examples, and the python module into <code>/usr/share/denali</code>. Note that to use the python module, you must install it from <code>/usr/share/denali/pydenali</code>, either using <code>pip</code>, or some other tool. See the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>
-<h3 id="from-source">From source</h3>
-<p>If a binary package is not available for your distribution, you can always compile <em>denali</em> from source. The build process is managed by CMake. You will need Qt 4 and VTK 5 to install. These can likely be obtained using your system's package manager. We recommend using the gcc compiler.</p>
-<p>To build from source and install to the default location under <code>/usr/local</code>, invoke from the project's root directory:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
-<span class="kw">cd</span> build
+<p><em>See the <a href="http://denali.cse.ohio-state.edu">project page</a> for the latest version of the Denali installer.</em></p>
+<p>The preferred method of installing <em>Denali</em> on Ubuntu or Debian is to download the <code>.deb</code> file on the project page, and install using <code>dpkg -i denali_x.y.deb</code>.</p>
+<p>After installation, you can find the examples, documentation, and python package in <code>/usr/share/denali</code>.</p>
+<p>For distributions that do not use the <code>.deb</code> format, it is recommended to install <em>Denali</em> from source. <em>Denali</em> was developed on linux, and tested to worked with the Ubuntu, Debian, Red Hat, and Arch distributions.</p>
+<h2 id="from-source">From source</h2>
+<p><em>Denali</em> can be installed from source on nearly any modern operating system. The build process is managed by the <a href="http://www.cmake.org/">CMake</a> cross-platform meta-compiler. The build instructions are nearly identical across operating systems.</p>
+<p><a href="https://github.com/eldridgejm/denali">Download or clone the source from GitHub</a>.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p><em>Denali</em> depends on the following libraries:</p>
+<ul>
+<li><a href="http://qt-project.org/">Qt 4</a></li>
+<li><a href="http://www.vtk.org/">VTK 5</a></li>
+<li><a href="http://www.boost.org/">Boost</a></li>
+</ul>
+<p>Furthermore, you must download and install the <a href="http://www.cmake.org/">CMake</a> meta-compiler in order to build <em>denali</em> from source.</p>
+<p>These libraries must be compiled or installed prior to building <em>denali</em>. If you choose to use your operating system's package manager to install these libraries, be sure to also download and install the appropriate header file packages (these packages are often suffixed with <code>-dev</code> in Linux distributions).</p>
+<p>VTK must be installed with Qt support. It is often the case that the versions of VTK available in your package manager's repositories are <em>not</em> compiled with Qt support. Trying to compile <em>denali</em> against a version of VTK which was not compiled with Qt support will result in missing file errors during the build process, such as <code>QVTKWidget.h not found</code>. In this case, it is recommended to build VTK from source using CMake with the cache entries <code>VTK_USE_QT</code> and <code>BUILD_SHARED_LIBS</code> set.</p>
+<p>It is difficult to give an exact set of instructions which works for every user's system. Nevertheless, the following steps were found to work on the developer's machines:</p>
+<h4 id="mac-os-x">Mac OS X</h4>
+<ul>
+<li>Install Qt via brew: <code>brew install qt</code></li>
+<li>Install boost via brew: <code>brew install boost</code></li>
+<li>Download and compile VTK from source using CMake with the <code>BUILD_SHARED_LIBS</code> and <code>VTK_USE_QT</code> options set.</li>
+</ul>
+<h4 id="windows-1">Windows</h4>
+<p>Compiling from source on Windows is somewhat complicated and therefore detailed instructions are not provided here. If you <em>do</em> choose to install from source on Windows, it is recommended that you specifically use the MinGW 4.8.2 compiler, Qt 4.8.6, and VTK 5.10.1.</p>
+<h3 id="compiling-denali">Compiling <em>denali</em></h3>
+<p>Once the prerequisites are installed, compiling <em>denali</em> is straightforward. Download and extract <em>denali</em>, and navigate to the project's root. Then invoke:</p>
+<pre><code># inside the denali source tree...
+mkdir build &amp;&amp; cd build
 cmake ..
-<span class="kw">make</span>
-<span class="kw">sudo</span> <span class="kw">make</span> <span class="kw">install</span></code></pre>
-<p>To install to a location other than the default, specify a prefix by using CMake's <code>CMAKE_INSTALL_PREFIX</code>. For example, to install to user <code>eldridge</code>'s home directory, run</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> build
-<span class="kw">cd</span> build
-cmake .<span class="kw">.</span> -DCMAKE_INSTALL_PREFIX=/home/eldridge
-<span class="kw">make</span>
-<span class="kw">make</span> <span class="kw">install</span></code></pre>
+make</code></pre>
+<p>and optionally, if you wish to install to a system-wide location:</p>
+<pre><code>sudo make install</code></pre>
+<p>By default this installs <em>denali</em> to the various directories under <code>/usr/local</code> on Unix-like systems, and the <code>Program Files</code> directory under Windows. These locations can be changed by specifying the <code>CMAKE_INSTALL_PREFIX</code> when invoking <code>cmake</code>.</p>
 <p><code>make install</code> creates the executables <code>denali</code> and <code>ctree</code> under <code>CMAKE_INSTALL_PREFIX/bin</code> and all files in the directory <code>CMAKE_INSTALL_PREFIX/share/denali</code>. In particular, you may find:</p>
 <ul>
 <li><code>CMAKE_INSTALL_PREFIX/share/denali/doc</code>: the documentation</li>
@@ -76,8 +88,10 @@ cmake .<span class="kw">.</span> -DCMAKE_INSTALL_PREFIX=/home/eldridge
 <li><code>CMAKE_INSTALL_PREFIX/share/denali/pydenali</code>: the python utility module</li>
 </ul>
 <p>To remove the software, simply delete these files.</p>
-<h2 id="pydenali">pydenali</h2>
-<p><em>pydenali</em>, the Python package of utilities included with <em>denali</em>, is included with <em>denali</em>, but not installed by the above steps. <em>pydenali</em> is an optional component for working with files in <em>denali</em> format, among other things. If you'd like to install it, see the <a href="../pydoc/_build/html/install.html">installation section</a> of the <em>pydenali</em> documentation.</p>
+<div style="text-align: center; margin-top: 20px">
+<a href="./intro.html" style="font-size: 20px">Previous: Introduction</a> <span style="font-size: 20px; opacity: .5"> | </span> <a href="./tutorial.html" style="font-size: 20px">Next: Tutorial</a>
+</div>
+
 </div>
 </body>
 </html>

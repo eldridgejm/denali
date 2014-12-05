@@ -813,3 +813,10 @@ dimensional space. A natural way of visualizing the structure of
 the manifold is to visualize the level sets of the geodesic distance from an
 arbitrary data point. This is the approach taken in the mouse cytometry example
 included in the *denali* distribution.
+
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./install.html" style="font-size: 20px">Previous: Installation</a>
+<span style="font-size: 20px; opacity: .5"> | </span>
+<a href="./examples.html" style="font-size: 20px">Next: Examples</a>
+</div>

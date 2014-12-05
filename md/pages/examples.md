@@ -9,6 +9,15 @@ several python packages be installed. Note that `pydenali` is included with your
 download, but not automatically installed. To install `pydenali`, see the
 [pydenali](../pydoc/_build/html/index.html) documentation.
 
+To run these examples, you first need to know where they are. This depends on
+your operating system:
+
+- **Windows**: `C:\Program Files (x86)\denali\examples`
+- **Linux**: `/usr/share/denali/examples` or `/usr/local/share/denali/examples`
+- **OS X**: The examples aren't included with the default installation. You can
+  download them separately from the [project
+  page](http://denali.cse.ohio-state.edu).
+
 ----
 
 - [`./tutorial`](#tutorial)
@@ -204,3 +213,10 @@ callback. Neither of these callbacks require that the subtree be provided.
 With both callbacks active, selecting a component of the landscape will print
 some information about the selection to the status box, and automatically
 resample the pdf and redraw the landscape.
+
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./tutorial.html" style="font-size: 20px">Previous: Tutorial</a>
+<span style="font-size: 20px; opacity: .5"> | </span>
+<a href="./cookbook.html" style="font-size: 20px">Next: Cookbook</a>
+</div>

@@ -20,6 +20,12 @@
 
 <h2 id="examples">Examples</h2>
 <p><em>Denali</em> comes complete with a variety of examples. All of these examples are located in the <code>/examples</code> folder, directly under the project root. Most of these examples are designed to show how the various features of <em>denali</em> can be used for various purposes. In particular, the callback system is demonstrated. The examples use the included <code>pydenali</code> python module, and may require that several python packages be installed. Note that <code>pydenali</code> is included with your download, but not automatically installed. To install <code>pydenali</code>, see the <a href="../pydoc/_build/html/index.html">pydenali</a> documentation.</p>
+<p>To run these examples, you first need to know where they are. This depends on your operating system:</p>
+<ul>
+<li><strong>Windows</strong>: <code>C:\Program Files (x86)\denali\examples</code></li>
+<li><strong>Linux</strong>: <code>/usr/share/denali/examples</code> or <code>/usr/local/share/denali/examples</code></li>
+<li><strong>OS X</strong>: The examples aren't included with the default installation. You can download them separately from the <a href="http://denali.cse.ohio-state.edu">project page</a>.</li>
+</ul>
 <hr />
 <ul>
 <li><a href="#tutorial"><code>./tutorial</code></a></li>
@@ -100,6 +106,10 @@
 <p><strong>Usage</strong>: As an optional first step, we'll generate some random data. The <code>vertices</code>, <code>edges</code>, and <code>tree.tree</code> files should already be included in the folder, but if you'd like to generate new random samples, simply run <code>./initialize.py</code>. This will overwrite the previously mentioned files.</p>
 <p>Next, load <code>tree.tree</code> in <em>denali</em>. You can load the <code>info_callback.py</code> script as a <em>info</em> callback. The <code>sampling_callback.py</code> script can be used as a <em>tree</em> callback. Neither of these callbacks require that the subtree be provided.</p>
 <p>With both callbacks active, selecting a component of the landscape will print some information about the selection to the status box, and automatically resample the pdf and redraw the landscape.</p>
+<div style="text-align: center; margin-top: 20px">
+<a href="./tutorial.html" style="font-size: 20px">Previous: Tutorial</a> <span style="font-size: 20px; opacity: .5"> | </span> <a href="./cookbook.html" style="font-size: 20px">Next: Cookbook</a>
+</div>
+
 </div>
 </body>
 </html>

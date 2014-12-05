@@ -52,3 +52,10 @@ distribution. Simply write a [tree callback](callback.html) to do the following:
 
 Included in `examples/pdf` is a callback which does just this for a simple
 mixture of Gaussians.
+
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./examples.html" style="font-size: 20px">Previous: Examples</a>
+<span style="font-size: 20px; opacity: .5"> | </span>
+<a href="./related.html" style="font-size: 20px">Next: Related Work</a>
+</div>

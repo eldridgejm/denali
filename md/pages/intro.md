@@ -38,13 +38,11 @@ landscape metaphors.
 
 ## What is included with *denali*?
 
-Included in this package are:
+Several tools are provided alongside *denali*. [*ctree*](./ctree.html) is tool
+for computing contour trees from point clouds.
+[*pydenali*](../pydoc/_build/html/index.html) is a package of Python utilities
+for interacting with *denali* and *ctree*.
 
-- *denali*: A graphical interface for visualizing landscape metaphors
-- *ctree*: A tool for computing contour trees
-- *pydenali*: Python utilities for interacting with *denali* and *ctree*.
-
-The main page lists the important documentation for each of these tools.
 
 ## Using this documentation
 
@@ -60,3 +58,7 @@ The suggested method of using this documentation is as follows:
 
 - For tips on how to use *denali* to visualize several different types of data,
   see the [cookbook](cookbook.html).
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./install.html" style="font-size: 20px">Next: Installation</a>
+</div>
