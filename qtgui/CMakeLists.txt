@@ -32,7 +32,7 @@ ELSE()
     add_executable(denali ${SOURCES} ${HEADERS_MOC} ${UI_SRCS})
 ENDIF()
 
-target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES} QVTK)
+target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES} vtkGUISupportQt-6.1)
 
 install(TARGETS denali DESTINATION bin)
 install(FILES startlogo.png DESTINATION share/denali)
