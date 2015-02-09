@@ -374,7 +374,7 @@ public:
             vtkSmartPointer<vtkImageActor> image_actor =
                     vtkSmartPointer<vtkImageActor>::New();
 
-            image_actor->GetMapper()->SetInput(png_reader->GetOutputPort());
+            image_actor->SetInputData(png_reader->GetOutput());
 
             _bg_renderer->AddActor(image_actor);
         }
