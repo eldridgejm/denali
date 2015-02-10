@@ -374,6 +374,7 @@ public:
             vtkSmartPointer<vtkImageActor> image_actor =
                     vtkSmartPointer<vtkImageActor>::New();
 
+            png_reader->Update();
             image_actor->SetInputData(png_reader->GetOutput());
 
             _bg_renderer->AddActor(image_actor);
@@ -393,7 +394,7 @@ public:
         _interactor_style->SetRenderer(_renderer);
         render_window->GetInteractor()->SetInteractorStyle(_interactor_style);
 
-        // adjust the zoom: it's often to far in
+        // adjust the zoom: it's often too far in
         _renderer->GetActiveCamera()->SetPosition(0,0,3);
 
     }
