@@ -37,7 +37,6 @@
 #include <vtkDataSetMapper.h>
 #include <vtkElevationFilter.h>
 #include <vtkImageActor.h>
-#include <vtkImageMapper3D.h>
 #include <vtkInteractorStyleTerrain.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkLookupTable.h>
@@ -374,8 +373,12 @@ public:
             vtkSmartPointer<vtkImageActor> image_actor =
                     vtkSmartPointer<vtkImageActor>::New();
 
+#if VTK_MAJOR_VERSION >= 6
             png_reader->Update();
             image_actor->SetInputData(png_reader->GetOutput());
+#else
+            image_actor->SetInput(png_reader->GetOutput());
+#endif
 
             _bg_renderer->AddActor(image_actor);
         }
