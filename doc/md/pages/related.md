@@ -7,3 +7,8 @@ of scalar-valued functions" in *Computer Graphics Forum*, 2010.
 A paper describing *denali* is under review in the Journal of Machine Learning
 Research. A version of the paper as a technical report is available on the
 [project page](http://denali.cse.ohio-state.edu).
+
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./cookbook.html" style="font-size: 20px">Previous: Cookbook</a>
+</div>

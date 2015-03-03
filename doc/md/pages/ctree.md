@@ -2,8 +2,20 @@
 ctree is a command line tool for generating contour trees from scalar functions
 defined on a simplicial complex.
 
-1. [Usage](#usage)
+1. [Location](#location)
+0. [Usage](#usage)
 0. [Input Formats](#input-formats)
+
+### Location
+
+In order to run `ctree`, you must first know where to find it. `ctree` is
+installed alongside *denali*, so by default you'll find `ctree` at:
+
+
+- **Windows**: `C:\Program Files (x86)\denali\ctree`
+- **Linux**: `/usr/bin/ctree` or `/usr/local/bin/ctree` (which is probably
+  already in your `PATH`)
+- **OS X**: `/Applications/Denali.app/Contents/MacOS/ctree`
 
 ### Usage
 

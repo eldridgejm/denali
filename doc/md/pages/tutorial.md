@@ -34,6 +34,7 @@ directory.
     - [Introduction to contour trees](#introduction-to-contour-trees)
     - [Building a neighbor graph](#building-a-neighbor-graph)
     - [Computing the contour tree](#computing-the-contour-tree)
+- [Other sources of hierarchical structure](#other-sources-of-hierarchical-structure)
 
 
 ---
@@ -42,12 +43,15 @@ directory.
 
 As described in the [introduction](intro.html), *denali* is a tool for
 visualizing data that meets two prerequisites. First, each data point must have
-an associate scalar value, whether it be a probability, score, cost, etc.
+an associated scalar value, whether it be a probability, score, cost, etc.
 Second, it must be possible to extract some tree-like structure from the data.
 [Later](#visualizing-functions-on-point-clouds) in this tutorial, we'll see how
 to extract tree-like structure from such things as scalar functions defined on
-point clouds. For now, we'll assume that our data is already in tree-like
-form.
+point clouds. *Denali* can also be used in other useful cases, such as
+visualizing the structure of a tree-like manifold, and interpreting hierachical
+structure in a dataset through agglomerative clustering. For now, we'll assume
+that a scalar tree has already been extracted from our data, and we'd now
+like to visualize the structure using *denali*.
 
 ### Scalar trees
 
@@ -786,3 +790,33 @@ successfully visualized a scalar function defined on a point cloud.
 
 For more information on how to use *ctree*, see the [ctree
 documentation](ctree.html).
+
+
+## Other Sources of Hierarchical Structure
+
+There are many ways of extracting hierarchical structure from a data set.
+Computing the contour tree of a scalar function defined on the data is one
+approach -- this is the method described above. In other situations, however, a
+different technique may be more applicable.
+
+A general approach to extracting hierarchical structure from data is via
+[hierarchical clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering).
+Most hierarchical clustering algorithms accept a dissimilarity matrix as input
+and produce a scalar tree as output. This tree is commonly represented as a
+[dendrogram](http://en.wikipedia.org/wiki/Dendrogram). *Denali* offers an
+alternative way of visualizing the hierarchical clustering which is more
+suitable for large datasets. An example of this use case can be seen
+[here](http://denali.cse.ohio-state.edu/doc/pages/examples.html#clustering).
+
+In other cases, the data may lie near a tree-like manifold embedded in a high
+dimensional space. A natural way of visualizing the structure of
+the manifold is to visualize the level sets of the geodesic distance from an
+arbitrary data point. This is the approach taken in the mouse cytometry example
+included in the *denali* distribution.
+
+
+<div style="text-align: center; margin-top: 20px">
+<a href="./install.html" style="font-size: 20px">Previous: Installation</a>
+<span style="font-size: 20px; opacity: .5"> | </span>
+<a href="./examples.html" style="font-size: 20px">Next: Examples</a>
+</div>
