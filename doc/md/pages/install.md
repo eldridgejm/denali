@@ -2,7 +2,7 @@
 
 *Denali* is available as a binary package on Windows, Debian/Ubuntu Linux, and
 Mac OS X. It can also be compiled from source on any platform supporting Qt 4
-and VTK 5.
+and VTK 5 or newer.
 
 - [Windows](#windows)
 - [OS X](#os-x)
