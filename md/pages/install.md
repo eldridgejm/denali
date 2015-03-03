@@ -72,7 +72,7 @@ across operating systems.
 *Denali* depends on the following libraries:
 
 - [Qt 4](http://qt-project.org/)
-- [VTK 5](http://www.vtk.org/)
+- [VTK 5 or newer](http://www.vtk.org/)
 - [Boost](http://www.boost.org/)
 
 Furthermore, you must download and install the [CMake](http://www.cmake.org/)
