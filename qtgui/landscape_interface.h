@@ -341,6 +341,8 @@ class LandscapeInterface
     vtkSmartPointer<LandscapeInteractorStyle> _interactor_style;
     vtkRenderWindow* _render_window;
 
+    float _bgcolor[3];
+
 public:
     LandscapeInterface(vtkRenderWindow* render_window) :
             _landscape_source(vtkSmartPointer<vtkProgrammableSource>::New()),
@@ -383,7 +385,9 @@ public:
             _bg_renderer->AddActor(image_actor);
         }
 
-        _bg_renderer->SetBackground(.4, .5, .6); // Background color white
+        // default bg color
+        _bgcolor[0] = .4; _bgcolor[1] = .5; _bgcolor[2] = .6;
+        _bg_renderer->SetBackground(_bgcolor[0], _bgcolor[1], _bgcolor[2]);
 
         _bg_renderer->SetLayer(0);
         _renderer->SetLayer(1);
@@ -442,10 +446,18 @@ public:
         if (_render_window->HasRenderer(_bg_renderer))
         {
             _render_window->RemoveRenderer(_bg_renderer);
-            _renderer->SetLayer(0);
-            _render_window->SetNumberOfLayers(1);
-            _renderer->SetBackground(.4, .5, .6); // Background color white
         }
+        _renderer->SetLayer(0);
+        _render_window->SetNumberOfLayers(1);
+        _renderer->SetBackground(_bgcolor[0], _bgcolor[1], _bgcolor[2]);
+        _renderer->Render();
+    }
+
+    void setBackgroundColor(float h, float s, float v)
+    {
+        this->_bgcolor[0] = h;
+        this->_bgcolor[1] = s;
+        this->_bgcolor[2] = v;
     }
 
 

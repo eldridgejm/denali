@@ -116,6 +116,12 @@ MainWindow::MainWindow() :
     connect(this, SIGNAL(cellSelected(unsigned int)), 
             this, SLOT(runCallbacksOnSelection()));
 
+    // Background Color
+    ////////////////////////////////////////////////////////////////////////////
+
+    connect(_mainwindow.actionChangeBackgroundColor, SIGNAL(triggered()),
+            this, SLOT(changeBackgroundColor()));
+
     // Rebasing
     ////////////////////////////////////////////////////////////////////////////
 
@@ -615,7 +621,7 @@ void MainWindow::configureColorMap()
         }
 
         // this isn't very elegant, but correlation color maps should have their
-        // ranges setto -1 to 1
+        // ranges set to -1 to 1
         if (reduction_id == CORRELATION) 
         {
             _landscape_context->setMaxReductionValue(1);
@@ -1063,4 +1069,16 @@ void MainWindow::chooseRoot()
         changeLandscapeRoot();
     }
 
+}
+
+
+void MainWindow::changeBackgroundColor()
+{
+    QColor color = QColorDialog::getColor();    
+    float red = color.red() / 255.;
+    float green = color.green() / 255.;
+    float blue = color.blue() / 255.;
+
+    _landscape_interface->setBackgroundColor(red, green, blue);
+    _landscape_interface->clearBackground();
 }

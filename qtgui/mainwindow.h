@@ -116,6 +116,8 @@ public slots:
     void enableChooseRoot();
     void chooseRoot();
 
+    void changeBackgroundColor();
+
 signals:
     void landscapeChanged();
     void cellSelected(unsigned int);
