@@ -245,6 +245,9 @@ public:
 
     Arc addArc(const Node u, const Node v)
     {
+        // no self-arcs/edges are permitted
+        assert(u.index != v.index);
+
         // the index of the arc in the vector
         int n;
 

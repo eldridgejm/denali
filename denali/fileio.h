@@ -187,7 +187,11 @@ public:
             throw std::runtime_error(msg.str());
         }
         lineno++;
-        plex.addEdge(plex.getNode(u),plex.getNode(v));
+
+        // don't add self-edges
+        if (u != v) {
+            plex.addEdge(plex.getNode(u),plex.getNode(v));
+        }
     }
 };
 
@@ -361,6 +365,14 @@ public:
 
         if (*u_err != 0 || *v_err != 0) {
             throw std::runtime_error(msg.str());
+        }
+
+        if (u_id == v_id) {
+            std::stringstream self_edge_msg(msg.str());
+            self_edge_msg << " Self-edge found between vertex " << u_id
+                          << " and itself. This is not permitted in contour "
+                          << " tree files.";
+            throw std::runtime_error(self_edge_msg.str());
         }
 
         Node u = _graph.getNode(u_id);

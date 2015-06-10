@@ -39,7 +39,7 @@ ENDIF()
 IF(${VTK_VERSION_MAJOR} VERSION_GREATER 5)
     target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES})
 ELSE()
-    message("Linking qvtk")
+    message(STATUS "Linking qvtk")
     target_link_libraries(denali ${QT_LIBRARIES} ${VTK_LIBRARIES} QVTK)
 ENDIF()
 

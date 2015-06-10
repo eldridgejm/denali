@@ -229,7 +229,9 @@ void MainWindow::openContourTreeFile()
     }
     catch (std::exception& e)
     {
-        QString message("There was a problem reading the contour tree file.");
+        QString message("There was a problem reading the contour tree file. "
+                        "Make sure that it is of the correct format, and that "
+                        "there are no self-edges in the tree.");
 
         QMessageBox msgbox;
         msgbox.setIcon(QMessageBox::Warning);
