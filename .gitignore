@@ -11,3 +11,4 @@ doc/dev/html/
 doc/dev/latex/
 doxygen_warn.log
 lib/
+extern/
